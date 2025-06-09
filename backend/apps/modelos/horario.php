@@ -1,7 +1,7 @@
 <?php
     require '../conexion/conexion.php';
     require '../interfaz/intefaz_horario.php';
-    class Horario implements interfaz_horario{
+    class Horario {
         private $conexion;
         public function __construct(){
             $this->conexion = crearConexion();

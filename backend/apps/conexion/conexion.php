@@ -1,10 +1,10 @@
 <?php
     function crearConexion(){
         //Definiendo los valores de la base de datos
-        $host = "127.0.0.1";
+        $host = "localhost";
         $user = "root";
         $contraseña = "";
-        $base_datos = "wasa"; 
+        $base_datos = "peruRail"; 
         $puerto = "3306";
     
         //Conectando

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peru Rail</title>
+
+  <!--ESTILOS Y JAVASCRIP-->
+  <script src="menu.js"></script>
+  <link rel="stylesheet" href="menu.css">
+  <!-- Flatpickr CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <!-- Flatpickr JS -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+</head>
+
+<body>
+  <div class="formulario1">
+    <form id=" " action="menu.php" target="_blank" method="POST">
+      <!--SELECCION-->
+      <div class="selccion">
+        <!--Ida y retorno-->
+        <div id="ida_retorno">
+          <label>
+            <input type="radio" name="tipo_viaje" value="ida_vuelta" checked onclick="toggleRetorno(true)"> Ida y buelta
+          </label>
+        </div>
+        <br><br>
+        <!--solo ida-->
+        <label>
+          <input type="radio" name="tipo_viaje" value="solo_ida" onclick="toggleRetorno(false)"> Solo ida
+        </label>
+      </div>
+
+      <br>
+      <!--RUTA-->
+      <div class="ruta">
+        <!-- ORIGEN -->
+        <select name="origen" id="origen" onchange="actualizarDestino()">
+          <option value="">ORIGEN</option>
+
+          <optgroup label="CUSCO">
+            <option value="ciudad de cusco">CIUDAD DE CUSCO</option>
+            <option value="urubamba">URUBAMBA</option>
+            <option value="ollantaytambo">OLLANTAYTAMBO</option>
+            <option value="machupicchu">MACHUPICCHU</option>
+            <option value="hidroelectrica">HIDROELECTRICA</option>
+          </optgroup>
+
+          <optgroup label="PUNO">
+            <option value="puno">PUNO</option>
+          </optgroup>
+
+          <optgroup label="AREQUIPA">
+            <option value="arequipa">AREQUIPA</option>
+          </optgroup>
+
+        </select>
+
+        <!-- Destino -->
+        <select name="destino" id="destino">
+          <option value="">DESTINO</option>
+        </select>
+      </div>
+
+      <br>
+      <!--ELIGE TREN-->
+      <div class="tren" id="campoTren" style="display: none;">
+        <select name="tren" id="tren" required>
+          <option value="">ELIGE TREN</option>
+          <option value=" tren 1">TREN 1 </option>
+          <option value=" tren 2">TREN 2</option>
+        </select>
+      </div>
+
+      <br>
+      <!--FECHA IDA Y RETORNO-->
+      <div class="fecha">
+        <!--IDA-->
+        <label>Fecha de ida:</label>
+        <input type="text" name="fecha_ida" id="fecha_ida" placeholder="Selecciona fecha">
+
+        <br>
+        <!--RETORNO-->
+        <div id="retorno_div">
+          <label>Fecha de retorno:</label>
+          <input type="text" name="fecha_retorno" id="fecha_retorno" placeholder="Selecciona fecha">
+        </div>
+      </div>
+
+      <br>
+
+      <!--PASAJEROS-->
+
+      <div class="cantidad-Pasajeros" id="pasajeros">
+        <label for="pasajeros" onclick="mostrarSelectorPasajeros()">
+          <input type="text" id="resumenPasajeros" readonly value="2 Adulto, 0 Niños">
+        </label>
+
+        <div id="selectorPasajeros" class="selector-pasajeros" style="display: none;">
+          <strong>PASAJEROS</strong>
+          <br><br>
+          <div>
+            <strong>ADULTOS</strong><br>
+            <span id="adultosCount">1</span>
+            <button type="button" onclick="cambiarPasajero('adultos', -1)">-</button>
+            <button type="button" onclick="cambiarPasajero('adultos', 1)">+</button>
+          </div>
+
+
+          <div>
+            <strong>NIÑOS</strong><br>
+            <span id="ninosCount">0</span>
+            <button type="button" onclick="cambiarPasajero('ninos', -1)">-</button>
+            <button type="button" onclick="cambiarPasajero('ninos', 1)">+</button>
+          </div>
+
+          <br>
+          <button type="button" onclick="cerrarSelector()">Cerrar</button>
+        </div>
+
+        <!--Campos ocultos para enviar al formulario-->
+        <input type="hidden" name="adultos" id="adultosInput" value="1">
+        <input type="hidden" name="ninos" id="ninosInput" value="0">
+
+      </div>
+      <br>
+      <button type="submit">BUSCAR</button>
+
+    </form>
+  </div>
+</body>
+
+</html>

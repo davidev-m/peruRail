@@ -20,8 +20,8 @@ require __DIR__ . '/../modelos/ruta.php';
             return null;
         }
         $fecha = $ruta->disponibilidad($Origen, $Destino);
-        $resultado = $fecha["diasDisponibles"];
-        if(!$fecha || !isset($fecha["diasDisponibles"])){
+        $resultado = $fecha["dias_disponibles"];
+        if(!$fecha || !isset($fecha["dias_disponibles"])){
             return null;
         }
         return $resultado;
@@ -31,7 +31,7 @@ require __DIR__ . '/../modelos/ruta.php';
         $origen = strtolower($origen);
         $destino =  $ruta->buscarDestino($origen);
         if(count($destino) > 0){
-            return array_column($destino, 'Destino');
+            return array_column($destino, 'destino');
         }else{
             return [];
         }

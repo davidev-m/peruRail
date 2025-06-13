@@ -20,7 +20,7 @@ class Ruta implements interfaz_ruta{
      * @return bool True si la ruta existe, False si no.
      */
     public function existe($origen, $destino){
-        $query = "SELECT * FROM Ruta WHERE Origen = ? AND Destino = ?";
+        $query = "SELECT * FROM Ruta WHERE origen = ? AND destino = ?";
         $sentencia = $this->conexion->prepare($query);
         $sentencia->bind_param("ss", $origen, $destino);
         $sentencia->execute();
@@ -41,7 +41,7 @@ class Ruta implements interfaz_ruta{
      * @return array Arreglo de destinos (cada uno como un array asociativo).
      */
     public function buscarDestino($origen){
-        $query = "SELECT Destino FROM Ruta WHERE Origen = ?";
+        $query = "SELECT destino FROM Ruta WHERE origen = ?";
         $sentencia = $this->conexion->prepare($query);
         $sentencia->bind_param('s', $origen);
         $sentencia->execute();
@@ -58,7 +58,7 @@ class Ruta implements interfaz_ruta{
      * @return array|null Días disponibles como array asociativo o null si no se encuentra.
      */
     public function disponibilidad($origen, $destino){
-        $query = "SELECT diasDisponibles FROM Ruta WHERE origen=? AND destino =?";
+        $query = "SELECT dias_disponibles FROM Ruta WHERE origen=? AND destino =?";
         $sentencia = $this->conexion->prepare($query);
         $sentencia->bind_param('ss', $origen, $destino);
         $sentencia->execute();

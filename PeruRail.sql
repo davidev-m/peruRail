@@ -1,49 +1,50 @@
--- 1) Borrar antes si existían versiones anteriores
-DROP DATABASE IF EXISTS PeruRail;
+-- 1) Eliminar la base de datos si ya existe
+DROP DATABASE IF EXISTS perurail;
 
--- 2) Crear base de datos y usarla
-CREATE DATABASE PeruRail;
-USE PeruRail;
-CREATE TABLE pago (
-  id_pago       INT(11)     NOT NULL AUTO_INCREMENT,
-  cant_reserva  INT(11)     NOT NULL,
-  metodo        VARCHAR(20) NULL,
-  fecha         DATETIME    NOT NULL,
+-- 2) Crear la base de datos y usarla
+CREATE DATABASE perurail;
+USE perurail;
+
+-- Tabla de pagos (registro de métodos de pago y cantidad de reservas pagadas)
+CREATE TABLE Pago (
+  id_pago        INT(11)     NOT NULL AUTO_INCREMENT,
+  cant_reserva   INT(11)     NOT NULL,
+  metodo         VARCHAR(20) NULL,
+  fecha          DATETIME    NOT NULL,
   PRIMARY KEY (id_pago)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Tabla de horarios (salidas, llegadas y duración del viaje)
+CREATE TABLE Horario (
+  id_horario     INT(11)     NOT NULL AUTO_INCREMENT,
+  fech_salida    DATE        NOT NULL,
+  hr_salida      DATETIME    NOT NULL,
+  hr_llegada     DATETIME    NOT NULL,
+  duracion       INT(11)     NOT NULL,
+  estado         VARCHAR(30) NOT NULL,
+  PRIMARY KEY (id_horario)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS horario;
-CREATE TABLE horario (
-ID_Horario int(11) not null auto_increment,
-Fech_Salida date not null,
-Hr_salida datetime not null,
-Hr_llegada datetime not null,
-Duracion int(11) not null,
-Estado varchar(30) not null,
-primary key(ID_Horario)
-);
+-- Tabla de trenes
+CREATE TABLE Tren (
+  id_tren        INT         NOT NULL AUTO_INCREMENT,
+  clase          VARCHAR(10) NOT NULL,
+  numero         INT(11)     NOT NULL,
+  nombre         VARCHAR(20) NOT NULL,
+  PRIMARY KEY (id_tren)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS tren;
-CREATE TABLE tren (
-ID_Tren int not null auto_increment,
-Clase varchar(10) not null,
-numero int(11) not null,
-nombre varchar(20) not null,
-  PRIMARY KEY (ID_Tren)
-);
+-- Tabla de rutas (de qué ciudad a qué ciudad va el tren)
+CREATE TABLE Ruta (
+  id_ruta         INT         NOT NULL AUTO_INCREMENT,
+  origen          VARCHAR(30) NOT NULL,
+  destino         VARCHAR(30) NOT NULL,
+  dia_disponible  VARCHAR(30) NOT NULL,
+  PRIMARY KEY (id_ruta)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS ruta;
-CREATE TABLE ruta (
-ID_Ruta int not null auto_increment,
-Origen varchar(30) not null,
-Destino varchar(30) not null,
-  PRIMARY KEY (ID_Ruta)
-);
-
--- Tabla reserva (depende de pago)
-DROP TABLE IF EXISTS reserva;
-CREATE TABLE reserva (
+-- Tabla de reservas (depende de pago, tren, ruta y horario)
+CREATE TABLE Reserva (
   id_reserva   INT(11)      NOT NULL AUTO_INCREMENT,
   id_pago      INT(11)      NOT NULL,
   id_ruta      INT(11)      NOT NULL,
@@ -54,92 +55,86 @@ CREATE TABLE reserva (
   PRIMARY KEY (id_reserva),
 
   FOREIGN KEY (id_pago)
-    REFERENCES pago(id_pago)
+    REFERENCES Pago(id_pago)
     ON UPDATE CASCADE
     ON DELETE RESTRICT,
 
   FOREIGN KEY (id_ruta)
-    REFERENCES ruta(ID_Ruta)
+    REFERENCES Ruta(id_ruta)
     ON UPDATE CASCADE
     ON DELETE RESTRICT,
 
   FOREIGN KEY (id_tren)
-    REFERENCES tren(ID_Tren)
+    REFERENCES Tren(id_tren)
     ON UPDATE CASCADE
     ON DELETE RESTRICT,
 
   FOREIGN KEY (id_horario)
-    REFERENCES horario(ID_Horario)
+    REFERENCES Horario(id_horario)
     ON UPDATE CASCADE
     ON DELETE RESTRICT
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-DROP TABLE IF EXISTS viaje;
-CREATE TABLE viaje (
+-- Tabla de viajes (puede almacenar más información sobre cada viaje)
+CREATE TABLE Viaje (
   viaje_id     INT AUTO_INCREMENT PRIMARY KEY,
   reserva_id   INT NOT NULL,
   tren_id      INT NOT NULL,
   ruta_id      INT NOT NULL,
   horario_id   INT NOT NULL,
-  -- aquí podrías añadir atributos de la relación “viaje”,
-  -- por ejemplo: precio, asiento, estado_viaje, etc.
+  -- atributos adicionales (ej: asiento, precio, etc.)
 
   FOREIGN KEY (reserva_id)
-    REFERENCES reserva(id_reserva)
+    REFERENCES Reserva(id_reserva)
     ON UPDATE CASCADE
     ON DELETE RESTRICT,
 
   FOREIGN KEY (tren_id)
-    REFERENCES tren(ID_Tren)
+    REFERENCES Tren(id_tren)
     ON UPDATE CASCADE
     ON DELETE RESTRICT,
 
   FOREIGN KEY (ruta_id)
-    REFERENCES ruta(ID_Ruta)
+    REFERENCES Ruta(id_ruta)
     ON UPDATE CASCADE
     ON DELETE RESTRICT,
 
   FOREIGN KEY (horario_id)
-    REFERENCES horario(ID_Horario)
+    REFERENCES Horario(id_horario)
     ON UPDATE CASCADE
     ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-);
-
--- Tabla trabajador
-DROP TABLE IF EXISTS trabajador;
-CREATE TABLE trabajador (
-  trabajador_id INT(11)     NOT NULL AUTO_INCREMENT,
+-- Tabla de trabajadores (empleados de la empresa)
+CREATE TABLE Trabajador (
+  trabajador_id  INT(11)     NOT NULL AUTO_INCREMENT,
   nombre         VARCHAR(20) NULL,
   apellido       VARCHAR(20) NULL,
   correo         VARCHAR(50) NULL,
   documento      VARCHAR(15) NULL,
   PRIMARY KEY (trabajador_id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Subclase chofer
-DROP TABLE IF EXISTS chofer;
-CREATE TABLE chofer (
+-- Subclase chofer (es un trabajador)
+CREATE TABLE Chofer (
   trabajador_id INT(11) NOT NULL,
   PRIMARY KEY (trabajador_id),
   FOREIGN KEY (trabajador_id)
-    REFERENCES trabajador(trabajador_id)
+    REFERENCES Trabajador(trabajador_id)
     ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Subclase asesor de venta
-drop table if exists asesor_de_venta;
-create table asesor_de_venta(
-trabajador_id int(11) not null,
-primary key (trabajador_id),
-foreign key (trabajador_id)
-	references trabajador (trabajador_id)
-    on delete cascade
-);
+-- Subclase asesor de venta (es un trabajador)
+CREATE TABLE Asesor_de_venta (
+  trabajador_id INT(11) NOT NULL,
+  PRIMARY KEY (trabajador_id),
+  FOREIGN KEY (trabajador_id)
+    REFERENCES Trabajador(trabajador_id)
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Tabla cliente_final
-DROP TABLE IF EXISTS cliente_final;
-CREATE TABLE cliente_final (
+-- Tabla de clientes finales (usuarios y empresas)
+CREATE TABLE Cliente_final (
   cliente_final_id INT(11)     NOT NULL AUTO_INCREMENT,
   nacionalidad     VARCHAR(20) NOT NULL,
   documento        VARCHAR(15) NOT NULL,
@@ -150,57 +145,52 @@ CREATE TABLE cliente_final (
   fech_nac         DATE        NOT NULL,
   correo           VARCHAR(30) NOT NULL,
   PRIMARY KEY (cliente_final_id)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Subtipo cliente_empresa
-DROP TABLE IF EXISTS cliente_empresa;
-CREATE TABLE cliente_empresa (
+-- Subtipo cliente empresa
+CREATE TABLE Cliente_empresa (
   cliente_final_id INT(11)     NOT NULL,
   ruc              VARCHAR(11) NOT NULL,
   razon_social     VARCHAR(30) NOT NULL,
   direccion        VARCHAR(30) NULL,
   PRIMARY KEY (cliente_final_id),
   FOREIGN KEY (cliente_final_id)
-    REFERENCES cliente_final(cliente_final_id)
+    REFERENCES Cliente_final(cliente_final_id)
     ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Subtipo cliente_usuario
-DROP TABLE IF EXISTS cliente_usuario;
-CREATE TABLE cliente_usuario (
+-- Subtipo cliente usuario (persona natural)
+CREATE TABLE Cliente_usuario (
   cliente_final_id INT(11) NOT NULL,
   PRIMARY KEY (cliente_final_id),
   FOREIGN KEY (cliente_final_id)
-    REFERENCES cliente_final(cliente_final_id)
+    REFERENCES Cliente_final(cliente_final_id)
     ON DELETE CASCADE
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
--- Tabla vagón
-DROP TABLE IF EXISTS Vagon;
+-- Tabla de vagones (entidad débil dependiente de tren)
 CREATE TABLE Vagon (
-ID_Tren int(11) not null,
-Numero int(11) not null,
-Descripcion text not null,
-precio float not null,
-clase varchar(20) not null,
-primary key(ID_Tren, Numero),
-foreign key (ID_Tren)
-references tren(ID_Tren)
-on update cascade
-on delete restrict
-);
+  id_tren     INT(11) NOT NULL,
+  numero      INT(11) NOT NULL,
+  descripcion TEXT    NOT NULL,
+  precio      FLOAT   NOT NULL,
+  clase       VARCHAR(20) NOT NULL,
+  PRIMARY KEY (id_tren, numero),
+  FOREIGN KEY (id_tren)
+    REFERENCES Tren(id_tren)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Tabla estación
-DROP TABLE IF EXISTS estacion;
-CREATE TABLE estacion (
-id_estacion int not null auto_increment,
-nombre varchar(20) not null,
-Localidad varchar (20) not null,
-ID_Ruta int(11) not null,
-primary key (id_estacion),
-foreign key(ID_Ruta)
-references ruta(ID_Ruta)
-on update cascade
-on delete restrict
-);
+-- Tabla de estaciones (pertenecen a una ruta)
+CREATE TABLE Estacion (
+  id_estacion  INT         NOT NULL AUTO_INCREMENT,
+  nombre       VARCHAR(20) NOT NULL,
+  localidad    VARCHAR(20) NOT NULL,
+  id_ruta      INT(11)     NOT NULL,
+  PRIMARY KEY (id_estacion),
+  FOREIGN KEY (id_ruta)
+    REFERENCES Ruta(id_ruta)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

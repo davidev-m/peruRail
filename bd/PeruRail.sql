@@ -39,7 +39,7 @@ CREATE TABLE Ruta (
   id_ruta         INT         NOT NULL AUTO_INCREMENT,
   origen          VARCHAR(30) NOT NULL,
   destino         VARCHAR(30) NOT NULL,
-  dia_disponible  VARCHAR(30) NOT NULL,
+  dias_disponibles  VARCHAR(30) NOT NULL,
   PRIMARY KEY (id_ruta)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

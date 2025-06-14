@@ -1,229 +1,249 @@
--- ------------------------------------------------------------------
--- 15 registros en Pago
--- ------------------------------------------------------------------
-INSERT INTO Pago (cant_reserva, metodo, fecha) VALUES
-  (2, 'Tarjeta',      '2025-06-01 08:15:00'),
-  (1, 'Efectivo',     '2025-06-01 12:30:00'),
-  (4, 'Yape',         '2025-06-02 09:45:00'),
-  (3, 'Plin',         '2025-06-02 17:20:00'),
-  (5, 'Transferencia','2025-06-03 10:00:00'),
-  (1, 'Tarjeta',      '2025-06-04 11:10:00'),
-  (2, 'Efectivo',     '2025-06-05 14:50:00'),
-  (3, 'Yape',         '2025-06-06 07:30:00'),
-  (1, 'Plin',         '2025-06-06 16:40:00'),
-  (2, 'Transferencia','2025-06-07 09:00:00'),
-  (4, 'Tarjeta',      '2025-06-08 13:25:00'),
-  (5, 'Efectivo',     '2025-06-09 15:55:00'),
-  (3, 'Yape',         '2025-06-10 08:05:00'),
-  (1, 'Plin',         '2025-06-11 14:30:00'),
-  (2, 'Transferencia','2025-06-12 10:45:00');
+USE perurail;
 
--- ------------------------------------------------------------------
--- 15 registros en Horario
--- ------------------------------------------------------------------
-INSERT INTO Horario (fech_salida, hr_salida, hr_llegada, duracion, estado) VALUES
-  ('2025-06-15','2025-06-15 06:00:00','2025-06-15 08:30:00',150,'Confirmado'),
-  ('2025-06-16','2025-06-16 07:00:00','2025-06-16 09:00:00',120,'Confirmado'),
-  ('2025-06-17','2025-06-17 08:30:00','2025-06-17 11:00:00',150,'Pendiente'),
-  ('2025-06-18','2025-06-18 06:45:00','2025-06-18 09:15:00',150,'Confirmado'),
-  ('2025-06-19','2025-06-19 07:15:00','2025-06-19 09:45:00',150,'Cancelado'),
-  ('2025-06-20','2025-06-20 08:00:00','2025-06-20 10:30:00',150,'Confirmado'),
-  ('2025-06-21','2025-06-21 09:00:00','2025-06-21 11:30:00',150,'Confirmado'),
-  ('2025-06-22','2025-06-22 06:30:00','2025-06-22 08:30:00',120,'Pendiente'),
-  ('2025-06-23','2025-06-23 07:45:00','2025-06-23 10:15:00',150,'Confirmado'),
-  ('2025-06-24','2025-06-24 08:15:00','2025-06-24 10:45:00',150,'Confirmado'),
-  ('2025-06-25','2025-06-25 06:20:00','2025-06-25 08:50:00',150,'Confirmado'),
-  ('2025-06-26','2025-06-26 07:30:00','2025-06-26 10:00:00',150,'Pendiente'),
-  ('2025-06-27','2025-06-27 08:00:00','2025-06-27 10:30:00',150,'Confirmado'),
-  ('2025-06-28','2025-06-28 09:15:00','2025-06-28 11:45:00',150,'Cancelado'),
-  ('2025-06-29','2025-06-29 06:10:00','2025-06-29 08:40:00',150,'Confirmado');
-
--- ------------------------------------------------------------------
--- 15 registros en Tren
--- ------------------------------------------------------------------
-INSERT INTO Tren (clase, numero, nombre) VALUES
-  ('Vistadome', 101, 'Expedition'),
-  ('Vistadome', 102, 'Sacred Valley'),
-  ('Expedition',103, 'Hiram Bingham'),
-  ('Tourist',   104, 'Andean Explorer'),
-  ('First',     105, 'Luxury'),
-  ('Tourist',   106, 'Mountainside'),
-  ('Vistadome', 107, 'Jungle'),
-  ('Expedition',108, 'Sunrise'),
-  ('Tourist',   109, 'Sunset'),
-  ('First',     110, 'Panoramic'),
-  ('Expedition',111, 'Spirit'),
-  ('Vistadome', 112, 'Heritage'),
-  ('Tourist',   113, 'Valley'),
-  ('First',     114, 'Elite'),
-  ('Expedition',115, 'Discovery');
-
--- ------------------------------------------------------------------
--- 15 registros en Ruta
--- ------------------------------------------------------------------
+-- ====================================================
+-- 1) RUTA: solo los valores que tú proporcionaste (14 en total)
+-- ====================================================
 INSERT INTO Ruta (origen, destino, dias_disponibles) VALUES
-  ('Cusco','Machu Picchu',    'Lunes,Miércoles,Viernes'),
-  ('Cusco','Puno',            'Martes,Jueves,Sábado'),
-  ('Puno','Uros',             'Lunes,Martes,Miércoles'),
-  ('Cusco','Ollantaytambo',   'Diario'),
-  ('Ollantaytambo','Machu Picchu','Diario'),
-  ('Cusco','Sacred Valley',   'Miércoles,Sábado'),
-  ('Puno','Arequipa',         'Viernes,Domingos'),
-  ('Arequipa','Cusco',        'Diario'),
-  ('Cusco','Juliaca',         'Martes,Jueves'),
-  ('Juliaca','Puno',          'Lunes,Miércoles,Viernes'),
-  ('Cusco','Urubamba',        'Diario'),
-  ('Urubamba','Machu Picchu', 'Lunes,Jueves,Sábado'),
-  ('Cusco','Chinchero',       'Diario'),
-  ('Chinchero','Ollantaytambo','Martes,Viernes'),
-  ('Sacred Valley','Andahuaylillas','Miércoles,Viernes');
+  ('ciudad de cusco','Machu Picchu',    'Todos los dias'),
+  ('ciudad de cusco','Puno',            'Jueves'),
+  ('Cusco','Arequipa',       'Jueves'),
+  ('Machu Picchu','ciudad de cusco',    'Todos los dias'),
+  ('Machu Picchu','Ollantaytambo',      'Todos los dias'),
+  ('Machu Picchu','Hidroelectrica',     'Todos los dias'),
+  ('Machu Picchu','Urubamba',           'Todos los dias'),
+  ('Urubamba','Machu Picchu',           'Todos los dias'),
+  ('Ollantaytambo','Machu Picchu',      'Todos los dias'),
+  ('Hidroelectrica','Machu Picchu',     'Todos los dias'),
+  ('Puno','ciudad de cusco',            'Viernes'),
+  ('Puno','Arequipa',                   'Viernes'),
+  ('Arequipa','ciudad de cusco',        'Domingo'),
+  ('Arequipa','Puno',                   'Domingo');
 
--- ------------------------------------------------------------------
--- 15 registros en Trabajador
--- ------------------------------------------------------------------
-INSERT INTO Trabajador (nombre, apellido, correo, documento) VALUES
-  ('Juan',    'Perez',      'juan.perez@perurail.com',    'A12345678'),
-  ('María',   'García',     'maria.garcia@perurail.com',  'B87654321'),
-  ('Luis',    'Rodríguez',  'luis.rodriguez@perurail.com','C23456789'),
-  ('Ana',     'Martínez',   'ana.martinez@perurail.com',  'D34567890'),
-  ('Carlos',  'López',      'carlos.lopez@perurail.com',  'E45678901'),
-  ('Sofía',   'González',   'sofia.gonzalez@perurail.com','F56789012'),
-  ('Miguel',  'Díaz',       'miguel.diaz@perurail.com',   'G67890123'),
-  ('Lucía',   'Sánchez',    'lucia.sanchez@perurail.com', 'H78901234'),
-  ('Diego',   'Ramírez',    'diego.ramirez@perurail.com', 'I89012345'),
-  ('Valeria', 'Torres',     'valeria.torres@perurail.com','J90123456'),
-  ('Pedro',   'Flores',     'pedro.flores@perurail.com',  'K01234567'),
-  ('Elena',   'Castro',     'elena.castro@perurail.com',  'L12345678'),
-  ('Javier',  'Reyes',      'javier.reyes@perurail.com',  'M23456789'),
-  ('Camila',  'Vargas',     'camila.vargas@perurail.com', 'N34567890'),
-  ('Rafael',  'Mendoza',    'rafael.mendoza@perurail.com', 'O45678901');
+-- ====================================================
+-- 2) CLIENTE_FINAL (15 registros)
+-- ====================================================
+INSERT INTO Cliente_final (nacionalidad, documento, nombre, apellido, genero, fech_nac) VALUES
+  ('Peruana','DNI10000001','Ana','Gonzalez','F','1980-01-15'),
+  ('Argentina','DNI10000002','Luis','Fernandez','M','1975-03-22'),
+  ('Chile','DNI10000003','María','Rodriguez','F','1990-07-05'),
+  ('Peruana','DNI10000004','Carlos','Lopez','M','1982-12-11'),
+  ('Boliviana','DNI10000005','Sofia','Martinez','F','1995-09-30'),
+  ('Colombiana','DNI10000006','Juan','Perez','M','1988-06-17'),
+  ('Ecuatoriana','DNI10000007','Valentina','Diaz','F','1979-02-28'),
+  ('Peruana','DNI10000008','Miguel','Alvarez','M','1985-05-09'),
+  ('Venezolana','DNI10000009','Laura','Jimenez','F','1992-11-23'),
+  ('Uruguaya','DNI10000010','Diego','Torres','M','1978-08-14'),
+  ('Paraguaya','DNI10000011','Julia','Vasquez','F','1983-04-02'),
+  ('Peruana','DNI10000012','Raul','Ramos','M','1987-10-29'),
+  ('Boliviana','DNI10000013','Carla','Sanchez','F','1991-01-07'),
+  ('Ecuatoriana','DNI10000014','Pedro','Castro','M','1976-07-21'),
+  ('Colombiana','DNI10000015','Elena','Morales','F','1984-03-18');
 
--- ------------------------------------------------------------------
--- 5 registros en Chofer (subclase de Trabajador)
--- ------------------------------------------------------------------
-INSERT INTO Chofer (trabajador_id) VALUES
-  (1),(3),(5),(7),(9);
+-- ====================================================
+-- 3) CLIENTE_EMPRESA (tomando los primeros 5 clientes como empresas)
+-- ====================================================
+INSERT INTO Cliente_empresa (id_cliente_final, ruc, razon_social, direccion) VALUES
+  (1,'20500000001','Andes Travels SAC','Av. Lima 123'),
+  (2,'20500000002','Cusco Expeditions SAC','Jr. Cuzco 45'),
+  (3,'20500000003','Misti Tours SAC','Av. Arequipa 678'),
+  (4,'20500000004','Puno Travel SAC','Jr. Juliaca 12'),
+  (5,'20500000005','Urubamba Guides SAC','Av. Urubamba 90');
 
--- ------------------------------------------------------------------
--- 5 registros en Asesor_de_venta (subclase de Trabajador)
--- ------------------------------------------------------------------
-INSERT INTO Asesor_de_venta (trabajador_id) VALUES
-  (2),(4),(6),(8),(10);
+-- ====================================================
+-- 4) CLIENTE_USUARIO (los otros 10 clientes como usuarios)
+-- ====================================================
+INSERT INTO Cliente_usuario (id_cliente_final) VALUES
+  (6),(7),(8),(9),(10),(11),(12),(13),(14),(15);
 
--- ------------------------------------------------------------------
--- 15 registros en Cliente_final
--- ------------------------------------------------------------------
-INSERT INTO Cliente_final (nacionalidad, documento, nombre, apellido, num_telf, genero, fech_nac, correo) VALUES
-  /* Usuarios (10) */
-  ('Peruana','U10000001','Ana','Torres','987000001','Femenino','1992-01-10','ana.torres@example.com'),
-  ('Peruano','U10000002','Luis','Paredes','987000002','Masculino','1988-05-12','luis.paredes@example.com'),
-  ('Peruana','U10000003','María','Quispe','987000003','Femenino','1995-09-20','maria.quispe@example.com'),
-  ('Peruano','U10000004','Carlos','Huaman','987000004','Masculino','1990-03-05','carlos.huaman@example.com'),
-  ('Peruana','U10000005','Lucía','Salazar','987000005','Femenino','1987-11-22','lucia.salazar@example.com'),
-  ('Peruano','U10000006','Diego','Mamani','987000006','Masculino','1993-07-15','diego.mamani@example.com'),
-  ('Peruana','U10000007','Elena','Cruz','987000007','Femenino','1994-12-30','elena.cruz@example.com'),
-  ('Peruano','U10000008','Miguel','Flores','987000008','Masculino','1985-08-09','miguel.flores@example.com'),
-  ('Peruana','U10000009','Valeria','Chávez','987000009','Femenino','1991-04-18','valeria.chavez@example.com'),
-  ('Peruano','U10000010','Javier','Soria','987000010','Masculino','1989-02-27','javier.soria@example.com'),
-  /* Empresas (5) */
-  ('Peruana','E20000001','Inka','Tours','','Empresa','2000-01-01','contacto@inkatours.com'),
-  ('Peruana','E20000002','Andes','Travel','','Empresa','2001-02-02','info@andestravel.com'),
-  ('Peruana','E20000003','Sacred','Valley','', 'Empresa','2002-03-03','ventas@sacredvalley.com'),
-  ('Peruana','E20000004','Misti','Expeditions','','Empresa','2003-04-04','hola@mistiexp.com'),
-  ('Peruana','E20000005','Andahuaylillas','SA','','Empresa','2004-05-05','soporte@andahuaylillas.sa.com');
+-- ====================================================
+-- 5) CLIENTE_USUARIO_ADULTO (todos los usuarios naturales)
+-- ====================================================
+INSERT INTO Cliente_usuario_adulto (id_cliente_final, email, numero) VALUES
+  (6,'juan.perez@example.com','987100001'),
+  (7,'valentina.diaz@example.com','987100002'),
+  (8,'miguel.alvarez@example.com','987100003'),
+  (9,'laura.jimenez@example.com','987100004'),
+  (10,'diego.torres@example.com','987100005'),
+  (11,'julia.vasquez@example.com','987100006'),
+  (12,'raul.ramos@example.com','987100007'),
+  (13,'carla.sanchez@example.com','987100008'),
+  (14,'pedro.castro@example.com','987100009'),
+  (15,'elena.morales@example.com','987100010');
 
--- ------------------------------------------------------------------
--- 10 registros en Cliente_usuario
--- ------------------------------------------------------------------
-INSERT INTO Cliente_usuario (cliente_final_id) VALUES
-  (1),(2),(3),(4),(5),(6),(7),(8),(9),(10);
+-- ====================================================
+-- 6) CLIENTE_USUARIO_NINO (ninguno o algunos, por ejemplo 3)
+-- ====================================================
+INSERT INTO Cliente_usuario_nino (id_cliente_final) VALUES
+  (6),(7),(8);
 
--- ------------------------------------------------------------------
--- 5 registros en Cliente_empresa
--- ------------------------------------------------------------------
-INSERT INTO Cliente_empresa (cliente_final_id, ruc, razon_social, direccion) VALUES
-  (11,'20456789012','Inka Tours SAC','Av. El Sol 123, Cusco'),
-  (12,'20567890123','Andes Travel SAC','Jr. Comercio 456, Puno'),
-  (13,'20678901234','Sacred Valley SAC','Plaza Principal, Urubamba'),
-  (14,'20789012345','Misti Expeditions SAC','Calle Misti 789, Arequipa'),
-  (15,'20890123456','Andahuaylillas SA','Av. Religión 101, Andahuaylillas');
+-- ====================================================
+-- 7) TRABAJADOR (15 registros)
+-- ====================================================
+INSERT INTO Trabajador (nombre, apellido, correo, documento, numero) VALUES
+  ('Jose','Martinez','jose.martinez@perurail.com','DNI20000001','999000001'),
+  ('Maria','Torres','maria.torres@perurail.com','DNI20000002','999000002'),
+  ('Luis','Ramirez','luis.ramirez@perurail.com','DNI20000003','999000003'),
+  ('Ana','Flores','ana.flores@perurail.com','DNI20000004','999000004'),
+  ('Carlos','Rojas','carlos.rojas@perurail.com','DNI20000005','999000005'),
+  ('Sofia','Vega','sofia.vega@perurail.com','DNI20000006','999000006'),
+  ('Rafael','Cruz','rafael.cruz@perurail.com','DNI20000007','999000007'),
+  ('Paula','Nunez','paula.nunez@perurail.com','DNI20000008','999000008'),
+  ('Diego','Silva','diego.silva@perurail.com','DNI20000009','999000009'),
+  ('Laura','Ortiz','laura.ortiz@perurail.com','DNI20000010','999000010'),
+  ('Marco','Paredes','marco.paredes@perurail.com','DNI20000011','999000011'),
+  ('Elena','Mendoza','elena.mendoza@perurail.com','DNI20000012','999000012'),
+  ('Victor','Cespedes','victor.cespedes@perurail.com','DNI20000013','999000013'),
+  ('Natalia','Reyes','natalia.reyes@perurail.com','DNI20000014','999000014'),
+  ('Jorge','Leon','jorge.leon@perurail.com','DNI20000015','999000015');
 
--- ------------------------------------------------------------------
--- 15 registros en Vagon (uno por tren)
--- ------------------------------------------------------------------
+-- ====================================================
+-- 8) CHOFER (tomamos los primeros 5 trabajadores)
+-- ====================================================
+INSERT INTO Chofer (id_trabajador) VALUES
+  (1),(2),(3),(4),(5);
+
+-- ====================================================
+-- 9) ASESOR_DE_VENTA (trabajadores restantes)
+-- ====================================================
+INSERT INTO Asesor_de_venta (id_trabajador) VALUES
+  (6),(7),(8),(9),(10),(11),(12),(13),(14),(15);
+
+-- ====================================================
+-- 10) TREN (15 registros, asignados a choferes)
+-- ====================================================
+INSERT INTO Tren (id_trabajador, clase, numero, nombre) VALUES
+  (1,'Expreso',1,'Andes Explorer'),
+  (2,'Regional',2,'Costa del Sol'),
+  (3,'Turistico',3,'Valle Encantado'),
+  (4,'Expreso',4,'Ruta del Inca'),
+  (5,'Regional',5,'Sierra Andina'),
+  (1,'Turistico',6,'Tren del Lago'),
+  (2,'Expreso',7,'Camino Real'),
+  (3,'Regional',8,'Cordillera Blanca'),
+  (4,'Turistico',9,'Selva Andina'),
+  (5,'Expreso',10,'Puno Express'),
+  (1,'Regional',11,'Yucay Express'),
+  (2,'Turistico',12,'Andahuaylillas'),
+  (3,'Expreso',13,'Checacupe'),
+  (4,'Regional',14,'Ollantaytambo'),
+  (5,'Turistico',15,'Hidroelectrica');
+
+-- ====================================================
+-- 11) PAGO (15 registros)
+-- ====================================================
+INSERT INTO Pago (cant_reserva, metodo, fecha) VALUES
+  (1,'Tarjeta','2025-06-01 08:00:00'),
+  (2,'Efectivo','2025-06-01 09:30:00'),
+  (3,'Tarjeta','2025-06-02 10:15:00'),
+  (1,'Transferencia','2025-06-02 11:45:00'),
+  (2,'Efectivo','2025-06-03 07:20:00'),
+  (1,'Tarjeta','2025-06-03 08:50:00'),
+  (3,'Efectivo','2025-06-04 10:00:00'),
+  (2,'Transferencia','2025-06-04 11:30:00'),
+  (1,'Tarjeta','2025-06-05 09:00:00'),
+  (2,'Efectivo','2025-06-05 10:30:00'),
+  (3,'Tarjeta','2025-06-06 08:45:00'),
+  (1,'Transferencia','2025-06-06 09:15:00'),
+  (2,'Efectivo','2025-06-07 07:30:00'),
+  (1,'Tarjeta','2025-06-07 08:15:00'),
+  (2,'Transferencia','2025-06-08 09:45:00');
+
+-- ====================================================
+-- 12) HORARIO (15 registros)
+-- ====================================================
+INSERT INTO Horario (fech_salida, hr_salida, hr_llegada, duracion, estado) VALUES
+  ('2025-07-01','2025-07-01 06:00:00','2025-07-01 10:00:00',240,'Confirmado'),
+  ('2025-07-01','2025-07-01 08:00:00','2025-07-01 12:30:00',270,'Pendiente'),
+  ('2025-07-01','2025-07-01 14:00:00','2025-07-01 18:30:00',270,'Confirmado'),
+  ('2025-07-02','2025-07-02 06:30:00','2025-07-02 11:00:00',270,'Confirmado'),
+  ('2025-07-02','2025-07-02 09:00:00','2025-07-02 13:00:00',240,'Pendiente'),
+  ('2025-07-02','2025-07-02 15:00:00','2025-07-02 19:00:00',240,'Confirmado'),
+  ('2025-07-03','2025-07-03 07:00:00','2025-07-03 11:30:00',270,'Pendiente'),
+  ('2025-07-03','2025-07-03 12:00:00','2025-07-03 16:00:00',240,'Confirmado'),
+  ('2025-07-03','2025-07-03 18:00:00','2025-07-03 22:30:00',270,'Pendiente'),
+  ('2025-07-04','2025-07-04 06:00:00','2025-07-04 10:00:00',240,'Confirmado'),
+  ('2025-07-04','2025-07-04 09:30:00','2025-07-04 14:00:00',270,'Pendiente'),
+  ('2025-07-04','2025-07-04 15:00:00','2025-07-04 19:30:00',270,'Confirmado'),
+  ('2025-07-05','2025-07-05 08:00:00','2025-07-05 12:00:00',240,'Confirmado'),
+  ('2025-07-05','2025-07-05 13:00:00','2025-07-05 17:30:00',270,'Pendiente'),
+  ('2025-07-05','2025-07-05 18:00:00','2025-07-05 22:00:00',240,'Confirmado');
+
+-- ====================================================
+-- 13) RESERVA (15 registros)
+-- ====================================================
+INSERT INTO Reserva (id_pago, id_cliente_final, id_trabajador, estado, fecha) VALUES
+  (1,6,6,'Confirmada','2025-07-01 05:30:00'),
+  (2,7,7,'Pendiente','2025-07-01 07:00:00'),
+  (3,8,8,'Cancelada','2025-07-02 06:00:00'),
+  (4,9,9,'Confirmada','2025-07-02 08:15:00'),
+  (5,10,10,'Pendiente','2025-07-03 09:45:00'),
+  (6,11,11,'Confirmada','2025-07-03 11:00:00'),
+  (7,12,12,'Pendiente','2025-07-04 07:30:00'),
+  (8,13,13,'Confirmada','2025-07-04 10:00:00'),
+  (9,14,14,'Cancelada','2025-07-05 06:45:00'),
+  (10,15,15,'Confirmada','2025-07-05 08:30:00'),
+  (11,6,6,'Pendiente','2025-07-06 09:15:00'),
+  (12,7,7,'Confirmada','2025-07-06 11:00:00'),
+  (13,8,8,'Pendiente','2025-07-07 07:00:00'),
+  (14,9,9,'Confirmada','2025-07-07 09:30:00'),
+  (15,10,10,'Cancelada','2025-07-08 06:00:00');
+
+-- ====================================================
+-- 14) VIAJE (15 registros)
+-- ====================================================
+INSERT INTO Viaje (id_reserva, id_tren, id_ruta, id_horario) VALUES
+  (1,1,1,1),
+  (2,2,2,2),
+  (3,3,3,3),
+  (4,4,4,4),
+  (5,5,5,5),
+  (6,6,1,6),
+  (7,7,2,7),
+  (8,8,3,8),
+  (9,9,1,9),
+  (10,10,2,10),
+  (11,11,3,11),
+  (12,12,1,12),
+  (13,13,2,13),
+  (14,14,3,14),
+  (15,15,1,15);
+
+-- ====================================================
+-- 15) VAGON (15 registros)
+-- ====================================================
 INSERT INTO Vagon (id_tren, numero, descripcion, precio, clase) VALUES
-  (1,1,'Panorámico con ventanas amplias',120.00,'Turista'),
-  (2,1,'Con servicio de bar',130.00,'Turista'),
-  (3,1,'Asientos reclinables y wifi',200.00,'Primera'),
-  (4,1,'Vistas 360º al valle',150.00,'Turista'),
-  (5,1,'Butacas de cuero',250.00,'Primera'),
-  (6,1,'Espacios amplios para maletas',140.00,'Turista'),
-  (7,1,'Bar y snack incluido',160.00,'Turista'),
-  (8,1,'Butacas cama',300.00,'Primera'),
-  (9,1,'Asientos estándar',100.00,'Turista'),
-  (10,1,'Panorámico superior',220.00,'Primera'),
-  (11,1,'Espacio familiar',130.00,'Turista'),
-  (12,1,'Vistas históricas',140.00,'Turista'),
-  (13,1,'Con cáscara antirruido',145.00,'Turista'),
-  (14,1,'Butacas premium',260.00,'Primera'),
-  (15,1,'Vagón de lujo',320.00,'Primera');
+  (1,1,'Vagon primera clase','120.00','primera'),
+  (1,2,'Vagon estandar','80.00','estandar'),
+  (2,1,'Vagon panoramico','150.00','turistico'),
+  (2,2,'Vagon economico','60.00','economico'),
+  (3,1,'Vagon cama','200.00','cama'),
+  (3,2,'Vagon asiento','90.00','asiento'),
+  (4,1,'Vagon familiar','110.00','familiar'),
+  (4,2,'Vagon VIP','180.00','vip'),
+  (5,1,'Vagon estancia','70.00','estancia'),
+  (5,2,'Vagon lujo','220.00','lujo'),
+  (6,1,'Vagon panoramico plus','160.00','turistico'),
+  (6,2,'Vagon estandar plus','85.00','estandar'),
+  (7,1,'Vagon cama plus','210.00','cama'),
+  (7,2,'Vagon asiento plus','95.00','asiento'),
+  (8,1,'Vagon familiar plus','115.00','familiar');
 
--- ------------------------------------------------------------------
--- 15 registros en Estacion
--- ------------------------------------------------------------------
+-- ====================================================
+-- 16) ESTACION (15 registros)
+-- ====================================================
 INSERT INTO Estacion (nombre, localidad, id_ruta) VALUES
-  ('Ollantaytambo','Ollantaytambo',   1),
-  ('Poroy',        'Poroy',          1),
-  ('Puno Estación','Puno',           2),
-  ('Uros','Uros',                    3),
-  ('Chinchero','Chinchero',          5),
-  ('Maras','Maras',                  6),
-  ('Andahuaylillas','Andahuaylillas',15),
-  ('Cusco','Cusco',                  4),
-  ('Mollepata','Mollepata',          6),
-  ('Juliaca','Juliaca',              9),
-  ('Urubamba','Urubamba',            11),
-  ('Sacred Valley','Urubamba',       12),
-  ('Chinchero Alto','Chinchero',     13),
-  ('Ollanta','Ollantaytambo',        14),
-  ('Andahuaylillas Centro','Andahuaylillas',15);
-
--- ------------------------------------------------------------------
--- 15 registros en Reserva
--- ------------------------------------------------------------------
-INSERT INTO Reserva (id_pago, id_ruta, id_tren, id_horario, estado, fecha) VALUES
-  (1,  1,  1,  1, 'Activa',   '2025-06-01 08:20:00'),
-  (2,  2,  2,  2, 'Activa',   '2025-06-01 12:35:00'),
-  (3,  3,  3,  3, 'Cancelada','2025-06-02 09:50:00'),
-  (4,  4,  4,  4, 'Activa',   '2025-06-02 17:25:00'),
-  (5,  5,  5,  5, 'Activa',   '2025-06-03 10:05:00'),
-  (6,  6,  6,  6, 'Pendiente','2025-06-04 11:15:00'),
-  (7,  7,  7,  7, 'Activa',   '2025-06-05 14:55:00'),
-  (8,  8,  8,  8, 'Activa',   '2025-06-06 07:35:00'),
-  (9,  9,  9,  9, 'Cancelada','2025-06-06 16:45:00'),
-  (10, 10, 10, 10,'Activa',   '2025-06-07 09:05:00'),
-  (11, 11, 11, 11,'Activa',   '2025-06-08 13:30:00'),
-  (12, 12, 12, 12,'Pendiente','2025-06-09 15:57:00'),
-  (13, 13, 13, 13,'Activa',   '2025-06-10 08:10:00'),
-  (14, 14, 14, 14,'Activa',   '2025-06-11 14:35:00'),
-  (15, 15, 15, 15,'Activa',   '2025-06-12 10:50:00');
-
--- ------------------------------------------------------------------
--- 15 registros en Viaje
--- ------------------------------------------------------------------
-INSERT INTO Viaje (reserva_id, tren_id, ruta_id, horario_id) VALUES
-  (1,  1,  1,  1),
-  (2,  2,  2,  2),
-  (3,  3,  3,  3),
-  (4,  4,  4,  4),
-  (5,  5,  5,  5),
-  (6,  6,  6,  6),
-  (7,  7,  7,  7),
-  (8,  8,  8,  8),
-  (9,  9,  9,  9),
-  (10, 10, 10, 10),
-  (11, 11, 11, 11),
-  (12, 12, 12, 12),
-  (13, 13, 13, 13),
-  (14, 14, 14, 14),
-  (15, 15, 15, 15);
+  ('Est-Cusco','Cusco',1),
+  ('Est-Urubamba','Urubamba',1),
+  ('Est-Machu','Machu Picchu',1),
+  ('Est-Ollanta','Ollantaytambo',5),
+  ('Est-Hidro','Hidroelectrica',6),
+  ('Est-Puno','Puno',2),
+  ('Est-Arequipa','Arequipa',3),
+  ('Est-Cusco2','Cusco',11),
+  ('Est-Puno2','Puno',12),
+  ('Est-Arequipa2','Arequipa',13),
+  ('Est-Urubamba2','Urubamba',14),
+  ('Est-Machu2','Machu Picchu',4),
+  ('Est-Ollanta2','Ollantaytambo',8),
+  ('Est-Hidro2','Hidroelectrica',9),
+  ('Est-Puno3','Puno',10);

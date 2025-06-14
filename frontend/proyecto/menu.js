@@ -5,7 +5,35 @@ function toggleRetorno(mostrar) {
 
 }
 
+function actualizarDestino() {
+    const origen = document.getElementById("origen").value;
+    const destino = document.getElementById("destino");
 
+    // Limpiar opciones anteriores
+    destino.innerHTML = '<option value="">DESTINO</option>';
+
+    // Llamar a PHP para obtener los destinos válidos
+    obtenerDestinosDesdePHP(origen).then(destinos => {
+        if (Array.isArray(destinos)) {
+            destinos.forEach(dest => {
+                const option = document.createElement("option");
+                option.value = dest.toLowerCase();
+                option.textContent = dest.toUpperCase();
+                destino.appendChild(option);
+            });
+        }
+    });
+
+    // Evento al cambiar destino
+    destino.addEventListener("change", function () {
+        const destinoSeleccionado = destino.value;
+        actualizarCamposFormulario(origen, destinoSeleccionado);
+    });
+}
+
+
+
+/*
 // Destinos posibles por origen
 const destinosPorOrigen = {
     "ciudad de cusco": ["AREQUIPA", "MACHUPICCHU", "PUNO"],
@@ -38,8 +66,10 @@ function actualizarDestino() {
         const destinoSeleccionado = destino.value;
         actualizarCamposFormulario(origen, destinoSeleccionado);
     });
-}
+}*/
 
+
+// Actualizar campos del formulario según origen y destino
 function actualizarCamposFormulario(origenValor, destinoValor) {
     const campoTren = document.getElementById("campoTren");
     const retornoFecha = document.getElementById("retorno_div");
@@ -242,5 +272,24 @@ function actualizarCalendario(origen, destino) {
         }
     });
 
+}
 
-}   
+// funciones para llamar a PHP y obtener destinos y fechas
+
+// Llamar a destinos desde PHP
+function obtenerDestinosDesdePHP(origen) {
+    return fetch(`api_rutas.php?accion=destinos&origen=${encodeURIComponent(origen)}`)
+        .then(response => response.json());
+}
+
+// Llamar a fechaDisponible desde PHP
+function obtenerFechasDesdePHP(origen, destino) {
+    return fetch(`api_rutas.php?accion=fechaDisponible&origen=${encodeURIComponent(origen)}&destino=${encodeURIComponent(destino)}`)
+        .then(response => response.json());
+}
+
+// Llamar a idaVuelta desde PHP
+function verificarIdaVuelta(origen, destino) {
+    return fetch(`api_rutas.php?accion=idaVuelta&origen=${encodeURIComponent(origen)}&destino=${encodeURIComponent(destino)}`)
+        .then(response => response.json());
+} 

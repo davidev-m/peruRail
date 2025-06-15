@@ -65,6 +65,27 @@ class Ruta implements interfaz_ruta{
         $result = $sentencia->get_result();
         return $result->fetch_assoc();
     }
+
+    public function devolverID($origen, $destino): ?int{
+        if(empty($origen) || empty($destino)){
+            throw new InvalidArgumentException("Origen y destion no pueden estar vacios");
+        }
+        $query = "SELECT id_ruta FROM Ruta WHERE origen = ? AND destino = ?";
+        
+        if(!$sentencia = $this->conexion->prepare($query)){
+            throw new RuntimeException("Error en la preparacion ". $this->conexion->error);
+        }
+        $sentencia->bind_param('ss', $origen,$destino);
+        if(!$sentencia->execute()){
+            throw new RuntimeException("Error en la ejecucion". $sentencia->error);
+        }
+        $resul = $sentencia->get_result();
+        if($resul->num_rows === 0){
+            return null;
+        }
+        $fila = $resul->fetch_assoc();
+        return (int)$fila['id_ruta'];
+    }
 };
 
 ?>

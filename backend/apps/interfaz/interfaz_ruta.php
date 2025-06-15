@@ -31,6 +31,15 @@ interface interfaz_ruta {
      * @return array|null Arreglo asociativo con la clave 'diasDisponibles' o null si no se encuentra
      */
     public function disponibilidad($origen, $destino);
+
+
+    /**
+     * Summary of devolverID
+     * @param $origen Ciudad de origen
+     * @param $destino Ciudad de destino
+     * @return int Entero con la clave id de la ruta
+     */
+    public function devolverID($origen,$destino);
 };
 
 ?>

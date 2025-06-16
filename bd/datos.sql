@@ -6,7 +6,7 @@ USE perurail;
 INSERT INTO Ruta (origen, destino, dias_disponibles) VALUES
   ('ciudad de cusco','Machu Picchu',    'Todos los dias'),
   ('ciudad de cusco','Puno',            'Jueves'),
-  ('Cusco','Arequipa',       'Jueves'),
+  ('ciudad de cusco','Arequipa',       'Jueves'),
   ('Machu Picchu','ciudad de cusco',    'Todos los dias'),
   ('Machu Picchu','Ollantaytambo',      'Todos los dias'),
   ('Machu Picchu','Hidroelectrica',     'Todos los dias'),

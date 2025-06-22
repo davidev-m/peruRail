@@ -14,12 +14,13 @@
 
   <!-- Script de Flatpickr -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
 </head>
 
 <body>
   <div class="formulario1">
     <!-- Formulario principal -->
-    <form id=" " action="menu.php" target="_blank" method="POST">
+    <form id="formularioReserva" method="post">
 
       <!-- SELECCIÓN TIPO DE VIAJE -->
       <div class="selccion">
@@ -27,7 +28,7 @@
         <div id="ida_retorno">
           <label>
             <input type="radio" name="tipo_viaje" value="ida_vuelta" checked onclick="toggleRetorno(true)">
-            Ida y buelta
+            Ida y vuelta
           </label>
         </div>
 
@@ -82,7 +83,7 @@
 
       <!-- SELECCIÓN DE TREN -->
       <div class="tren" id="campoTren" style="display: none;">
-        <select name="tren" id="tren" required>
+        <select name="tren" id="tren">
           <option value="">ELIGE TREN</option>
           <option value=" tren 1">TREN 1</option>
           <option value=" tren 2">TREN 2</option>
@@ -112,8 +113,9 @@
 
       <!-- SELECCIÓN DE PASAJEROS -->
       <div class="cantidad-Pasajeros" id="pasajeros">
-        <label for="pasajeros" onclick="mostrarSelectorPasajeros()">
-          <input type="text" id="resumenPasajeros" readonly value="2 Adulto, 0 Niños">
+        <label for="pasajeros">
+          <input type="text" id="resumenPasajeros" readonly value="2 Adulto, 0 Niños"
+            onclick="mostrarSelectorPasajeros()">
         </label>
 
         <!-- Selector dinámico de cantidad -->

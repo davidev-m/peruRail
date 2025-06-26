@@ -286,7 +286,8 @@ document.addEventListener('DOMContentLoaded', function () {
             tipo: document.querySelector('input[name="tipo_viaje"]:checked').value,
             fechaIda: document.getElementById('fecha_ida').value,
             fechaRet: document.getElementById('fecha_retorno').value,
-            adultos, ninos
+            adultos: parseInt(document.getElementById('adultosInput').value), //modificado
+            ninos: parseInt(document.getElementById('ninosInput').value) // modificado
         };
         try {
             const res = await fetch('tren.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) });

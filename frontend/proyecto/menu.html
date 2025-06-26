@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Peru Rail</title>
+
+  <!-- Vinculo al archivo CSS personalizado -->
+  <link rel="stylesheet" href="menu.css">
+
+  <!-- Estilos de Flatpickr (calendario) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+  <!-- Script de Flatpickr -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+</head>
+
+<body>
+  <div class="formulario1">
+    <!-- Formulario principal -->
+    <form id="formularioReserva" method="post">
+
+      <!-- SELECCIÓN TIPO DE VIAJE -->
+      <div class="selccion">
+        <!-- Opción de ida y vuelta -->
+        <div id="ida_retorno">
+          <label>
+            <input type="radio" name="tipo_viaje" value="ida_vuelta" checked onclick="toggleRetorno(true)">
+            Ida y vuelta
+          </label>
+        </div>
+
+        <br><br>
+
+        <!-- Opción solo ida -->
+        <label>
+          <input type="radio" name="tipo_viaje" value="solo_ida" onclick="toggleRetorno(false)">
+          Solo ida
+        </label>
+      </div>
+
+      <br>
+
+      <!-- SECCIÓN DE RUTA: ORIGEN Y DESTINO -->
+      <div class="ruta">
+        <div>
+          <!-- Selección de ORIGEN -->
+          <select name="origen" id="origen" onchange="actualizarDestino()">
+            <option value="">ORIGEN</option>
+
+            <optgroup label="CUSCO">
+              <option value="ciudad de cusco">CIUDAD DE CUSCO</option>
+              <option value="urubamba">URUBAMBA</option>
+              <option value="ollantaytambo">OLLANTAYTAMBO</option>
+              <option value="machu picchu">MACHU PICCHU</option>
+              <option value="hidroelectrica">HIDROELECTRICA</option>
+            </optgroup>
+
+            <optgroup label="PUNO">
+              <option value="puno">PUNO</option>
+            </optgroup>
+
+            <optgroup label="AREQUIPA">
+              <option value="arequipa">AREQUIPA</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <br><br>
+
+        <div>
+          <!-- Selección de DESTINO (dinámico) -->
+          <select name="destino" id="destino">
+            <option value="">DESTINO</option>
+          </select>
+        </div>
+
+      </div>
+
+      <br>
+
+      <!-- SELECCIÓN DE TREN -->
+      <div class="tren" id="campoTren" style="display: none;">
+        <select name="tren" id="tren">
+          <option value="">ELIGE TREN</option>
+          <option value=" tren 1">TREN 1</option>
+          <option value=" tren 2">TREN 2</option>
+        </select>
+      </div>
+
+      <br>
+
+      <!-- SELECCIÓN DE FECHAS -->
+      <div class="fecha">
+        <div>
+          <!-- Fecha de ida -->
+          <label>Fecha de ida:</label>
+          <input type="text" name="fecha_ida" id="fecha_ida" placeholder="Selecciona fecha">
+        </div>
+
+        <br><br>
+
+        <!-- Fecha de retorno (visible según opción) -->
+        <div id="retorno_div">
+          <label>Fecha de retorno:</label>
+          <input type="text" name="fecha_retorno" id="fecha_retorno" placeholder="Selecciona fecha">
+        </div>
+      </div>
+
+      <br>
+
+      <!-- SELECCIÓN DE PASAJEROS -->
+      <div class="cantidad-Pasajeros" id="pasajeros">
+        <label for="pasajeros">
+          <input type="text" id="resumenPasajeros" readonly value="2 Adulto, 0 Niños"
+            onclick="mostrarSelectorPasajeros()">
+        </label>
+
+        <!-- Selector dinámico de cantidad -->
+        <div id="selectorPasajeros" class="selector-pasajeros" style="display: none;">
+          <strong>PASAJEROS</strong>
+          <br><br>
+
+          <!-- Adultos -->
+          <div class="cantidad">
+            <strong>ADULTOS</strong><br>
+            <span id="adultosCount">1</span>
+            <button type="button" onclick="cambiarPasajero('adultos', -1)">-</button>
+            <button type="button" onclick="cambiarPasajero('adultos', 1)">+</button>
+          </div>
+
+          <!-- Niños -->
+          <div>
+            <strong>NIÑOS</strong><br>
+            <span id="ninosCount">0</span>
+            <button type="button" onclick="cambiarPasajero('ninos', -1)">-</button>
+            <button type="button" onclick="cambiarPasajero('ninos', 1)">+</button>
+          </div>
+
+          <br>
+          <button type="button" onclick="cerrarSelector()">Cerrar</button>
+        </div>
+
+        <!-- Campos ocultos que envían la cantidad al servidor -->
+        <input type="hidden" name="adultos" id="adultosInput" value="1">
+        <input type="hidden" name="ninos" id="ninosInput" value="0">
+      </div>
+
+      <br>
+
+      <!-- BOTÓN DE ENVÍO -->
+      <button type="submit">BUSCAR</button>
+    </form>
+  </div>
+
+  <!-- Importar el script JS al final para que se cargue correctamente -->
+  <script src="menu.js"></script>
+</body>
+
+</html>

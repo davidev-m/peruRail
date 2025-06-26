@@ -1,0 +1,99 @@
+/* Contenedor principal */
+.formulario1 form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 18px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    padding: 24px 32px;
+    margin-bottom: 18px;
+}
+
+/* Radio buttons personalizados */
+.selccion {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-right: 18px;
+}
+
+.selccion label {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    color: #ff6600;
+    font-size: 18px;
+    margin-bottom: 0;
+}
+
+.selccion input[type="radio"] {
+    accent-color: #ff6600;
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
+}
+
+/* Inputs y selects redondeados */
+input[type="text"],
+select {
+    border-radius: 24px;
+    border: 1px solid #e0e0e0;
+    padding: 14px 22px;
+    font-size: 17px;
+    background: #fafbfc;
+    color: #444;
+    outline: none;
+    min-width: 180px;
+    margin-right: 0;
+}
+
+/* Botón BUSCAR */
+button[type="submit"] {
+    background: #ffc107;
+    color: #222;
+    border: none;
+    border-radius: 28px;
+    padding: 18px 48px;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-left: 12px;
+}
+
+button[type="submit"]:hover {
+    background: #ffb300;
+}
+
+/* Responsive para móviles */
+@media (max-width: 900px) {
+    .formulario1 form {
+        flex-direction: column;
+        gap: 14px;
+        padding: 18px 8px;
+    }
+
+    input[type="text"],
+    select,
+    button[type="submit"] {
+        min-width: unset;
+        width: 100%;
+    }
+}
+
+/* Métodos de pago y compra segura */
+.form-footer,
+.payment-methods {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 18px;
+    justify-content: flex-start;
+    font-size: 15px;
+}
+
+.payment-methods img {
+    height: 28px;
+}

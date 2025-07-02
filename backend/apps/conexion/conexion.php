@@ -1,19 +1,21 @@
 <?php
-    function crearConexion(){
-        //Definiendo los valores de la base de datos
-        $host = "localhost";
-        $user = "root";
-        $contraseña = "";
-        $base_datos = "peruRail"; 
-        $puerto = "3306";
-    
-        //Conectando
-        $conexion = new mysqli($host, $user, $contraseña, $base_datos, $puerto);
-        
-        //Verificacion
-        if($conexion ->connect_error){
-            die("Error". $conexion->connect_error);
+    class database{
+        private static ?PDO $conexion = null;
+        public static function getConexion():PDO{
+            if(self::$conexion === null){
+                $host = "localhost";
+                $base_datos = "ZZZ"; 
+                $user = "root";
+                $contraseña = "";
+                $dns = "mysql:host=$host; dbname=$base_datos; charset=utf8mb4";
+                self::$conexion = new PDO(
+                    $dns,
+                    $user,
+                    $contraseña,
+                    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+                );
+            }
+            return self::$conexion;
         }
-        return $conexion;
     }
 ?>

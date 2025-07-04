@@ -57,11 +57,17 @@
 
             <hr>
 
-            <!-- BARRA INFERIOR DINÁMICA -->
-            <div id="barraInferior" class="barra-inferior">
-                <!-- Contenido dinámico generado desde JS -->
+            <!-- Barra inferior dinámica -->
+            <div class="barra-inferior" id="barraInferior" style="display: none;">
+                <!-- Columna 1: Tren de ida o botón para seleccionarlo -->
+                <div class="col-bar" id="colIda"></div>
 
+                <!-- Columna 2: Tren de retorno o botón de selección -->
+                <div class="col-bar" id="colRetorno"></div>
 
+                <!-- Columna 3: Total + botón continuar -->
+                <div class="col-bar continuar-btn" id="colTotal"></div>
+            </div>
         </form>
     </div>
     <script src="menu2.js" defer></script>

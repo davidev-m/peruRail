@@ -122,53 +122,77 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!Array.isArray(trenes) || trenes.length === 0) {
             return listaTrenes.textContent = "No hay trenes disponibles.";
         }
-        trenes.forEach((t, idx) => {
-            const { hora_salida, hora_llegada, duracion, estaciones, tren } = t;
-            const card = document.createElement("div");
-            card.className = "tren-card";
-            card.innerHTML = `
-          <div class="c-col horario">
-            <div class="salida">${hora_salida}</div>
-            <div><strong>Duración:</strong> ${duracion}</div>
-            <div><strong>Estaciones:</strong> ${estaciones.join(" → ")}</div>
-            <div class="llegada">${hora_llegada}</div>
-          </div>
-          <div class="c-col detalles">
-            <div class="nombre">${tren.nombre}</div>
-            <div class="precio">USD ${tren.precio.toFixed(2)}</div>
-          </div>
-        `;
-            // detalle
-            const detalle = document.createElement("div");
-            detalle.className = "tren-detalle";
-            detalle.id = `detalle-${idx}`;
-            detalle.style.display = "none";
-            detalle.innerHTML = `
-          <div><strong>Ruta:</strong> ${estaciones[0]} → ${estaciones[1]}</div>
-          <div><strong>Servicio:</strong> ${tren.nombre}</div>
-          <div><strong>Precio:</strong> USD ${tren.precio.toFixed(2)}</div>
-          <div><strong>Descripción:</strong> Asientos amplios, música y snacks.</div>
-        `;
-            card.addEventListener("click", () => {
-                // alternar detalle
-                detalle.style.display = detalle.style.display === "block" ? "none" : "block";
-                // asignar selecciones y actualizar barra inferior
-                if (fase === "solo_ida") {
-                    trenIda = t;
-                    actualizarBarraInferiorSoloIda();
-                } else if (fase === "ida") {
-                    trenIda = t;
-                    trenRetorno = null;
-                    //fase = "retorno";
-                    actualizarBarraInferiorIdaVuelta();
-                } else if (fase === "retorno") {
-                    trenRetorno = t;
-                    actualizarBarraInferiorIdaVuelta();
-                }
 
+        // Agrupar trenes por hora de salida
+        const grupos = {};
+        trenes.forEach((t, i) => {
+            if (!grupos[t.hora_salida]) grupos[t.hora_salida] = [];
+            grupos[t.hora_salida].push({ ...t, _idx: i });
+        });
+
+        // Para cada hora de salida: crear una fila con 3 columnas
+        Object.entries(grupos).forEach(([hora, trenesMismaHora]) => {
+            const fila = document.createElement("div");
+            fila.className = "tren-card";
+
+            // Columna 1: horario general
+            const info = trenesMismaHora[0]; // tomar cualquier tren del grupo
+            const col1 = document.createElement("div");
+            col1.className = "c-col horario";
+            col1.innerHTML = `
+          <div class="salida">${info.hora_salida}</div>
+          <div><strong>Duración:</strong> ${info.duracion}</div>
+          <div><strong>Estaciones:</strong> ${info.estaciones.join(" → ")}</div>
+          <div class="llegada">${info.hora_llegada}</div>
+        `;
+            fila.appendChild(col1);
+
+
+            // Columna 2 y 3: máximo 2 trenes diferentes
+            trenesMismaHora.slice(0, 2).forEach((trenData, idx) => {
+                const col = document.createElement("div");
+                col.className = "c-col detalles";
+                col.innerHTML = `
+            <div class="nombre">${trenData.tren.nombre}</div>
+            <div class="precio">USD ${trenData.tren.precio.toFixed(2)}</div>
+          `;
+
+                // detalle individual
+                const detalle = document.createElement("div");
+                detalle.className = "tren-detalle";
+                detalle.id = `detalle-${hora}-${idx}`;
+                detalle.style.display = "none";
+                detalle.innerHTML = `<div>
+            <div><strong>Ruta:</strong> ${trenData.estaciones[0]} → ${trenData.estaciones[1]}</div>
+            <div><strong>Servicio:</strong> ${trenData.tren.nombre}</div>
+            <div><strong>Precio:</strong> USD ${trenData.tren.precio.toFixed(2)}</div>
+            <div><strong>Descripción:</strong> Asientos amplios, música, snacks.</div>
+            </div>
+          `;
+
+                // evento click individual por tren
+                col.addEventListener("click", () => {
+                    const detalle = document.getElementById(`detalle-${hora}-${idx}`); /// modificado , agregado.
+                    detalle.style.display = detalle.style.display === "block" ? "none" : "block";
+                    if (fase === "solo_ida") {
+                        trenIda = trenData;
+                        actualizarBarraInferiorSoloIda();
+                    } else if (fase === "ida") {
+                        trenIda = trenData;
+                        trenRetorno = null;
+                        actualizarBarraInferiorIdaVuelta();
+                    } else if (fase === "retorno") {
+                        trenRetorno = trenData;
+                        actualizarBarraInferiorIdaVuelta();
+                    }
+                });
+
+                fila.appendChild(col);
+                listaTrenes.appendChild(fila); // solo 1 vez por fila
+                listaTrenes.appendChild(detalle);
             });
-            listaTrenes.appendChild(card);
-            listaTrenes.appendChild(detalle);
+
+            //listaTrenes.appendChild(fila); // solo 1 vez por fila
         });
     }
 

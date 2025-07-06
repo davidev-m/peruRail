@@ -179,6 +179,16 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+
+    /* 👇 ESTILO PARA EL MARCO */
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fdfdfd;
+    margin: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
 }
 
 .tren-card .detalles .nombre {
@@ -191,6 +201,12 @@ body {
     font-weight: bold;
     color: #005eb8;
 }
+
+.tren-card .detalles:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 
 /* ========================
      DETALLE EXPANDIBLE
@@ -205,7 +221,20 @@ body {
     color: #555;
     max-width: 900px;
     margin: -1px auto 1rem auto;
+
+
 }
+
+/*
+.tren-opcion {
+    flex: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+    border-left: 1px solid #eee;
+}*/
 
 /* ========================
      ESTILOS RESPONSIVOS
@@ -232,92 +261,57 @@ body {
 }
 
 /* ==== BARRA INFERIOR FIJA ==== */
+
 .barra-inferior {
     position: fixed;
     bottom: 0;
-    left: 0;
-    width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 80px);
+    /* Ajusta según el padding del contenedor principal */
+
+    /* Igual al ancho del formulario .formulario2 si aplica */
     background: white;
     border-top: 2px solid #ccc;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 20px;
-    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
-    z-index: 100;
-    font-family: sans-serif;
+
+
+    z-index: 999;
+    box-sizing: border-box;
+
+    max-width: 900px;
+    margin: 2rem auto;
+    background-color: #fff;
+    padding: 1rem 2rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Sección izquierda: tren de ida */
-.barra-inferior .info-ida {
-    background-color: #001f4d;
-    color: white;
-    padding: 10px 15px;
-    border-radius: 6px;
-    min-width: 180px;
-}
-
-.barra-inferior .info-ida strong {
-    display: block;
-    font-size: 13px;
-    margin-bottom: 4px;
-}
-
-.barra-inferior .info-ida span {
+.col-bar {
+    flex: 1;
+    padding: 8px 12px;
     font-size: 14px;
+    font-weight: 500;
+    color: #111;
 }
 
-/* Botón para seleccionar retorno */
-.barra-inferior .btn-retorno {
-    background-color: #f3c200;
-    color: #000;
-    padding: 10px 15px;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    min-width: 170px;
-    text-align: center;
-    transition: background 0.3s;
-    border: none;
-}
-
-.barra-inferior .btn-retorno:hover {
-    background-color: #e6b800;
-}
-
-/* Precio total y botón continuar */
-.barra-inferior .total {
+.continuar-btn {
     text-align: right;
-    margin-left: auto;
 }
 
-.barra-inferior .total .precio {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.barra-inferior .total .precio-soles {
-    font-size: 14px;
-    color: gray;
-}
-
-.barra-inferior .btn-continuar {
-    margin-left: 20px;
-    background-color: #f3c200;
-    padding: 10px 20px;
-    border-radius: 5px;
+.continuar-btn button {
+    background-color: #f1c40f;
     border: none;
+    color: black;
     font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 4px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: 0.2s;
 }
 
-.barra-inferior .btn-continuar:hover {
-    background-color: #e6b800;
-}
-
-/* Para que no tape otros elementos al hacer scroll */
-body {
-    padding-bottom: 80px;
-    /* Altura estimada de la barra */
+.continuar-btn button:hover {
+    background-color: #d4ac0d;
 }

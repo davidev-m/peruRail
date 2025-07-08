@@ -1,91 +1,121 @@
 <?php
 
-require __DIR__ . '/../conexion/conexion.php';
-require __DIR__ . '/../interfaz/interfaz_ruta.php';
-class Ruta implements interfaz_ruta{
-    private $conexion;
-    /**
-     * Consturcto de la clase Ruta
-     * Crea la conexion a la base de datos
-     */
+use LDAP\Result;
+
+require_once __DIR__ . '/../conexion/conexion.php';
+class Ruta{
+    private PDO $conexion ;
     public function __construct(){
-        $this->conexion = crearConexion();
+        $this->conexion = database::getConexion();
     }
 
-
-    /**
-     * Verificamos si la existencia de la ruta
-     * @param string $origen Ciudad de origen.
-     * @param string $destino Ciudad de destino.
-     * @return bool True si la ruta existe, False si no.
-     */
-    public function existe($origen, $destino){
-        $query = "SELECT * FROM Ruta WHERE origen = ? AND destino = ?";
-        $sentencia = $this->conexion->prepare($query);
-        $sentencia->bind_param("ss", $origen, $destino);
-        $sentencia->execute();
-        $resultado = $sentencia->get_result();
-        //Comprobamos si hay datos en la tabla
-        if($resultado->num_rows > 0){
-            return true;
-        }else{
-            return false;
-        }
+public function existe($origen, $destino) {
+    if (empty($origen) || empty($destino)) {
+        throw new InvalidArgumentException("Origen y destino son requeridos.");
     }
 
-
-    /**
-     * Busca todos los destinos posibles desde un origen dado.
-     *
-     * @param string $origen Ciudad de origen.
-     * @return array Arreglo de destinos (cada uno como un array asociativo).
-     */
-    public function buscarDestino($origen){
-        $query = "SELECT destino FROM Ruta WHERE origen = ?";
-        $sentencia = $this->conexion->prepare($query);
-        $sentencia->bind_param('s', $origen);
-        $sentencia->execute();
-        $result = $sentencia->get_result();
-        return $result->fetch_all(MYSQLI_ASSOC); 
+    $query = "SELECT id_ruta FROM Ruta WHERE origen = :origen AND destino = :destino";
+    $sentencia = $this->conexion->prepare($query);
+    if (!$sentencia) {
+        throw new RuntimeException("Error al preparar la consulta: " . implode(", ", $this->conexion->errorInfo()));
     }
 
+    $sentencia->bindParam(':origen', $origen);
+    $sentencia->bindParam(':destino', $destino);
 
-    /**
-     * Obtiene los días disponibles para una ruta específica.
-     *
-     * @param string $origen Ciudad de origen.
-     * @param string $destino Ciudad de destino.
-     * @return array|null Días disponibles como array asociativo o null si no se encuentra.
-     */
-    public function disponibilidad($origen, $destino){
-        $query = "SELECT dias_disponibles FROM Ruta WHERE origen=? AND destino =?";
-        $sentencia = $this->conexion->prepare($query);
-        $sentencia->bind_param('ss', $origen, $destino);
-        $sentencia->execute();
-        $result = $sentencia->get_result();
-        return $result->fetch_assoc();
+    if (!$sentencia->execute()) {
+        throw new RuntimeException("Error al ejecutar la consulta: " . implode(", ", $sentencia->errorInfo()));
     }
 
-    public function devolverID($origen, $destino): ?int{
-        if(empty($origen) || empty($destino)){
-            throw new InvalidArgumentException("Origen y destion no pueden estar vacios");
-        }
-        $query = "SELECT id_ruta FROM Ruta WHERE origen = ? AND destino = ?";
-        
+    $resultado = $sentencia->fetch(PDO::FETCH_ASSOC);
+    return !empty($resultado);
+}
+
+public function buscarDestino($origen) {
+    if (empty($origen)) {
+        throw new InvalidArgumentException("Origen es requerido.");
+    }
+
+    $query = "SELECT destino FROM Ruta WHERE origen = :origen";
+    $sentencia = $this->conexion->prepare($query);
+    if (!$sentencia) {
+        throw new RuntimeException("Error al preparar la consulta: " . implode(", ", $this->conexion->errorInfo()));
+    }
+
+    $sentencia->bindParam(':origen', $origen);
+
+    if (!$sentencia->execute()) {
+        throw new RuntimeException("Error al ejecutar la consulta: " . implode(", ", $sentencia->errorInfo()));
+    }
+
+    return $sentencia->fetchAll(PDO::FETCH_ASSOC);
+}
+
+public function buscarPorID($id) {
+    if (empty($id)) {
+        throw new InvalidArgumentException("ID requerido.");
+    }
+
+    $query = "SELECT origen, destino FROM Ruta WHERE id_ruta = :id";
+    $sentencia = $this->conexion->prepare($query);
+    if (!$sentencia) {
+        throw new RuntimeException("Error al preparar la consulta: " . implode(", ", $this->conexion->errorInfo()));
+    }
+
+    $sentencia->bindParam(':id', $id, PDO::PARAM_INT);
+
+    if (!$sentencia->execute()) {
+        throw new RuntimeException("Error al ejecutar la consulta: " . implode(", ", $sentencia->errorInfo()));
+    }
+
+    $result = $sentencia->fetch(PDO::FETCH_ASSOC);
+    if (!$result) {
+        throw new RuntimeException("No se encontró ruta con el ID proporcionado.");
+    }
+
+    return $result;
+}
+
+public function disponibilidad($origen, $destino) {
+    if (empty($origen) || empty($destino)) {
+        throw new InvalidArgumentException("Origen y destino son requeridos.");
+    }
+
+    $query = "SELECT dias_disponibles FROM Ruta WHERE origen = :origen AND destino = :destino";
+    $sentencia = $this->conexion->prepare($query);
+    if (!$sentencia) {
+        throw new RuntimeException("Error al preparar la consulta: " . implode(", ", $this->conexion->errorInfo()));
+    }
+
+    $sentencia->bindParam(':origen', $origen);
+    $sentencia->bindParam(':destino', $destino);
+
+    if (!$sentencia->execute()) {
+        throw new RuntimeException("Error al ejecutar la consulta: " . implode(", ", $sentencia->errorInfo()));
+    }
+
+    $result = $sentencia->fetch(PDO::FETCH_ASSOC);
+    if (!$result) {
+        throw new RuntimeException("No se encontró disponibilidad para la ruta indicada.");
+    }
+
+    return $result;
+}
+
+    public function devuelveID($origen, $destino){
+        $query = "SELECT id_ruta FROM Ruta WHERE origen = :origen AND destino = :destino";
         if(!$sentencia = $this->conexion->prepare($query)){
-            throw new RuntimeException("Error en la preparacion ". $this->conexion->error);
+            throw new RuntimeException('Sentencia erroena',$this->conexion->errorCode());
         }
-        $sentencia->bind_param('ss', $origen,$destino);
+        $sentencia->bindParam(':origen', $origen);
+        $sentencia->bindParam(':destino', $destino);
         if(!$sentencia->execute()){
-            throw new RuntimeException("Error en la ejecucion". $sentencia->error);
+            throw new RuntimeException($sentencia->errorInfo(), $sentencia->errorCode());
         }
-        $resul = $sentencia->get_result();
-        if($resul->num_rows === 0){
-            return null;
-        }
-        $fila = $resul->fetch_assoc();
-        return (int)$fila['id_ruta'];
+        $resultado = $sentencia->fetch(PDO::FETCH_ASSOC);
+        return $resultado['id_ruta'];
     }
+
 };
 
 ?>

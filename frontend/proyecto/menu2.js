@@ -12,7 +12,9 @@ document.addEventListener("DOMContentLoaded", function () {
         return window.location.href = "menu.html";
     }
 
-    const { origen, destino, tipo, fechaIda, fechaRet, adultos, ninos } = datosForm1;
+    console.log("📦 Datos recibidos desde Formulario 1:", datosForm1);
+
+    const { origen, destino, tipo, fechaIda, fechaRet, adultos, ninos, infantes } = datosForm1;
 
     // ========================
     // REFERENCIAS A DOM
@@ -51,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let fase = (tipo === "ida_vuelta") ? "ida" : "solo_ida";
     let trenIda = null;
     let trenRetorno = null;
-
+    console.log("🧭 Datos del formulario 1:", { origen, destino, tipo, fechaIda, fechaRet, adultos, ninos, infantes });
     // ========================
     // RENDERIZAR BARRA DE FECHAS [-2…+4]
     // ========================
@@ -214,6 +216,7 @@ document.addEventListener("DOMContentLoaded", function () {
         S/ ${totalSoles}<br>
         <button type="button">CONTINUAR &gt;</button>
       `;
+
     }
 
     // ========================
@@ -272,6 +275,44 @@ document.addEventListener("DOMContentLoaded", function () {
     // ========================
     cargarTrenes(fechaIda, false);
 
+    // ========================
+    // BOTÓN CONTINUAR → Guardar y redirigir
+    // ========================
+    barraInferior.addEventListener("click", (e) => {
+        const btn = e.target.closest("button");
+        if (!btn || !btn.textContent.includes("CONTINUAR")) return;
 
+        // Validar que esté todo listo
+        if (!trenIda || (tipo === "ida_vuelta" && !trenRetorno)) {
+            alert("Por favor selecciona todos los trenes.");
+            return;
+        }
+
+        // Construir datos finales
+        const datosFinales = {
+            origen,
+            destino,
+            tipo,
+            fechaIda,
+            fechaRet,
+            adultos,
+            ninos,
+            trenIda,
+            trenRetorno
+        };
+
+        // Guardar en sessionStorage
+        sessionStorage.setItem("formularioFinal", JSON.stringify(datosFinales));
+
+        // OPCIONAL: enviar al backend
+        fetch("guardar_reserva.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(datosFinales)
+        });
+
+        // Redirigir al paso 3
+        window.location.href = "menu3.html";
+    });
 
 });

@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Contadores de pasajeros
     let adultos = 1;
     let ninos = 0;
+    let infantes = 0; // Agregado para manejar infantes
 
     // ========================
     // FUNCIONES PRINCIPALES
@@ -202,15 +203,49 @@ document.addEventListener('DOMContentLoaded', function () {
      * @param {number} cambio - +1 o -1.
      */
     function cambiarPasajero(tipo, cambio) {
-        if (tipo === 'adultos' && adultos + cambio >= 1 && adultos + cambio + ninos <= 11) adultos += cambio;
-        if (tipo === 'ninos' && ninos + cambio >= 0 && adultos + ninos + cambio <= 11) ninos += cambio;
+        const total = adultos + ninos + infantes + cambio;
+
+        if (tipo === 'adultos' && adultos + cambio >= 1 && total <= 11) {
+            adultos += cambio;
+
+            // Si después de reducir adultos hay más infantes que adultos, ajustamos
+            if (infantes > adultos) {
+                infantes = adultos;
+            }
+        }
+
+        if (tipo === 'ninos' && ninos + cambio >= 0 && total <= 11) {
+            ninos += cambio;
+        }
+
+        if (tipo === 'infantes') {
+            const nuevosInfantes = infantes + cambio;
+            if (
+                nuevosInfantes >= 0 &&
+                nuevosInfantes <= adultos && // <-- aquí se impone la restricción
+                total <= 11
+            ) {
+                infantes = nuevosInfantes;
+            } else if (nuevosInfantes > adultos) {
+                alert("No puede haber más infantes que adultos.");
+            }
+        }
 
         document.getElementById("adultosCount").innerText = adultos;
         document.getElementById("ninosCount").innerText = ninos;
-        document.getElementById("resumenPasajeros").value = `${adultos} Adulto${adultos > 1 ? 's' : ''}, ${ninos} Niño${ninos !== 1 ? 's' : ''}`;
+        document.getElementById("infantesCount").innerText = infantes;
+
+        document.getElementById("resumenPasajeros").value =
+            `${adultos} Adulto${adultos > 1 ? 's' : ''}, ` +
+            `${ninos} Niño${ninos !== 1 ? 's' : ''}, ` +
+            `${infantes} Infante${infantes !== 1 ? 's' : ''}`;
+
         document.getElementById("adultosInput").value = adultos;
         document.getElementById("ninosInput").value = ninos;
+        document.getElementById("infantesInput").value = infantes;
     }
+
+
 
     // Cerrar selector al hacer clic fuera
     document.addEventListener("click", event => {
@@ -287,9 +322,11 @@ document.addEventListener('DOMContentLoaded', function () {
             fechaIda: document.getElementById('fecha_ida').value,
             fechaRet: document.getElementById('fecha_retorno').value,
             adultos: parseInt(document.getElementById('adultosInput').value), //modificado
-            ninos: parseInt(document.getElementById('ninosInput').value) // modificado
+            ninos: parseInt(document.getElementById('ninosInput').value), // modificado
+            infantes: parseInt(document.getElementById('infantesInput').value)
         };
         try {
+
             const res = await fetch('tren.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) });
             const out = await res.json();
             sessionStorage.setItem('form1', JSON.stringify(datos));

@@ -47,7 +47,8 @@
       <div class="ruta">
         <div>
           <!-- Selección de ORIGEN -->
-          <select name="origen" id="origen" onchange="actualizarDestino()">
+          <select name="origen" id="origen">
+            <!--onchange="actualizarDestino()" -lo quite para ver si afecta en algo y no  -->
             <option value="">ORIGEN</option>
 
             <optgroup label="CUSCO">
@@ -114,7 +115,7 @@
       <!-- SELECCIÓN DE PASAJEROS -->
       <div class="cantidad-Pasajeros" id="pasajeros">
         <label for="pasajeros">
-          <input type="text" id="resumenPasajeros" readonly value="2 Adulto, 0 Niños"
+          <input type="text" id="resumenPasajeros" readonly value="1 Adulto, 0 Niños, 0 Infantes"
             onclick="mostrarSelectorPasajeros()">
         </label>
 
@@ -139,6 +140,15 @@
             <button type="button" onclick="cambiarPasajero('ninos', 1)">+</button>
           </div>
 
+          <!-- Infantes -->
+          <!-- Infantes -->
+          <div>
+            <strong>INFANTES</strong><br>
+            <span id="infantesCount">0</span>
+            <button type="button" onclick="cambiarPasajero('infantes', -1)">-</button>
+            <button type="button" onclick="cambiarPasajero('infantes', 1)">+</button>
+          </div>
+
           <br>
           <button type="button" onclick="cerrarSelector()">Cerrar</button>
         </div>
@@ -146,6 +156,7 @@
         <!-- Campos ocultos que envían la cantidad al servidor -->
         <input type="hidden" name="adultos" id="adultosInput" value="1">
         <input type="hidden" name="ninos" id="ninosInput" value="0">
+        <input type="hidden" name="infantes" id="infantesInput" value="0">
       </div>
 
       <br>

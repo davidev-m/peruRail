@@ -1,0 +1,317 @@
+/* menu2.css */
+
+/* Reset y tipografía base */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.4;
+}
+
+/* ========================
+     BARRA DE PASOS
+     ======================== */
+.pasos {
+    display: flex;
+    justify-content: space-around;
+    background-color: #fff;
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+}
+
+.paso {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #888;
+    flex: 1;
+}
+
+.paso.actual {
+    color: #005eb8;
+    font-weight: bold;
+}
+
+.paso.activo {
+    color: #005eb8;
+}
+
+/* ========================
+     CONTENEDOR PRINCIPAL
+     ======================== */
+.formulario2 {
+    max-width: 900px;
+    margin: 2rem auto;
+    background-color: #fff;
+    padding: 1rem 2rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================
+     CABECERA DE RUTA Y FECHAS
+     ======================== */
+.ruta_fecha {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 1rem;
+}
+
+.origen_destino {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.fechas {
+    font-size: 0.95rem;
+    color: #555;
+}
+
+/* ========================
+     BARRA DE FECHAS
+     ======================== */
+.barra_fechas {
+    margin-bottom: 1rem;
+}
+
+.navegacion-fechas {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.flecha {
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #444;
+    padding: 0 0.5rem;
+    user-select: none;
+}
+
+.contenedor-fechas {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.contenedor-fechas::-webkit-scrollbar {
+    display: none;
+}
+
+.boton-fecha {
+    flex: 0 0 auto;
+    margin: 0 0.25rem;
+    padding: 0.5rem 1rem;
+    background: #eee;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #333;
+    cursor: pointer;
+}
+
+.boton-fecha.activo {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    position: relative;
+    top: 1px;
+    font-weight: bold;
+}
+
+/* ========================
+     LISTA DE TRENES
+     ======================== */
+.trenes_disponibles {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Cada tarjeta de tren */
+.tren-card {
+    display: flex;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+}
+
+/* Remarcar la tarjeta seleccionada */
+.tren-card.activo {
+    background: #f0f0f0;
+}
+
+/* Columnas dentro de la tarjeta */
+.tren-card .c-col {
+    padding: 1rem;
+}
+
+.tren-card .horario {
+    flex: 0 0 180px;
+    border-right: 1px solid #eee;
+}
+
+.tren-card .horario .salida,
+.tren-card .horario .llegada {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.tren-card .horario .duracion {
+    margin: 0.5rem 0;
+    font-size: 0.85rem;
+    color: #777;
+}
+
+.tren-card .detalles {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    /* 👇 ESTILO PARA EL MARCO */
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fdfdfd;
+    margin: 0.5rem;
+    padding: 1rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.tren-card .detalles .nombre {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+
+.tren-card .detalles .precio {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #005eb8;
+}
+
+.tren-card .detalles:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+
+/* ========================
+     DETALLE EXPANDIBLE
+     ======================== */
+.tren-detalle {
+    background: #fafafa;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    padding: 1rem;
+    font-size: 0.9rem;
+    color: #555;
+    max-width: 900px;
+    margin: -1px auto 1rem auto;
+
+
+}
+
+/*
+.tren-opcion {
+    flex: 1;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+    border-left: 1px solid #eee;
+}*/
+
+/* ========================
+     ESTILOS RESPONSIVOS
+     ======================== */
+@media (max-width: 600px) {
+    .tren-card {
+        flex-direction: column;
+    }
+
+    .tren-card .horario {
+        border-right: none;
+        border-bottom: 1px solid #eee;
+        width: 100%;
+    }
+
+    .tren-card .detalles {
+        padding: 0.75rem;
+    }
+
+    .ruta_fecha {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+/* ==== BARRA INFERIOR FIJA ==== */
+
+.barra-inferior {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 80px);
+    /* Ajusta según el padding del contenedor principal */
+
+    /* Igual al ancho del formulario .formulario2 si aplica */
+    background: white;
+    border-top: 2px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+
+    z-index: 999;
+    box-sizing: border-box;
+
+    max-width: 900px;
+    margin: 2rem auto;
+    background-color: #fff;
+    padding: 1rem 2rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.col-bar {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #111;
+}
+
+.continuar-btn {
+    text-align: right;
+}
+
+.continuar-btn button {
+    background-color: #f1c40f;
+    border: none;
+    color: black;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.continuar-btn button:hover {
+    background-color: #d4ac0d;
+}

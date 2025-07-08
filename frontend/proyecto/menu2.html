@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Selecciona tu Tren</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Estilos base (puedes enlazar tu CSS propio luego) -->
+    <link rel="stylesheet" href="menu2.css">
+    <!--<script src="menu2.js" defer></script>-->
+</head>
+
+<body>
+    <!-- PASOS DE RESERVA -->
+    <div class="pasos">
+        <div class="paso activo">1<br>BÚSQUEDA</div>
+        <div class="paso actual">2<br>TRENES</div>
+        <div class="paso">3<br>DATOS DE PASAJEROS</div>
+        <div class="paso">4<br>CONFIRMACIÓN Y PAGO</div>
+    </div>
+
+    <hr>
+
+    <!-- INFORMACIÓN DE RUTA Y FECHAS -->
+    <div class="formulario2">
+        <form id="formularioSeleccionTren">
+            <div class="ruta_fecha">
+                <div class="origen_destino" id="origenDestinoResumen">
+                    <!-- Se completará desde JS -->
+                </div>
+                <br>
+                <div class="fechas" id="fechasResumen">
+                    <!-- Se completará desde JS -->
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- BARRA DE FECHAS -->
+            <div class="barra_fechas">
+                <div class="navegacion-fechas">
+                    <span class="flecha" onclick="anteriorFecha()">&lt;</span>
+                    <div id="barraFechas" class="contenedor-fechas">
+                        <!-- Aquí se renderizan los días (JS) -->
+                    </div>
+                    <span class="flecha" onclick="siguienteFecha()">&gt;</span>
+                </div>
+            </div>
+
+            <hr>
+
+            <!-- LISTA DE TRENES -->
+            <div class="trenes_disponibles" id="listaTrenes">
+                <!-- Aquí se cargará la lista de trenes dinámicamente -->
+            </div>
+
+            <hr>
+
+            <!-- Barra inferior dinámica -->
+            <div class="barra-inferior" id="barraInferior" style="display: none;">
+                <!-- Columna 1: Tren de ida o botón para seleccionarlo -->
+                <div class="col-bar" id="colIda"></div>
+
+                <!-- Columna 2: Tren de retorno o botón de selección -->
+                <div class="col-bar" id="colRetorno"></div>
+
+                <!-- Columna 3: Total + botón continuar -->
+                <div class="col-bar continuar-btn" id="colTotal"></div>
+            </div>
+        </form>
+    </div>
+    <script src="menu2.js" defer></script>
+</body>
+
+</html>

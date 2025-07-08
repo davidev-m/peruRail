@@ -1,45 +1,61 @@
 <?php
+// --- INICIO: CÓDIGO DE DEPURACIÓN ---
+// Muestra todos los errores de PHP para ayudarnos a encontrar el problema.
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+// --- FIN: CÓDIGO DE DEPURACIÓN ---
+
+// Iniciar el buffer de salida para capturar cualquier salida inesperada.
 ob_start();
 
-// 1. Incluir el autoload de Composer
-require_once __DIR__ . '/../vendor/autoload.php';
+// Definir una variable para la respuesta
+$response_data = [];
 
 try {
-    // 2. Configurar la llave secreta de prueba de Culqi
-    $culqi = new Culqi\Culqi([
-        'api_key' => 'sk_test_xHJ0C3vO5Cw7ToFK'
-    ]);
+    // --- CARGA DE LIBRERÍAS CON COMPOSER ---
+    // Este es el ÚNICO archivo que necesitas incluir cuando usas Composer.
+    // Se asume que la carpeta 'vendor' está en el directorio raíz, un nivel arriba de 'culqi'.
+    require_once dirname(__FILE__) . '/../vendor/autoload.php';
 
-    // 3. Validar datos recibidos desde el frontend
-    if (empty($_POST['token']) || empty($_POST['email']) || empty($_POST['amount'])) {
+    // --- LÓGICA DE PAGO ---
+    $SECRET_KEY = "sk_test_xHJ0C3vO5Cw7ToFK";
+    $culqi = new Culqi\Culqi(array('api_key' => $SECRET_KEY));
+
+    if (!isset($_POST['token']) || !isset($_POST['email']) || !isset($_POST['amount'])) {
         throw new Exception("Datos incompletos para procesar el pago.");
     }
 
-    // 4. Preparar y enviar el cargo a la API de Culqi
-    $charge = $culqi->Charges->create([
-        'amount'        => intval($_POST['amount']),
-        'currency_code' => 'PEN',
-        'description'   => $_POST['description'] ?? 'Venta de boletos de viaje',
-        'email'         => $_POST['email'],
-        'source_id'     => $_POST['token'],
-        'capture'       => true,
-    ]);
+    $token = $_POST['token'];
+    $email = $_POST['email'];
+    $amount = $_POST['amount'];
+    $description = isset($_POST['description']) ? $_POST['description'] : 'Venta de prueba';
 
-    // 5. Preparar respuesta exitosa
-    $response = $charge;
+    $charge = $culqi->Charges->create(
+        array(
+            "amount" => $amount,
+            "currency_code" => "PEN",
+            "description" => $description,
+            "email" => $email,
+            "source_id" => $token,
+            "capture" => true
+        )
+    );
+
+    $response_data = $charge;
 
 } catch (Exception $e) {
-    // 6. Preparar respuesta de error
-    $response = [
-        'object'           => 'error',
-        'merchant_message' => $e->getMessage(),
-    ];
+    $response_data = array(
+        'object' => 'error',
+        'merchant_message' => $e->getMessage()
+    );
 }
 
+// Limpiar cualquier salida que se haya generado.
 ob_end_clean();
+
+// Establecer la cabecera JSON y enviar la respuesta.
 header('Content-Type: application/json');
-echo json_encode($response);
+echo json_encode($response_data);
 exit();
+?>

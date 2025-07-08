@@ -1,5 +1,5 @@
 {
-    "tipo": "Ida",
+    "tipo": "Ida y Retorno",
     "viajes": [
         {
             "titulo": "TREN DE IDA",
@@ -9,6 +9,15 @@
             "salida": "07/06/2025 03:20",
             "llegada": "07/06/2025 07:40",
             "monto": "100.00"
+        },
+        {
+            "titulo": "TREN DE REGRESO",
+            "ruta": "MACHU PICCHU - WANCHAQ",
+            "tren": "Expedition 204",
+            "transporte": "SERVICIO BIMODAL (TREN + BUS)",
+            "salida": "07/06/2025 13:37",
+            "llegada": "07/06/2025 17:30",
+            "monto": "100.00"
         }
     ],
     "pasajeros": [
@@ -16,8 +25,12 @@
             "nombre": "EDGAR LEYVA",
             "documento": "76852884",
             "tarifa": "ADULTO"
+        },
+        {
+            "nombre": "ANA GOMEZ",
+            "documento": "12345678",
+            "tarifa": "NIÑO"
         }
-
     ],
-    "total": "100.00"
+    "total": "200.00" 
 }

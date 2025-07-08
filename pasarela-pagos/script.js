@@ -38,7 +38,6 @@ function culqi() {
         const amount = Math.round(montoTotalParaPagar * 100);
 
         console.log('Token de Culqi creado:', token);
-        const primerPasajero = document.querySelector('#pasajeros-body tr td')?.textContent || 'Desconocido';
 
         $.ajax({
             url: 'culqi/procesar_pago.php',
@@ -52,22 +51,25 @@ function culqi() {
             },
             success: function(response) {
                 console.log('Respuesta del servidor:', response);
+                let verificacionJson;
+
                 if (response.object === 'charge') {
                     mostrarMensaje('¡Pago exitoso! Gracias por tu compra.', 'success');
+                    verificacionJson = { "verificacion": "true" };
                 } else {
                     mostrarMensaje(`Error en el pago: ${response.user_message || response.merchant_message}`, 'error');
+                    verificacionJson = { "verificacion": "false" };
                 }
+                // Mostrar el JSON de verificación en la consola
+                console.log("JSON de Verificación:", verificacionJson);
             },
             error: function(xhr) {
-                console.error('Error al conectar con el servidor.', xhr);
-                console.log('responseText:', xhr.responseText);
-                console.log('responseJSON:', xhr.responseJSON);
-
-                let msg = 'Hubo un error al procesar tu pago.';
-                if (xhr.responseJSON && xhr.responseJSON.merchant_message) {
-                    msg = xhr.responseJSON.merchant_message;
-                }
-                mostrarMensaje(msg, 'error');
+                console.error('Error al conectar con el servidor. Respuesta completa:', xhr.responseText);
+                mostrarMensaje('Hubo un error al procesar tu pago. Revisa la consola.', 'error');
+                
+                // Crear y mostrar el JSON de verificación fallida
+                const verificacionJson = { "verificacion": "false" };
+                console.log("JSON de Verificación:", verificacionJson);
             }
         });
 
@@ -101,7 +103,6 @@ async function cargarYRenderizarDatos() {
         const response = await fetch('detalles_pago.json');
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const datos = await response.json();
-
         renderizarDetalles(datos);
     } catch (error) {
         console.error('Error al cargar los datos del viaje:', error);
@@ -142,12 +143,12 @@ function renderizarDetalles(datos) {
                         </thead>
                         <tbody>
                             <tr class="bg-white border-b">
-                                <td class="px-6 py-4 font-medium text-gray-900">${viaje.ruta}</td>
-                                <td class="px-6 py-4">${viaje.tren}</td>
-                                <td class="px-6 py-4">${viaje.transporte}</td>
-                                <td class="px-6 py-4">${viaje.salida}</td>
-                                <td class="px-6 py-4">${viaje.llegada}</td>
-                                <td class="px-6 py-4 text-right font-semibold">S/ ${viaje.monto}</td>
+                                <td data-label="Ruta" class="px-6 py-4 font-medium text-gray-900">${viaje.ruta}</td>
+                                <td data-label="Tren" class="px-6 py-4">${viaje.tren}</td>
+                                <td data-label="Transporte" class="px-6 py-4">${viaje.transporte}</td>
+                                <td data-label="Salida" class="px-6 py-4">${viaje.salida}</td>
+                                <td data-label="Llegada" class="px-6 py-4">${viaje.llegada}</td>
+                                <td data-label="Monto" class="px-6 py-4 text-right font-semibold">S/ ${viaje.monto}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -160,9 +161,9 @@ function renderizarDetalles(datos) {
     datos.pasajeros.forEach(pasajero => {
         const pasajeroHtml = `
             <tr class="bg-white border-b">
-                <td class="px-6 py-4 font-medium text-gray-900">${pasajero.nombre}</td>
-                <td class="px-6 py-4">${pasajero.documento}</td>
-                <td class="px-6 py-4">${pasajero.tarifa}</td>
+                <td data-label="Nombre Completo" class="px-6 py-4 font-medium text-gray-900">${pasajero.nombre}</td>
+                <td data-label="Número de Documento" class="px-6 py-4">${pasajero.documento}</td>
+                <td data-label="Tarifa" class="px-6 py-4">${pasajero.tarifa}</td>
             </tr>
         `;
         pasajerosBody.innerHTML += pasajeroHtml;

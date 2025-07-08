@@ -1,0 +1,56 @@
+/* Estilo base para usar la fuente Inter */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Color de fondo personalizado para las cabeceras de las tablas */
+.bg-custom-blue {
+    background-color: #1e3a5f; /* Un tono de azul oscuro similar al de la imagen */
+}
+
+/* --- Estilos para Diseño Responsivo en Móviles --- */
+/* Se aplica solo a pantallas con un ancho máximo de 767px */
+@media (max-width: 767px) {
+    .responsive-table-container thead {
+        /* Oculta la cabecera original de la tabla en móviles */
+        display: none;
+    }
+
+    .responsive-table-container tr {
+        /* Cada fila se convierte en una 'tarjeta' */
+        display: block;
+        margin-bottom: 1.5rem;
+        border-radius: 0.5rem;
+        border: 1px solid #e5e7eb; /* Borde gris claro */
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        overflow: hidden; /* Para que el radio de borde funcione bien */
+    }
+
+    .responsive-table-container td {
+        /* Cada celda ocupa todo el ancho y se organiza verticalmente */
+        display: block;
+        width: 100%;
+        text-align: right; /* Alinea el valor a la derecha */
+        padding: 0.75rem 1rem; /* Ajuste de padding */
+        position: relative;
+        padding-left: 50%; /* Deja espacio a la izquierda para la etiqueta */
+        border-bottom: 1px solid #f3f4f6; /* Línea separadora entre celdas */
+    }
+    
+    .responsive-table-container td:last-child {
+        border-bottom: none; /* Elimina la última línea separadora */
+    }
+
+    .responsive-table-container td::before {
+        /* Crea la etiqueta de la celda usando el atributo 'data-label' del HTML */
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        width: 45%;
+        padding-left: 1rem;
+        font-weight: 600; /* Seminegrita */
+        text-align: left;
+        white-space: nowrap;
+        color: #111827; /* Texto más oscuro para la etiqueta */
+    }
+}

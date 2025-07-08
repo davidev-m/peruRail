@@ -1,9 +1,20 @@
 <?php
-require __DIR__ . '/../modelos/ruta.php';
+require_once __DIR__ . '/../modelos/ruta.php';
+    function formatoLugar($texto) {
+        $min = [' De ', ' Del ', ' La ', ' Las ', ' El ', ' Los '];
+        $corregido = [' de ', ' del ', ' la ', ' las ', ' el ', ' los '];
+        
+        // Primero ponemos todo en minúsculas y aplicamos ucwords
+        $texto = ucwords(strtolower($texto));
+        
+        // Luego corregimos preposiciones
+        return str_replace($min, $corregido, $texto);
+    }
+
     function idaVuelta($Origen, $Destino){
         $ruta = new Ruta();
-        $Origen = strtolower($Origen);
-        $Destino = strtolower($Destino);
+        $Origen = formatoLugar($Origen);
+        $Destino = formatoLugar($Destino);
         if(!$ruta->existe($Origen,$Destino)){
             return null;
         }
@@ -14,9 +25,10 @@ require __DIR__ . '/../modelos/ruta.php';
             return null;
         }
         $ruta = new Ruta();
-        $Origen = strtolower($Origen);
-        $Destino = strtolower($Destino);
+        $Origen = formatoLugar($Origen);
+        $Destino = formatoLugar($Destino);
         if(!$ruta->existe($Origen,$Destino)){
+            echo $Origen . '----' . $Destino;
             return null;
         }
         $fecha = $ruta->disponibilidad($Origen, $Destino);
@@ -28,7 +40,7 @@ require __DIR__ . '/../modelos/ruta.php';
     }
     function destinos($origen){
         $ruta = new Ruta();
-        $origen = strtolower($origen);
+        $origen = formatoLugar($origen);
         $destino =  $ruta->buscarDestino($origen);
         if(count($destino) > 0){
             return array_column($destino, 'destino');

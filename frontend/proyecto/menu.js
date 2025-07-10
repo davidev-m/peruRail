@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return fetch(`${API}?accion=fechaDisponible&origen=${encodeURIComponent(origen)}&destino=${encodeURIComponent(destino)}`)
             .then(r => r.json())
             .then(data => {
-                const mapa = { domingo: 0, lunes: 1, martes: 2, miércoles: 3, jueves: 4, viernes: 5, sábado: 6, "todos los dias": [0, 1, 2, 3, 4, 5, 6] };
+                const mapa = { domingo: 0, lunes: 1, martes: 2, miércoles: 3, jueves: 4, viernes: 5, sábado: 6, "todos los días": [0, 1, 2, 3, 4, 5, 6] };
                 if (typeof data === 'string') {
                     return [...new Set(
                         data.toLowerCase().split(/,\s*/).flatMap(d => Array.isArray(mapa[d.trim()]) ? mapa[d.trim()] : [mapa[d.trim()]])
@@ -327,7 +327,7 @@ document.addEventListener('DOMContentLoaded', function () {
         };
         try {
 
-            const res = await fetch('tren.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) });
+            const res = await fetch('/../../backend/apps/logica/tren_logica.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) });
             const out = await res.json();
             sessionStorage.setItem('form1', JSON.stringify(datos));
             sessionStorage.setItem('trenes', JSON.stringify(out));

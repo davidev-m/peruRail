@@ -4,7 +4,7 @@
         public static function getConexion():PDO{
             if(self::$conexion === null){
                 $host = "localhost";
-                $base_datos = "ZZZ"; 
+                $base_datos = "perurail"; 
                 $user = "root";
                 $contraseña = "";
                 $dns = "mysql:host=$host; dbname=$base_datos; charset=utf8mb4";

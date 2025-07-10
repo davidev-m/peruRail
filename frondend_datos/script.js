@@ -20,10 +20,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   let datosPasajeros;
   try {
-    const res = await fetch("pasajeros.json");
+    const res = await fetch("../backend/apps/logica/datos_personales_E.php",{
+      credentials: 'include'
+    });
     if (!res.ok) throw new Error("HTTP " + res.status);
     datosPasajeros = await res.json();
-  } catch (e) {
+    console.log(datosPasajeros);
+  } catch (e) { 
     console.error("Error cargando pasajeros.json:", e);
     datosPasajeros = { "Adulto": 1, "Nino": 0, "Infante": 0 };
   }
@@ -31,7 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const infantesDisponibles = datosPasajeros.Infante || 0;
   const tipos = [
     { key: "Adulto", label: "Adulto", total: datosPasajeros.Adulto || 0 },
-    { key: "Nino",   label: "Niño", total: datosPasajeros.Nino || 0 }
+    { key: "Nino",   label: "Nino", total: datosPasajeros.Nino || 0 }
   ];
 
   const form = document.createElement("form");

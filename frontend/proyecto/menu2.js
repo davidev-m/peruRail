@@ -104,10 +104,11 @@ document.addEventListener("DOMContentLoaded", function () {
             adultos,
             ninos
         };
-        fetch("tren.php", {
+        fetch("/../../backend/apps/logica/tren_logica.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
+            body: JSON.stringify(payload),
+            credentials: 'include'
         })
             .then(r => r.json())
             .then(data => mostrarTrenes(data))
@@ -287,7 +288,7 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Por favor selecciona todos los trenes.");
             return;
         }
-
+        const infantes = 1;
         // Construir datos finales
         const datosFinales = {
             origen,
@@ -298,21 +299,22 @@ document.addEventListener("DOMContentLoaded", function () {
             adultos,
             ninos,
             trenIda,
-            trenRetorno
+            trenRetorno,
+            infantes
         };
 
         // Guardar en sessionStorage
         sessionStorage.setItem("formularioFinal", JSON.stringify(datosFinales));
 
         // OPCIONAL: enviar al backend
-        fetch("guardar_reserva.php", {
+        fetch("/../../backend/apps/logica/tren_seleccion.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(datosFinales)
         });
 
         // Redirigir al paso 3
-        window.location.href = "menu3.html";
+        window.location.href = "../../frondend_datos/menu3.html";
     });
 
 });

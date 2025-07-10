@@ -1,15 +1,21 @@
 <?php
-    session_start();
-    require_once __DIR__ . '/../modelos/modelos.php';
+ini_set('session.cookie_path', '/');
+ini_set('session.cookie_domain', '');
+ini_set('session.cookie_secure', '0');
+session_start();
+
+header('content-Type:application/json');
+// CAMBIO CLAVE: Cambiar * por el origen exacto de tu frontend
+header('Access-Control-Allow-Origin: http://localhost'); 
+header('Access-Control-Allow-Credentials: true'); // Necesario cuando Access-Control-Allow-Origin no es * y usas credentials: 'include'
+header('Access-Control-Allow-Methods: POST, OPTIONS, GET'); // Asegúrate de incluir todos los métodos HTTP que uses
+header('Access-Control-Allow-Headers: Content-Type'); 
+
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
     
-    
-//Sola la primera vez pide mas datos después solo fecha IMPORTANTE
-    /**
-     * origen, destino, fechaIda fechaRetorno
-     * fecha => [
-     * ida => 00
-     * retorno =>]
-     */
     function duracion($hora_salida, $hora_llegada){
         $salida = new DateTime($hora_salida);
         $llegada = new DateTime($hora_llegada);
@@ -21,10 +27,6 @@
         return $fecha->format('H:i');
     }
 
-    header('content-Type:application/json');
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Methods: POST, OPTIONS');
-    header('Access-Control-Allow-Headers:Content-Type');
     if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     http_response_code(response_code: 200);
     exit();
@@ -41,10 +43,12 @@
         }
         //Datos guardados en sesion----------------------------
         //Si no se inicializó los datos de SESSION se guarda
-        if (!isset($_SESSION["adultos"])) $_SESSION["adultos"] = (int)$datosR["adultos"];
-        if (!isset($_SESSION["niños"])) $_SESSION["niños"] = (int)$datosR["niños"];
-        if (!isset($_SESSION["infantes"])) $_SESSION["infantes"] = (int)$datosR["infantes"];
+        $_SESSION['adultos'] = (int)$datosR['adultos'];
+        $_SESSION['ninos'] = (int)$datosR['ninos'];
+        $_SESSION['infantes'] = (int)$datosR['infantes'];
 
+        error_log("tren_logica.php -> Session ID: " . session_id());
+error_log("tren_logica.php -> Contenido de SESSION: " . print_r($_SESSION, true));
         //------------------------------------------------------
         
         
@@ -52,7 +56,7 @@
         $resultado = $viaje->buscar($origen,$destino, $fecha);
         
         //Logica antes de antes del frondend
-        $pasajeros = (int)$datosR["adultos"] + (int)$datosR["niños"]; 
+        $pasajeros = (int)$datosR['adultos'] + (int)$datosR['ninos']; 
         $j = 0;
         //Datos enviados al frondend----------------------------
         $jsonRetorna = [];

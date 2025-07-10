@@ -3,7 +3,7 @@
 header("Content-Type: application/json");
 
 // Incluir el archivo PHP que contiene la lógica de negocio de las rutas de viaje
-require_once __DIR__ . '/../pruebas/logica/viaje_logica.php';
+require_once __DIR__ . '/../../backend/apps/logica/viaje_logica.php';
 
 // Obtener la acción enviada por la URL. Si no existe, se asigna una cadena vacía.
 $accion = $_GET['accion'] ?? '';

@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     console.log("📦 Datos recibidos desde Formulario 1:", datosForm1);
 
-    const { origen, destino, tipo, fechaIda, fechaRet, adultos, ninos, infantes } = datosForm1;
+    const { origen, destino, tipo, fechaIda, fechaRet, adultos, ninos, infantes } = datosForm1; // 'infantes' se obtiene aquí
 
     // ========================
     // REFERENCIAS A DOM
@@ -102,9 +102,10 @@ document.addEventListener("DOMContentLoaded", function () {
             fechaIda: fecha,
             //fechaRet: esRetorno ? fecha : fechaRet,
             adultos,
-            ninos
+            ninos,
+            infantes
         };
-        fetch("/../../backend/apps/logica/tren_logica.php", {
+        fetch("../../backend/apps/logica/tren_logica.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
@@ -182,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         actualizarBarraInferiorSoloIda();
                     } else if (fase === "ida") {
                         trenIda = trenData;
-                        trenRetorno = null;
+                        trenRetorno = null; // Reiniciar retorno si se cambia la ida
                         actualizarBarraInferiorIdaVuelta();
                     } else if (fase === "retorno") {
                         trenRetorno = trenData;
@@ -279,7 +280,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // ========================
     // BOTÓN CONTINUAR → Guardar y redirigir
     // ========================
-    barraInferior.addEventListener("click", (e) => {
+    barraInferior.addEventListener("click", async (e) => { // Añadido 'async' aquí
         const btn = e.target.closest("button");
         if (!btn || !btn.textContent.includes("CONTINUAR")) return;
 
@@ -288,7 +289,7 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Por favor selecciona todos los trenes.");
             return;
         }
-        const infantes = 1;
+        // const infantes = 1; // <--- ELIMINADA ESTA LÍNEA
         // Construir datos finales
         const datosFinales = {
             origen,
@@ -298,23 +299,43 @@ document.addEventListener("DOMContentLoaded", function () {
             fechaRet,
             adultos,
             ninos,
+            infantes, // Ahora usa el 'infantes' de datosForm1
             trenIda,
-            trenRetorno,
-            infantes
+            trenRetorno
+            // infantes // <--- ELIMINADA ESTA LÍNEA DUPLICADA
         };
 
         // Guardar en sessionStorage
         sessionStorage.setItem("formularioFinal", JSON.stringify(datosFinales));
 
-        // OPCIONAL: enviar al backend
-        fetch("/../../backend/apps/logica/tren_seleccion.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(datosFinales)
-        });
+        // OPCIONAL: enviar al backend - AHORA ESPERAMOS LA RESPUESTA
+        try {
+            const response = await fetch("../../backend/apps/logica/tren_seleccion.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(datosFinales),
+                credentials: 'include'
+            });
 
-        // Redirigir al paso 3
-        window.location.href = "../../frondend_datos/menu3.html";
+            if (!response.ok) {
+                // Si la respuesta no es OK (ej. 400, 500), lanzar un error
+                const errorData = await response.json(); // Intentar leer el cuerpo del error
+                throw new Error(`Error del servidor: ${response.status} - ${errorData.error || response.statusText}`);
+            }
+
+            const result = await response.json();
+            console.log("Respuesta de tren_seleccion.php:", result);
+
+            if (result.success) {
+                // Redirigir al paso 3 SOLO si la solicitud fue exitosa
+                window.location.href = "../../frontend_datos/menu3.html";
+            } else {
+                alert(`Error al guardar selección de tren: ${result.error || 'Error desconocido'}`);
+            }
+        } catch (error) {
+            console.error("Error al enviar datos a tren_seleccion.php:", error);
+            alert(`No se pudo guardar la selección de tren: ${error.message}`);
+        }
     });
 
 });

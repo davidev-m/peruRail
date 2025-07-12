@@ -100,7 +100,7 @@ function mostrarMensaje(texto, tipo) {
 
 async function cargarYRenderizarDatos() {
     try {
-        const response = await fetch('detalles_pago.json');
+        const response = await fetch('../backend/apps/logica/datos_pago_E.php');
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const datos = await response.json();
         renderizarDetalles(datos);

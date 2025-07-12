@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const form = document.createElement("form");
   form.id = "pasajeros-form";
-  form.action = "procesa_formulario.php";
+  form.action = "../backend/apps/logica/datos_personales_R.php";
   form.method = "POST";
 
   tipos.forEach(({ key, label, total }) => {
@@ -276,7 +276,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log('Enviando los siguientes datos:', reservaData);
 
     try {
-        const response = await fetch('procesa_formulario.php', {
+        const response = await fetch('../backend/apps/logica/datos_personales_R.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(reservaData)
@@ -295,6 +295,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
             throw new Error(result.error || 'Ocurrió un error desconocido.');
         }
+
+        window.location.href = "../pasarela_pagos/menu4.html";
+
 
     } catch (error) {
         console.error('Error en el envío fetch:', error); // Log para depuración

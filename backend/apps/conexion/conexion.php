@@ -6,12 +6,12 @@
                 $host = "localhost";
                 $base_datos = "perurail"; 
                 $user = "root";
-                $contraseña = "";
+                $contrasena = "";
                 $dns = "mysql:host=$host; dbname=$base_datos; charset=utf8mb4";
                 self::$conexion = new PDO(
                     $dns,
                     $user,
-                    $contraseña,
+                    $contrasena,
                     [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
                 );
             }

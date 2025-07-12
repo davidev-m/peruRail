@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (flatpickrIda) flatpickrIda.destroy();
         if (flatpickrRetorno) flatpickrRetorno.destroy();
 
-        // Rango desde hoy hasta fin de año
+        // Rango desde hoy hasta fin de ano
         const hoy = new Date(), fin = new Date("2025-12-31");
         const habilitadas = [];
         for (let d = new Date(hoy); d <= fin; d.setDate(d.getDate() + 1)) {
@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // ========================
 
     /**
-     * Devuelve la configuración de locale para Flatpickr en español.
+     * Devuelve la configuración de locale para Flatpickr en espanol.
      */
     function getFlatpickrLocale() {
         return {
@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     /**
-     * Ajusta la cantidad de adultos o niños respetando los límites.
+     * Ajusta la cantidad de adultos o ninos respetando los límites.
      * Actualiza la interfaz y campos ocultos.
      * @param {string} tipo - 'adultos' o 'ninos'.
      * @param {number} cambio - +1 o -1.
@@ -236,9 +236,9 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById("infantesCount").innerText = infantes;
 
         document.getElementById("resumenPasajeros").value =
-            `${adultos} Adulto${adultos > 1 ? 's' : ''}, ` +
-            `${ninos} Niño${ninos !== 1 ? 's' : ''}, ` +
-            `${infantes} Infante${infantes !== 1 ? 's' : ''}`;
+            `${adultos} Adultos, ` +
+            `${ninos} Ninos, ` +
+            `${infantes} Infantes`;
 
         document.getElementById("adultosInput").value = adultos;
         document.getElementById("ninosInput").value = ninos;
@@ -326,8 +326,13 @@ document.addEventListener('DOMContentLoaded', function () {
             infantes: parseInt(document.getElementById('infantesInput').value)
         };
         try {
-
-            const res = await fetch('/../../backend/apps/logica/tren_logica.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(datos) });
+            // ANADIDO: credentials: 'include' para asegurar que la cookie de sesión se envíe
+            const res = await fetch('../../backend/apps/logica/tren_logica.php', { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify(datos),
+                credentials: 'include' // <-- ¡ESTO ES CRÍTICO!
+            });
             const out = await res.json();
             sessionStorage.setItem('form1', JSON.stringify(datos));
             sessionStorage.setItem('trenes', JSON.stringify(out));

@@ -4,6 +4,8 @@
     header('Access-Control-Allow-Origin: *');
     header('Access-Control-Allow-Headers:Content-Type');
 
+
+    error_log("datos_personales_E.php -> Contenido de SESSION: " . print_r($_SESSION, true));
     //Antes de iniciar comprobamos los datos  de SESSION
     if (!isset($_SESSION['trenes_seleccionados']) || !isset($_SESSION['pasajeros'])) {
         http_response_code(400);
@@ -25,7 +27,7 @@
     $montoIda = $trenes['trenIda']['tren']['precio'];
     $resultado = [
         'Tipo' => $tipo,
-        "Viajes" => [
+        "viajes" => [
             [
                 "titulo" => "TREN DE IDA",
                 "ruta" => $trenes['trenIda']['estaciones'][0] . " - ". $trenes['trenIda']['estaciones'][1],
@@ -68,13 +70,13 @@
         }
     }
     
-    if(isset($pasajeros['niños'])){
+    if(isset($pasajeros['ninos'])){
         //GUARDAR DATOS DE NIÑO
-        $cantNiños = count($pasajeros['niños']);
-        for($i = 0; $i < $cantNiños; $i++){
+        $cantninos = count($pasajeros['ninos']);
+        for($i = 0; $i < $cantninos; $i++){
             $resultado['pasajeros'][] = [
-                "nombre" => $pasajeros["niños"][$i]['nombre'] ." " . $pasajeros["niños"][$i]['apellidos'],
-                "documento" => $pasajeros["niños"][$i]['num_doc'],
+                "nombre" => $pasajeros["ninos"][$i]['nombre'] ." " . $pasajeros["ninos"][$i]['apellidos'],
+                "documento" => $pasajeros["ninos"][$i]['num_doc'],
                 "tarifa" => "NIÑO"
             ];
             $monto_total += (int)$montoIda;

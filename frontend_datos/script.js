@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (key === "Adulto") {
         topControlsDiv.innerHTML += `
           <div class="control-group">
-            <input type="checkbox" class="buyer-checkbox" id="comprador_${i}" name="Adulto_es_comprador_${i}">
+            <input type="checkbox" class="buyer-checkbox" id="comprador_${i}" name="Adulto_es_comprador_${i}" required>
             <label for="comprador_${i}">Comprador</label>
           </div>
         `;

@@ -18,6 +18,37 @@
 </head>
 
 <body>
+
+  <!-- BARRA SUPERIOR -->
+  <header class="barra-superior">
+    <div class="barra-contenido">
+      <div class="logo"> <img src="imagenes/perurail.png" alt="PeruRail" /></div>
+      <nav class="menu-navegacion">
+        <a href="#">Trenes</a>
+        <a href="#">Rutas</a>
+        <a href="#">Promociones</a>
+        <a href="#">Contacto</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- CARRUSEL DE IMÁGENES -->
+  <div class="carrusel-container">
+    <div class="carrusel">
+      <div class="slide active" style="background-image: url('imagenes/tren1.webp');"></div>
+      <div class="slide" style="background-image: url('imagenes/tren2.webp');"></div>
+      <div class="slide" style="background-image: url('imagenes/tren3.jpg');"></div>
+    </div>
+
+    <!-- Indicadores del carrusel -->
+    <div class="carrusel-indicadores">
+      <span class="dot active" onclick="irASlide(0)"></span>
+      <span class="dot" onclick="irASlide(1)"></span>
+      <span class="dot" onclick="irASlide(2)"></span>
+    </div>
+  </div>
+
+
   <div class="formulario1">
     <!-- Formulario principal -->
     <form id="formularioReserva" method="post">
@@ -113,9 +144,9 @@
       <br>
 
       <!-- SELECCIÓN DE PASAJEROS -->
-      <div class="cantidad-Pasajeros" id="pasajeros">
+      <div class="cantidad-Pasajeros" id="pasajeros" style="position: relative">
         <label for="pasajeros">
-          <input type="text" id="resumenPasajeros" readonly value="1 Adulto, 0 Ninos, 0 Infantes"
+          <input type="text" id="resumenPasajeros" readonly value="1 Adulto, 0 Niños, 0 Infantes"
             onclick="mostrarSelectorPasajeros()">
         </label>
 
@@ -132,7 +163,7 @@
             <button type="button" onclick="cambiarPasajero('adultos', 1)">+</button>
           </div>
 
-          <!-- Ninos -->
+          <!-- Niños -->
           <div>
             <strong>NIÑOS</strong><br>
             <span id="ninosCount">0</span>
@@ -163,11 +194,63 @@
 
       <!-- BOTÓN DE ENVÍO -->
       <button type="submit">BUSCAR</button>
+
+
+
+      <div class="compra-segura">
+        <div style="border-top: 1px solid #000; margin: 10px 0;"></div>
+
+        <div class="medios-pago">
+          <p>Compra Segura</p>
+          <img src="imagenes\visa.png" alt="Visa">
+          <img src="imagenes\mastercard2.jpg" alt="Mastercard">
+          <img src="imagenes\dinerclub.png" alt="Diner Club">
+          <img src="imagenes\peypal.png" alt="PayPal">
+          <br>
+        </div>
+      </div>
     </form>
+
+  </div>
+
+
+  <div class="info-adicional">
+    <!-- Sección de pago seguro -->
+    <div class="seccion-pago">
+      <h3>PUEDES PAGAR TU BOLETO DE TREN SEGURO</h3>
+      <p>*La cantidad de cuotas está sujeta a las condiciones de tu banco.</p>
+    </div>
   </div>
 
   <!-- Importar el script JS al final para que se cargue correctamente -->
   <script src="menu.js"></script>
+
+  <script>
+    let indexSlide = 0;
+    const slides = document.querySelectorAll(".slide");
+    const dots = document.querySelectorAll(".dot");
+
+    function mostrarSlide(n) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle("active", i === n);
+        dots[i].classList.toggle("active", i === n);
+      });
+    }
+
+    function siguienteSlide() {
+      indexSlide = (indexSlide + 1) % slides.length;
+      mostrarSlide(indexSlide);
+    }
+
+    function irASlide(n) {
+      indexSlide = n;
+      mostrarSlide(indexSlide);
+    }
+
+    // Cambia automáticamente cada 3 segundos
+    setInterval(siguienteSlide, 3000);
+  </script>
+
 </body>
 
 </html>

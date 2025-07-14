@@ -171,7 +171,7 @@ function renderizarDetalles(datos) {
         pasajerosBody.innerHTML += pasajeroHtml;
     });
 
-    totalAmount.textContent = `S/ ${datos.total}`;
+    totalAmount.textContent = `S/ ${datos.total *100}`;
     montoTotalParaPagar = parseFloat(datos.total);
 }
 

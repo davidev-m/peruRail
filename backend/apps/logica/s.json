@@ -1,0 +1,95 @@
+{
+  "adultos": 2,
+  "ninos": 1,
+  "infantes": 1,
+  "trenes_seleccionados": {
+    "origen": "ciudad de cusco",
+    "destino": "machu picchu",
+    "tipo": "ida_vuelta",
+    "fechaIda": "2025-07-13",
+    "fechaRet": "2025-07-13",
+    "adultos": 2,
+    "ninos": 1,
+    "infantes": 1,
+    "trenIda": {
+      "hora_salida": "08:53",
+      "hora_llegada": "13:35",
+      "duracion": "04 hr. 42 min",
+      "estaciones": [
+        "Estación Machu Picchu",
+        "Estación Wanchaq"
+      ],
+      "tren": {
+        "nombre": "PeruRail Expedition 72",
+        "precio": 50,
+        "movilidad": "Bus + Tren",
+        "id_bus": 1
+      },
+      "_idx": 0
+    },
+    "trenRetorno": {
+      "hora_salida": "03:20",
+      "hora_llegada": "07:40",
+      "duracion": "04 hr. 20 min",
+      "estaciones": [
+        "Estación Wánchaq",
+        "Estación Machu Picchu"
+      ],
+      "tren": {
+        "nombre": "PeruRail Expedition 81",
+        "precio": 68,
+        "movilidad": "Bus + Tren",
+        "id_bus": 1
+      },
+      "_idx": 0
+    }
+  },
+  "pasajeros": {
+    "adultos": [
+      {
+        "nombre": "david",
+        "apellidos": "montoya",
+        "genero": "M",
+        "pais": "Perú",
+        "tipo_doc": "DNI",
+        "num_doc": 71470226,
+        "fecha_nac": "2004-02-21",
+        "es_comprador": 1,
+        "con_infante": null
+      },
+      {
+        "nombre": "edgar",
+        "apellidos": "leyva",
+        "genero": "M",
+        "pais": "Perú",
+        "tipo_doc": "DNI",
+        "num_doc": 71475422,
+        "fecha_nac": "2002-05-14",
+        "es_comprador": null,
+        "con_infante": 1
+      }
+    ],
+    "ninos": [
+      {
+        "nombre": "alex",
+        "apellidos": "huaracha",
+        "genero": "M",
+        "pais": "Perú",
+        "tipo_doc": "DNI",
+        "num_doc": 71204253,
+        "fecha_nac": "2000-10-12"
+      }
+    ]
+  },
+  "comprador": {
+    "nombre": "david",
+    "apellidos": "montoya",
+    "telefono": 939025879,
+    "email": "dgmotnoya@gmail.com"
+  },
+  "empresa": {
+    "ruc": 24125415242,
+    "razon_social": "Transportes Andinos SAC",
+    "direccion": "Av. El Sol 450, Cusco, Perú"
+  }
+}

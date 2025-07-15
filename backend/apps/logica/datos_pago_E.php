@@ -26,7 +26,7 @@
 
     $montoIda = $trenes['trenIda']['tren']['precio'];
     $resultado = [
-        'Tipo' => $tipo,
+        'tipo' => $tipo,
         "viajes" => [
             [
                 "titulo" => "TREN DE IDA",
@@ -42,7 +42,7 @@
 
     if($tren_retorno){
         $montoRetorno = $trenes['trenRetorno']['tren']['precio'];
-        $resultado['Viajes'][] = [
+        $resultado['viajes'][] = [
             "titulo" => "TREN DE RETORNO",
                     "ruta" => $trenes['trenRetorno']['estaciones'][0] . " - ". $trenes['trenRetorno']['estaciones'][1],
                     "tren" => $trenes["trenRetorno"]["tren"]["nombre"],
@@ -88,5 +88,8 @@
     $resultado['total'] = $monto_total;
     //--------------------------------------------------------------------
         
+    error_log("datos_pago_E.php -> Contenido de SESSION: " . print_r($resultado, true));
     echo json_encode($resultado);
+
+
 ?>

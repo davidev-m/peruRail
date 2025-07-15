@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     .collapsed .form-content { display: none; }
     .collapsed .toggle-arrow { transform: rotate(-90deg); }
     .buyer-fields { display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid #eee; }
+    /* Estilo para campos inválidos */
+    input:invalid { border-color: #e53e3e; }
   `;
   const styleSheet = document.createElement("style");
   styleSheet.innerText = newStyles;
@@ -67,7 +69,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (key === "Adulto") {
         topControlsDiv.innerHTML += `
           <div class="control-group">
-            <input type="checkbox" class="buyer-checkbox" id="comprador_${i}" name="Adulto_es_comprador_${i}" required>
+            <input type="checkbox" class="buyer-checkbox" id="comprador_${i}" name="Adulto_es_comprador_${i}">
             <label for="comprador_${i}">Comprador</label>
           </div>
         `;
@@ -99,6 +101,60 @@ document.addEventListener("DOMContentLoaded", async () => {
       `;
       contentWrapper.appendChild(fieldsDiv);
       
+      // --- INICIO: VALIDACIÓN DE DOCUMENTO CONTRA BASE DE DATOS ---
+      const numDocInput = fieldsDiv.querySelector(`#${key}_num_doc_${i}`);
+      const nombreInput = fieldsDiv.querySelector(`#${key}_nombre_${i}`);
+      const apellidosInput = fieldsDiv.querySelector(`#${key}_apellidos_${i}`);
+      const tipoDocSelect = fieldsDiv.querySelector(`#${key}_tipo_doc_${i}`);
+
+      // Función para ejecutar la validación
+      const validarDocumento = async () => {
+        const docType = tipoDocSelect.value;
+        const docTypesToValidate = ['DNI', 'Pasaporte', 'Carnet de extranjería'];
+
+        // Solo validar si el tipo de documento está en la lista y los campos requeridos tienen valor
+        if (docTypesToValidate.includes(docType) && numDocInput.value && nombreInput.value && apellidosInput.value) {
+          try {
+            const formData = new FormData();
+            formData.append('nombre', nombreInput.value);
+            formData.append('apellido', apellidosInput.value);
+            formData.append('documento', numDocInput.value);
+
+            const response = await fetch('../backend/apps/logica/funciones_extra.php', {
+              method: 'POST',
+              body: formData
+            });
+
+            if (!response.ok) throw new Error(`Error del servidor: ${response.status}`);
+            
+            const result = await response.json(); // Se espera una respuesta como { "valid": true/false }
+
+            if (result.valid === false) {
+              // Si el PHP retorna false, significa que el documento existe con otros datos.
+              numDocInput.setCustomValidity('El documento ya está registrado con un nombre o apellido diferente.');
+            } else {
+              // Si es válido, se limpia el mensaje de error.
+              numDocInput.setCustomValidity('');
+            }
+          } catch (error) {
+            console.error('Error al verificar el documento:', error);
+            // Opcional: No bloquear el formulario si falla la API, pero sí notificar en consola.
+            numDocInput.setCustomValidity(''); // No bloquear si la API falla
+          }
+        } else {
+          // Si no es un tipo de documento a validar o faltan datos, se asegura de que no haya error de validación.
+          numDocInput.setCustomValidity('');
+        }
+      };
+
+      // Añadir listeners para que la validación se dispare cuando el usuario deja los campos.
+      numDocInput.addEventListener('blur', validarDocumento);
+      nombreInput.addEventListener('blur', validarDocumento);
+      apellidosInput.addEventListener('blur', validarDocumento);
+      // También validar si cambia el tipo de documento
+      tipoDocSelect.addEventListener('change', validarDocumento);
+      // --- FIN: VALIDACIÓN DE DOCUMENTO CONTRA BASE DE DATOS ---
+
       if (key === "Adulto") {
         const buyerFieldsDiv = document.createElement('div');
         buyerFieldsDiv.className = 'buyer-fields';
@@ -111,6 +167,26 @@ document.addEventListener("DOMContentLoaded", async () => {
           </div>
         `;
         contentWrapper.appendChild(buyerFieldsDiv);
+
+        // --- INICIO: NUEVA LÓGICA DE VALIDACIÓN DE EMAIL ---
+        const emailInput = buyerFieldsDiv.querySelector(`#Adulto_email_${i}`);
+        const emailConfInput = buyerFieldsDiv.querySelector(`#Adulto_email_conf_${i}`);
+
+        const validateEmails = () => {
+          if (emailInput.value !== emailConfInput.value) {
+            // Establece un mensaje de error de validación personalizado.
+            // El navegador mostrará este mensaje y evitará el envío del formulario.
+            emailConfInput.setCustomValidity("El E-mail y su confirmación no coinciden.");
+          } else {
+            // Si coinciden, se limpia el mensaje de error.
+            emailConfInput.setCustomValidity("");
+          }
+        };
+
+        // Se añaden los listeners para que la validación se ejecute mientras el usuario escribe.
+        emailInput.addEventListener('input', validateEmails);
+        emailConfInput.addEventListener('input', validateEmails);
+        // --- FIN: NUEVA LÓGICA DE VALIDACIÓN DE EMAIL ---
       }
       bloque.appendChild(header);
       bloque.appendChild(contentWrapper);
@@ -125,7 +201,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const submitDiv = document.createElement("div");
   submitDiv.className = "actions";
-  submitDiv.innerHTML = `<button type="submit">Enviar</button>`;
+  submitDiv.innerHTML = `<button type="submit">Siguiente</button>`;
   form.appendChild(submitDiv);
   container.appendChild(form);
 
@@ -143,7 +219,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (currentCheckbox.checked) {
         fieldsDiv.style.display = 'block';
         fieldInputs.forEach(input => {
-          if (input.type === 'email') input.required = true;
+          if (input.type === 'email' || input.type === 'tel') input.required = true;
         });
         buyerCheckboxes.forEach(otherCheckbox => {
           if (otherCheckbox !== currentCheckbox) otherCheckbox.disabled = true;
@@ -168,7 +244,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     infantCheckboxes.forEach(checkbox => checkbox.addEventListener('change', handleInfantSelection));
   }
 
-  // 3. Control para la validación del NÚMERO DE DOCUMENTO
+  // 3. Control para la validación del NÚMERO DE DOCUMENTO (formato)
   document.querySelectorAll('.formulario-dinamico').forEach(formBlock => {
       const tipoDocSelect = formBlock.querySelector("select[id*='_tipo_doc_']");
       const numDocInput = formBlock.querySelector("input[id*='_num_doc_']");
@@ -214,7 +290,40 @@ document.addEventListener("DOMContentLoaded", async () => {
   form.addEventListener('submit', async (event) => {
     event.preventDefault(); 
     
+    // El navegador se encargará de mostrar los mensajes de error de validación
+    // (tanto para email como para DNI) antes de permitir el envío.
+    // Si form.checkValidity() es false, el evento 'submit' no se debería disparar
+    // o se detiene por el navegador.
+    if (!form.checkValidity()) {
+        form.reportValidity(); // Muestra todos los errores de validación pendientes
+        return;
+    }
+
     const statusMessage = document.getElementById('status-message');
+    
+    // --- VALIDACIÓN FINAL ANTES DE ENVIAR ---
+    const buyerCheckbox = document.querySelector('.buyer-checkbox:checked');
+    
+    // Primero, verificar si se ha seleccionado un comprador.
+    if (!buyerCheckbox) {
+        statusMessage.textContent = 'Debe seleccionar un pasajero como comprador.';
+        statusMessage.style.color = 'red';
+        return; // Detiene el envío
+    }
+    
+    // Si hay comprador, verificar la coincidencia de emails.
+    const i = buyerCheckbox.id.split('_')[1];
+    const emailInput = document.getElementById(`Adulto_email_${i}`);
+    const emailConfInput = document.getElementById(`Adulto_email_conf_${i}`);
+
+    if (emailInput.value !== emailConfInput.value) {
+        statusMessage.textContent = 'Error: El E-mail y su confirmación no coinciden.';
+        statusMessage.style.color = 'red';
+        emailConfInput.focus(); // Pone el foco en el campo incorrecto
+        return; // Detiene el envío
+    }
+
+    // Si todas las validaciones pasan, se procede con el envío.
     statusMessage.textContent = 'Enviando datos...';
     statusMessage.style.color = 'orange';
 
@@ -272,7 +381,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
     }
 
-    // Log para ver el JSON que se va a enviar
     console.log('Enviando los siguientes datos:', reservaData);
 
     try {
@@ -286,21 +394,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         
         const result = await response.json();
         
-        // Log para ver la respuesta que se recibe del servidor
         console.log('Respuesta del servidor:', result);
 
         if (result.success) {
             statusMessage.textContent = '¡Reserva guardada con éxito!';
             statusMessage.style.color = 'green';
+            // Redirección si todo es correcto
+            window.location.href = "../pasarela_pagos/menu4.html";
         } else {
             throw new Error(result.error || 'Ocurrió un error desconocido.');
         }
 
-        window.location.href = "../pasarela_pagos/menu4.html";
-
-
     } catch (error) {
-        console.error('Error en el envío fetch:', error); // Log para depuración
+        console.error('Error en el envío fetch:', error);
         statusMessage.textContent = `Error al enviar: ${error.message}`;
         statusMessage.style.color = 'red';
     }

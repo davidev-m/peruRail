@@ -58,7 +58,7 @@ try{
 
 
     $viaje = new Viaje();
-    $resultado = $viaje->buscar($origen,$destino, $fecha);
+    $resultado = $viaje->buscarViajesDisponibles($origen,$destino, $fecha);
 
     // Lógica antes del frontend
     $pasajeros = (int)($datosR['adultos'] ?? 0) + (int)($datosR['ninos'] ?? 0); 

@@ -1,31 +1,47 @@
 <?php
-    require_once __DIR__ . '/../conexion/conexion.php'; 
+require_once __DIR__ . '/caso_base.php';
 
-    class Estacion{
-        private PDO $conexion ;
-        public function __construct(){
-            $this->conexion = database::getConexion();
+class Estacion extends caso_base_CRUD {
+
+    public function obtenerIdEstacion($estOrigen, $estDestino, $id_ruta = null) {
+        // 1. Validación de los datos de entrada
+        if (empty($estOrigen) || empty($estDestino)) {
+            throw new InvalidArgumentException("El origen y el destino no pueden estar vacíos.");
         }
-        public function retornaID($estOrigen, $estDestino){
-            $sql = "SELECT id_estacion
-            from Estacion
-            where est_origen = :origen and est_destino = :destino";
-            
-            if (!$sentencia = $this->conexion->prepare($sql)) {
-                throw new RuntimeException("Sentencia errorea", $this->conexion->errorCode());
-            }
 
-            $sentencia->bindParam(':origen', $estOrigen);
-            $sentencia->bindParam(':destino', $estDestino);
-            if (!$sentencia->execute()) {
-                throw new RuntimeException('Error en la peticion de consulta', $sentencia->errorCode());
-            }
-            $result = $sentencia->fetch(PDO::FETCH_ASSOC);
-            if (!$result) {
-                throw new RuntimeException("No se encontró ruta con el ID proporcionado.");
-            }
+        // 2. Preparamos los parámetros para el método buscar()
+        $select = 'id_estacion';
+        $from = 'Estacion';
+        
+        // La condición WHERE y los datos cambian si se proporciona un id_ruta
+        $where = 'est_origen = :origen AND est_destino = :destino';
+        $datos = [
+            ':origen' => $estOrigen,
+            ':destino' => $estDestino
+        ];
 
-            return $result;
-        } 
+        // Si el usuario nos da un id_ruta, lo añadimos a la búsqueda para ser más precisos.
+        // ¡Esta es la forma más segura de hacerlo!
+        if ($id_ruta !== null) {
+            $where .= ' AND id_ruta = :idRuta';
+            $datos[':idRuta'] = $id_ruta;
+        }
+
+        // 3. Llamamos al método buscar() de la clase padre.
+        $resultado = $this->buscar(
+                     $from, 
+            $select, 
+                     $where, 
+                     $datos
+        );
+
+        // 4. Procesamos el resultado
+        if (!empty($resultado)) {
+            // Devolvemos el ID del primer resultado encontrado.
+            return $resultado[0]['id_estacion'];
+        }
+
+        return null; // No se encontró ninguna estación con esos criterios.
     }
+}
 ?>

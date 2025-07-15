@@ -1,5 +1,6 @@
-<?php
-    class Cliente{
+<?php 
+    require_once __DIR__ . '/caso_base.php';
+    class Cliente extends caso_base_CRUD{
         private PDO $conexion ;
         public function __construct(){
             $this->conexion = database::getConexion();
@@ -22,5 +23,12 @@
             }
             return $result;
         } 
+
+        public function insertarCliente($id_documento, $nombre, $apellido, $genero, $documento, $fecha_nacimiento){
+            $tabla = "Cliente";
+            
+            $datos = [$id_documento, $nombre, $apellido, $genero, $documento, $fecha_nacimiento];
+            $this->insertar($tabla,$datos);
+        }
     }
 ?>

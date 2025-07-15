@@ -25,7 +25,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
     }     
     $_SESSION['trenes_seleccionados'] = $datos;
 
-    error_log("tren_seleccion.php -> Contenido de SESSION DESPUÉS DE GUARDAR TRENES: " . print_r($_SESSION, true));
-
     echo json_encode(["success" => true, "message" => "Datos de trenes seleccionados guardados en sesión."]);
 ?>

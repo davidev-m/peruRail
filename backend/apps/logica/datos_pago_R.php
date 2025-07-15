@@ -11,24 +11,6 @@
 
     if($confirmacion['verificacion']){
 
-        $cliente = new Cliente();
-        $adultos = $_SESSION["pasajeros"]["adultos"];
-        $cantAdultos = count($adultos);
-        for($i = 0; $i < $cantAdultos; $i++){
-            $nombre = $adultos["nombre"];
-            $apellidos = $adultos["apellidos"];
-            $genero = $adultos["genero"];
-            $pais = $adultos["pais"];
-            $tipo_doc = $adultos["tipo_doc"];
-            $num_doc = $adultos["num_doc"];
-            $con_infante = $adultos["con_infante"];
-            $fecha_nac = $adultos["fecha_nac"];
-
-            $cliente->insertarCliente(2,$nombre,$apellidos,$genero,$num_doc,$fecha_nac);
-        }
-
-
-
         //BUSCAR ID VIAJE-------------------------------------------------
         $trenIda = $_SESSION["trenes_seleccionados"]["trenIda"];
         $nombreTren = separarNombreYNumero($trenIda['tren']["nombre"]);
@@ -63,8 +45,117 @@
         }
         //----------------------------------------------
 
+
+
         
+        
+        //CASO DE CLIENTE EMPRESA
+        $empresa = $_SESSION['empresa'];
+        $empresa = $_SESSION['empresa'];
+        $claseEmpresa = new ClienteEmpresa();
+        $idEmpresa = -1;
+        if(!empty($empresa)){
+            $ruc = $empresa['ruc'];
+            $razon_social = $empresa['razon_social'];
+            $direccion = $empresa['direccion'];
+            if($empresa['existe'] == 1){
+                $idEmpresa = ($claseEmpresa->buscaEmpresa($empresa['ruc']))['id_cliente_e'];
+            }else{
+                $idEmpresa = $claseEmpresa->insertarEmpresa($ruc,$razon_social,$direccion);
+            }
+        }
+        
+        
+        
+        //CASO DE RESERVA
+        $claseCliente = new Cliente();
+        $claseClienteComprador = new ClienteComprador();
+        $documento = new tipo_documento();
+        $clasePago = new Pago();
+        
+        $adultos = $_SESSION["pasajeros"]["adultos"];
+        $ninos = $_SESSION['pasajeros']['ninos'];
+        $comprador = $_SESSION["comprador"];
+
+
+        $clientes = array_merge($adultos, $ninos);
+        $cantCliente = count($clientes);
+        foreach ($clientes as $client) {
+            //INSERTAR CLIENTE---------------------------------
+            $num_doc = $client["num_doc"];
+
+            //CLIENTE
+            //Existe cliente -- Buscar su Id
+            // if($client['existe'] == 1){
+            //     $idCliente[] = $claseCliente->buscarId($num_doc);
+            // }
+            // //No existe cliente -- Insertar
+            // else{
+            //     $idDocumento = $documento->buscarDocumento($client['tipo_doc']);
+            //     $nombre = $client["nombre"];
+            //     $apellidos = $client["apellidos"];
+            //     $genero = $client["genero"];
+            //     $pais = $client["pais"];
+            //     $tipo_doc = $client["tipo_doc"];
+            //     $fecha_nac = $client["fecha_nac"];
+    
+            //     $idCliente[] = $claseCliente->insertarCliente($idDocumento,$nombre,$apellidos,$genero,$num_doc,$fecha_nac);
+            // }
+            // //---------------------------------------------------
+   
+            $idDocumento = $documento->buscarDocumento($client['tipo_doc']);
+            $nombre = $client["nombre"];
+            $apellidos = $client["apellidos"];
+            $genero = $client["genero"];
+            $pais = $client["pais"];
+            $tipo_doc = $client["tipo_doc"];
+            $fecha_nac = $client["fecha_nac"];
+
+            $idCliente[] = $claseCliente->insertarCliente($idDocumento,$nombre,$apellidos,$genero,$num_doc,$fecha_nac);
+
+            if(isset($client["es_comprador"]) && $client["es_comprador"] != null){
+
+                //INSERTAR COMPRADOR
+                if(false && $client['existe'] == 1){
+                    $idComprador = $idCliente[] = $claseCliente->buscarId($num_doc);
+                }else{ 
+                    // if($idEmpresa == -1){
+                    //     $idComprador = $claseClienteComprador->insertarClienteComprador(id_cliente: end($idCliente),email:$comprador['email'], telefono:$comprado['telefono']);
+                    // }else{
+                    //     $idComprador = $claseClienteComprador->insertarClienteComprador(end($idCliente), $idEmpresa, $comprador['email'], $comprador['telefono']);
+                    // }   
+                    $idComprador = $claseClienteComprador->insertarClienteComprador(end($idCliente), null, $comprador['email'], $comprador['telefono']);
+                }
+
+                //INSERTAR PAGO
+                $montoTotal = $_SESSION['monto_total'];
+                $idPago = $clasePago->insertarPago(end($idCliente),$montoTotal, "tarjeta");
+            }
+   
+        }
+
+        $claseReserva = new reserva(); 
+        $fecha = $_SESSION["trenes_seleccionados"]['fechaIda'];
+        for($i = 0; $i < $cantCliente; $i++){
+            $client = $clientes[$i]; 
+            //Existe con_infante y no es nulo
+            $infante = false;
+            if(isset($client['con_infante'])){
+                $infante = true;
+            }
+            $claseReserva->insertarReserva($idViaje[0],$idPago,$fecha,$idCliente[$i],$infante);
+        }
+        if(count($idViaje) > 1){
+            $client = $clientes[$i]; 
+            //Existe con_infante y no es nulo
+            $infante = false;
+            if(isset($client['con_infante'])){
+                $infante = true;
+            }
+            $claseReserva->insertarReserva($idViaje[1],$idPago,$fecha,$idCliente[$i],$infante);
+        }
     }
+
     echo json_encode(["success" => true, "message" => "Datos de trenes seleccionados guardados en sesión."]);
 
 ?>

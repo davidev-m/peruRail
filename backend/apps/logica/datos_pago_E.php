@@ -86,6 +86,7 @@
         }
     }
     $resultado['total'] = $monto_total;
+    $_SESSION['monto_total'] = $monto_total;
     //--------------------------------------------------------------------
         
     error_log("datos_pago_E.php -> Contenido de SESSION: " . print_r($resultado, true));

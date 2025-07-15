@@ -2,6 +2,12 @@
 require_once __DIR__ . '/caso_base.php';
 
 class Estacion extends caso_base_CRUD {
+    private $nombreTabla;
+    
+    function __construct(){
+        parent::__construct(); 
+        $this->nombreTabla = "Estacion";
+    }
 
     public function obtenerIdEstacion($estOrigen, $estDestino, $id_ruta = null) {
         // 1. Validación de los datos de entrada
@@ -11,7 +17,7 @@ class Estacion extends caso_base_CRUD {
 
         // 2. Preparamos los parámetros para el método buscar()
         $select = 'id_estacion';
-        $from = 'Estacion';
+        $from = $this->nombreTabla;
         
         // La condición WHERE y los datos cambian si se proporciona un id_ruta
         $where = 'est_origen = :origen AND est_destino = :destino';

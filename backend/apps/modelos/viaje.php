@@ -6,6 +6,10 @@ require_once __DIR__ . '/caso_base.php';
  * Hereda de caso_base_CRUD para las operaciones de base de datos.
  */
 class Viaje extends caso_base_CRUD {
+
+    function __construct(){
+        parent::__construct(); 
+    }
     public function buscarViajesDisponibles($origen, $destino, $fecha_salida) {
         // 1. Validación de los datos de entrada.
         if (empty($origen) || empty($destino) || empty($fecha_salida)) {

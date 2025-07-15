@@ -2,6 +2,9 @@
     require_once __DIR__ . '/../conexion/conexion.php';
     require_once __DIR__ . '/caso_base.php';
     class Tren extends caso_base_CRUD{
+        function __construct(){
+            parent::__construct(); 
+        }
         public function BuscarIdTren($codigo, $nombre_clase) {
         // 1. Validación de entradas (esto es lógica de negocio y se queda aquí)
         if (empty($codigo) || empty($nombre_clase)) {

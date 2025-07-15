@@ -111,6 +111,26 @@ document.addEventListener("DOMContentLoaded", async () => {
           </div>
         `;
         contentWrapper.appendChild(buyerFieldsDiv);
+
+        // --- INICIO: NUEVA LÓGICA DE VALIDACIÓN DE EMAIL ---
+        const emailInput = buyerFieldsDiv.querySelector(`#Adulto_email_${i}`);
+        const emailConfInput = buyerFieldsDiv.querySelector(`#Adulto_email_conf_${i}`);
+
+        const validateEmails = () => {
+          if (emailInput.value !== emailConfInput.value) {
+            // Establece un mensaje de error de validación personalizado.
+            // El navegador mostrará este mensaje y evitará el envío del formulario.
+            emailConfInput.setCustomValidity("El E-mail y su confirmación no coinciden.");
+          } else {
+            // Si coinciden, se limpia el mensaje de error.
+            emailConfInput.setCustomValidity("");
+          }
+        };
+
+        // Se añaden los listeners para que la validación se ejecute mientras el usuario escribe.
+        emailInput.addEventListener('input', validateEmails);
+        emailConfInput.addEventListener('input', validateEmails);
+        // --- FIN: NUEVA LÓGICA DE VALIDACIÓN DE EMAIL ---
       }
       bloque.appendChild(header);
       bloque.appendChild(contentWrapper);

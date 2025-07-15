@@ -180,54 +180,54 @@ INSERT IGNORE Clase(nombre_clase) VALUES
 ('PeruRail Titicaca'),
 ('Anden Explorer a Belmond Train');
 
-INSERT IGNORE Tren(id_clase, id_trabajador, cap_total, codigo) VALUES
-(1, 1, 50, '81'),
-(1, 2, 50, '83'),
-(1, 3, 50, '33'),
-(1, 4, 50, '31'),
-(1, 5, 50, '203'),
-(1, 6, 50, '73'),
-(1, 7, 50, '603'),
-(1, 8, 50, '71'),
-(1, 9, 50, '91'),
-(1, 10, 50, '51'),
-(1, 11, 50, '72H'),
-(1, 12, 50, '504H'),
-(2, 13, 40, '303'),
-(2, 14, 40, '603'),
-(2, 15, 40, '203'),
-(2, 16, 40, '83'),
-(2, 17, 40, '33'),
-(3, 18, 45, '31'),
-(3, 19, 45, '75'),
-(3, 20, 45, '301'),
-(3, 21, 45, '601'),
-(3, 22, 45, '501'),
-(4, 23, 30, '11'),
-(5, 24, 35, '1'),
-(6, 25, 45, '2'),
-(1, 26, 50, '204'),
-(1, 27, 50, '34'),
-(1, 28, 50, '504'),
-(1, 29, 50, '50'),
-(1, 30, 50, '72'),
-(1, 31, 50, '34'),
-(1, 32, 50, '604'),
-(1, 33, 50, '84'),
-(1, 34, 50, '76'),
-(1, 35, 50, '71H'),
-(1, 36, 50, '501H'),
-(2, 37, 40, '204'),
-(2, 38, 40, '504'),
-(2, 39, 40, '604'),
-(2, 40, 40, '302'),
-(2, 41, 40, '34'),
-(3, 42, 45, '32'),
-(3, 43, 45, '606'),
-(3, 44, 45, '84'),
-(3, 45, 45, '602'),
-(3, 46, 45, '76'),
-(4, 47, 30, '12');
+INSERT IGNORE Tren(id_clase, id_trabajador, cap_total, codigo, estado) VALUES
+(1, 1, 50, '81', 'activo'),
+(1, 2, 50, '83', 'activo'),
+(1, 3, 50, '33', 'activo'),
+(1, 4, 50, '31', 'activo'),
+(1, 5, 50, '203', 'activo'),
+(1, 6, 50, '73', 'activo'),
+(1, 7, 50, '603', 'activo'),
+(1, 8, 50, '71', 'activo'),
+(1, 9, 50, '91', 'activo'),
+(1, 10, 50, '51', 'activo'),
+(1, 11, 50, '72H', 'activo'),
+(1, 12, 50, '504H', 'activo'),
+(2, 13, 40, '303', 'activo'),
+(2, 14, 40, '603', 'activo'),
+(2, 15, 40, '203', 'activo'),
+(2, 16, 40, '83', 'activo'),
+(2, 17, 40, '33', 'activo'),
+(3, 18, 45, '31', 'activo'),
+(3, 19, 45, '75', 'activo'),
+(3, 20, 45, '301', 'activo'),
+(3, 21, 45, '601', 'activo'),
+(3, 22, 45, '501', 'activo'),
+(4, 23, 30, '11', 'activo'),
+(5, 24, 35, '1', 'activo'),
+(6, 25, 45, '2', 'activo'),
+(1, 26, 50, '204', 'activo'),
+(1, 27, 50, '34', 'activo'),
+(1, 28, 50, '504', 'activo'),
+(1, 29, 50, '50', 'activo'),
+(1, 30, 50, '72', 'activo'),
+(1, 31, 50, '34', 'activo'),
+(1, 32, 50, '604', 'activo'),
+(1, 33, 50, '84', 'activo'),
+(1, 34, 50, '76', 'activo'),
+(1, 35, 50, '71H', 'activo'),
+(1, 36, 50, '501H', 'activo'),
+(2, 37, 40, '204', 'activo'),
+(2, 38, 40, '504', 'activo'),
+(2, 39, 40, '604', 'activo'),
+(2, 40, 40, '302', 'activo'),
+(2, 41, 40, '34', 'activo'),
+(3, 42, 45, '32', 'activo'),
+(3, 43, 45, '606', 'activo'),
+(3, 44, 45, '84', 'activo'),
+(3, 45, 45, '602', 'activo'),
+(3, 46, 45, '76', 'activo'),
+(4, 47, 30, '12', 'activo');
 
 INSERT IGNORE Bus(placa) VALUES
 ('A23-432'),
@@ -1800,15 +1800,15 @@ INSERT IGNORE INTO Viaje(id_estacion, id_tren, id_bus, fecha_salida, hora_salida
 (20, 25, NULL, '2025-07-20', '2025-07-20 10:00:00', '2025-07-22 15:30:00', 3000);
 
 
-INSERT IGNORE Pago(id_cliente, monto_total, metodo) VALUES
+INSERT IGNORE  INTO Pago(id_cliente, monto_total, metodo) VALUES
 (1, 500, 'Tarjeta'),
 (2, 1000, 'Transferencia'),
 (3, 2500, 'Efectivo');
 
-INSERT IGNORE Reserva(id_viaje, id_pago, fecha, id_cliente, infate) VALUES
-(1, 1, '2025-07-04',2,1),
-(3, 2, '2025-07-04',1,0),
-(5, 3, '2025-07-04',3,0);
+INSERT IGNORE INTO Reserva(id_viaje, id_pago, fecha, id_cliente, infante) VALUES
+(1, 1, '2025-07-04', 2, 1),
+(3, 2, '2025-07-04', 1, 0),
+(5, 3, '2025-07-04', 3, 0);
 
-INSERT IGNORE Reserva_asesor(id_reserva, id_trabajador) VALUES
+INSERT IGNORE INTO Reserva_asesor(id_reserva, id_trabajador) VALUES
 (3, 48);

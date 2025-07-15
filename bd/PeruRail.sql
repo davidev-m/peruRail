@@ -119,6 +119,7 @@ CREATE TABLE Tren(
     id_trabajador INT(11) NOT NULL,
     cap_total	INT(11) NOT NULL,
     codigo		VARCHAR(10) NULL,
+    estado	VARCHAR(10) NOT NULL,
     PRIMARY KEY(id_tren),
     FOREIGN KEY(id_clase)
 		REFERENCES Clase(id_clase)
@@ -173,23 +174,23 @@ CREATE TABLE Pago(
 );
 
 CREATE TABLE Reserva(
-	id_reserva	INT(11) NOT NULL AUTO_INCREMENT,
-    id_viaje	INT(11) NOT NULL,
-    id_pago		INT(11) NOT NULL,
-    id_cliente 	INT(11) NOT NULL,
-    fecha 		DATE NOT NULL, -- fecha para realizar la compra
-    infante     BOOL NOT NULL,
+    id_reserva  INT(11) NOT NULL AUTO_INCREMENT,
+    id_viaje    INT(11) NOT NULL,
+    id_pago     INT(11) NOT NULL,
+    id_cliente  INT(11) NOT NULL,
+    fecha       DATE NOT NULL, -- fecha para realizar la compra
+    infante     BOOL NOT NULL, -- LÍNEA CORREGIDA
     PRIMARY KEY (id_reserva),
     FOREIGN KEY(id_viaje)
-		REFERENCES Viaje(id_viaje)
+        REFERENCES Viaje(id_viaje)
         ON UPDATE RESTRICT
         ON DELETE RESTRICT,
-	FOREIGN KEY(id_pago)
-		REFERENCES Pago(id_pago)
+    FOREIGN KEY(id_pago)
+        REFERENCES Pago(id_pago)
         ON UPDATE RESTRICT
         ON DELETE RESTRICT,
-	FOREIGN KEY(id_cliente)
-		REFERENCES Cliente(id_cliente)
+    FOREIGN KEY(id_cliente)
+        REFERENCES Cliente(id_cliente)
         ON UPDATE RESTRICT
         ON DELETE RESTRICT
 );

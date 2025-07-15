@@ -1,0 +1,52 @@
+[
+    {
+      "clase": "awa",
+      "codigo": 72,
+      "capacidad": 35
+    },
+    {
+      "clase": "Inca Rail Voyager",
+      "codigo": 82,
+      "capacidad": 50
+    },
+    {
+      "clase": "Belmond Hiram Bingham",
+      "codigo": 15,
+      "capacidad": 84
+    },
+    {
+      "clase": "Andean Explorer",
+      "codigo": 33,
+      "capacidad": 48
+    },
+    {
+      "clase": "PeruRail Vistadome",
+      "codigo": 45,
+      "capacidad": 64
+    },
+    {
+      "clase": "Inca Rail 360°",
+      "codigo": 91,
+      "capacidad": 48
+    },
+    {
+      "clase": "Tren Macho",
+      "codigo": 101,
+      "capacidad": 120
+    },
+    {
+      "clase": "Ferrocarril Central",
+      "codigo": 22,
+      "capacidad": 200
+    },
+    {
+      "clase": "Inca Rail First Class",
+      "codigo": 68,
+      "capacidad": 30
+    },
+    {
+      "clase": "PeruRail Titicaca",
+      "codigo": 59,
+      "capacidad": 42
+    }
+  ]

@@ -1,21 +1,59 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Formulario de Info Personal</title>
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Pasajeros - PeruRail</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="info">
-    <h1>Pasajeros</h1>
-    <!-- Aquí se inyecta el <form> con todos los pasajeros -->
-    <div id="form-container"></div>
-    
-    <!-- Div para mostrar mensajes de estado (éxito, error, etc.) -->
-    <div id="status-message" style="text-align: center; margin-top: 20px; font-weight: bold;"></div>
-  </div>
 
-  <script src="script.js"></script>
+    <div class="main-container">
+        <!-- Encabezado con logo y sesión -->
+        <header class="header">
+            <div class="logo">
+                <img src="Imagenes/logo.png" alt="Logo de la Empresa">
+            </div>
+        </header>
+
+        <!-- Indicador de Pasos -->
+        <ol class="steps-indicator">
+            <li class="step">
+                <span class="step-number">1</span>
+                <span class="step-label">BUSCAR</span>
+            </li>
+            <li class="step">
+                <span class="step-number">2</span>
+                <span class="step-label">TRENES</span>
+            </li>
+            <li class="step active">
+                <span class="step-number">3</span>
+                <span class="step-label">DATOS DEL PASAJERO</span>
+            </li>
+            <li class="step">
+                <span class="step-number">4</span>
+                <span class="step-label">CONFIRMACION Y PAGO</span>
+            </li>
+        </ol>
+
+        <!-- Contenedor del Formulario -->
+        <main class="form-wrapper">
+            <h1>PASAJEROS</h1>
+            
+            <!-- Tu script inyectará el formulario aquí dentro -->
+            <div id="form-container"></div>
+            
+            <!-- Div para mensajes de estado -->
+            <div id="status-message"></div>
+
+            <!-- Botones de Acción -->
+            <div class="action-buttons">
+                <button type="button" class="btn btn-return">&lt; ATRAS</button>
+                <!-- El botón de continuar será el submit del formulario, generado por script.js -->
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

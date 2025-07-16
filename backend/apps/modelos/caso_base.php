@@ -31,6 +31,9 @@ class caso_base_CRUD {
 
 
         $sql = "INSERT INTO `$tabla` (`" . implode('`, `', $columnas) . "`) VALUES (" . implode(', ', $placeholders) . ")";
+        
+        //error_log("Caso Base (SQL Insert): " . $sql);
+
 
         try {
             $sentencia = $this->pdo->prepare($sql);
@@ -95,11 +98,29 @@ class caso_base_CRUD {
         }
     }
 
-    public function eliminar($tabla, $datoId){
-        if(empty($tabla) || empty($datoId)){
-            throw new Exception( "Datos vacios");
+    public function eliminar($tabla, $datoId) {
+        if (empty($tabla) || empty($datoId) || !is_array($datoId) || count($datoId) !== 1) {
+            throw new InvalidArgumentException("Se requiere la tabla y un array con una sola clave/valor para la condición de eliminación.");
         }
-        $sql = "UPDATE  `". $tabla . "` SET  `" . array_keys($datoId)[0] .'` WHERE '. array_values($datoId)[0];
+        $this->validarNombre($tabla);
+
+        $columnaCondicion = array_key_first($datoId); 
+        $valorCondicion = $datoId[$columnaCondicion];  
+
+        // 2. Construimos la sentencia SQL directamente.
+        $sql = "UPDATE `$tabla` SET `estado` = :estado WHERE `$columnaCondicion` = :id_condicion";
+
+        try {
+            $sentencia = $this->pdo->prepare($sql);
+
+            $sentencia->bindValue(':estado', 'inactivo');
+            $sentencia->bindValue(':id_condicion', $valorCondicion);
+
+            $sentencia->execute();  
+
+        } catch (PDOException $e) {
+            throw new RuntimeException("Error al eliminar (desactivar) en la tabla `$tabla`: " . $e->getMessage());
+        }
     }
 }
 ?>

@@ -16,14 +16,17 @@
         $nombreTren = separarNombreYNumero($trenIda['tren']["nombre"]);
         
         $tren = new Tren();
-        $idTren = [$tren->BuscarIdTren($nombreTren['codigo'],$nombreTren['nombre'])];
+        $idTren[] = $tren->BuscarIdTren($nombreTren['codigo'],$nombreTren['nombre']);
         
         $estacion = new Estacion();
         $NombreEstacion = $trenIda["estaciones"];
-        $idEstacion = [$estacion->obtenerIdEstacion($NombreEstacion[0], $NombreEstacion[1])];
+        $idEstacion[] = $estacion->obtenerIdEstacion($NombreEstacion[0], $NombreEstacion[1]);
 
-        $idBus = [$trenIda["tren"]["id_bus"]];
-
+        if(isset($trenIda["tren"]["id_bus"])){
+            $idBus[] = $trenIda["tren"]["id_bus"]; 
+        }else{
+            $idBus[] = null;
+        }
         $viaje = new Viaje();
 
         if($_SESSION['trenes_seleccionados']['tipo'] == "ida_vuelta"){
@@ -32,17 +35,28 @@
             $nombreTren = separarNombreYNumero($trenRetorno['tren']["nombre"]);
             
             $tren = new Tren();
-            $idTren[] = [$tren->BuscarIdTren($nombreTren['codigo'],$nombreTren['nombre'])];  
+            $idTren[] = $tren->BuscarIdTren($nombreTren['codigo'],$nombreTren['nombre']);  
         
             $NombreEstacion = $trenRetorno["estaciones"];
-            $idEstacion[] = [$estacion->obtenerIdEstacion($NombreEstacion[0], $NombreEstacion[1])];
+            $idEstacion[] = $estacion->obtenerIdEstacion($NombreEstacion[0], $NombreEstacion[1]);
 
-            $idBus[] = $trenIda["tren"]["id_bus"];
+            if(isset($trenRetorno["tren"]["id_bus"])){
+                $idBus[] = $trenRetorno["tren"]["id_bus"]; 
+            }else{
+                $idBus[] = null;
+            }
         }
 
+        $fecha[] = $_SESSION['trenes_seleccionados']['fechaIda'];
+        if($_SESSION['trenes_seleccionados']['fechaRet']){
+            $fecha[] = $_SESSION['trenes_seleccionados']['fechaRet'];
+        }
         for($i = 0; $i < count($idBus); $i++){
-            $idViaje[] = $viaje->obtenerIdViaje($idTren[$i], $idBus[$i], $idEstacion[$i]);
+            $idViaje[] = $viaje->obtenerIdViaje($idTren[$i], $idBus[$i], $idEstacion[$i], $fecha[$i]);
         }
+
+
+        
         //----------------------------------------------
 
 
@@ -113,23 +127,23 @@
 
             $idCliente[] = $claseCliente->insertarCliente($idDocumento,$nombre,$apellidos,$genero,$num_doc,$fecha_nac);
 
-            if(isset($client["es_comprador"]) && $client["es_comprador"] != null){
+            if(isset($client["es_comprador"]) && $client["es_comprador"] == 1){
 
                 //INSERTAR COMPRADOR
                 if(false && $client['existe'] == 1){
-                    $idComprador = $idCliente[] = $claseCliente->buscarId($num_doc);
+                    $idComprador = $claseCliente->buscarId($num_doc);
                 }else{ 
                     // if($idEmpresa == -1){
                     //     $idComprador = $claseClienteComprador->insertarClienteComprador(id_cliente: end($idCliente),email:$comprador['email'], telefono:$comprado['telefono']);
                     // }else{
                     //     $idComprador = $claseClienteComprador->insertarClienteComprador(end($idCliente), $idEmpresa, $comprador['email'], $comprador['telefono']);
                     // }   
-                    $idComprador = $claseClienteComprador->insertarClienteComprador(end($idCliente), null, $comprador['email'], $comprador['telefono']);
+                    $idComprador = $claseClienteComprador->insertarClienteComprador(end($idCliente), $comprador['email'], $comprador['telefono'], null);
                 }
 
                 //INSERTAR PAGO
                 $montoTotal = $_SESSION['monto_total'];
-                $idPago = $clasePago->insertarPago(end($idCliente),$montoTotal, "tarjeta");
+                $idPago = $clasePago->insertarPago($idComprador,$montoTotal, "tarjeta");
             }
    
         }
@@ -139,23 +153,27 @@
         for($i = 0; $i < $cantCliente; $i++){
             $client = $clientes[$i]; 
             //Existe con_infante y no es nulo
-            $infante = false;
-            if(isset($client['con_infante'])){
-                $infante = true;
+            $infante = 0;
+            if(isset($client['con_infante']) && $client['con_infante'] == 1){
+                $infante = 1;
             }
             $claseReserva->insertarReserva($idViaje[0],$idPago,$fecha,$idCliente[$i],$infante);
         }
         if(count($idViaje) > 1){
+            for($i = 0; $i < $cantCliente; $i++){
             $client = $clientes[$i]; 
             //Existe con_infante y no es nulo
-            $infante = false;
-            if(isset($client['con_infante'])){
-                $infante = true;
+            $infante = 0;
+            if(isset($client['con_infante']) && $client['con_infante'] == 1){
+                $infante = 1;
             }
             $claseReserva->insertarReserva($idViaje[1],$idPago,$fecha,$idCliente[$i],$infante);
         }
+        }
     }
 
-    echo json_encode(["success" => true, "message" => "Datos de trenes seleccionados guardados en sesión."]);
+    echo json_encode(
+        ["success" => true, 
+        "message" => "Datos de trenes seleccionados guardados en sesión."]);
 
 ?>

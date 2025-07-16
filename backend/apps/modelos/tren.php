@@ -2,8 +2,11 @@
     require_once __DIR__ . '/../conexion/conexion.php';
     require_once __DIR__ . '/caso_base.php';
     class Tren extends caso_base_CRUD{
+        private $nombre_tabla;
+
         function __construct(){
             parent::__construct(); 
+            $this->nombre_tabla = "Tren";
         }
         public function BuscarIdTren($codigo, $nombre_clase) {
         // 1. Validación de entradas (esto es lógica de negocio y se queda aquí)
@@ -34,6 +37,24 @@
 
         // Si no se encontró nada, devolvemos null.
         return null;
+    }
+    public function eliminarTren($idTren){
+        $from = $this->nombre_tabla;
+        $datos = [
+            "id_tren" => $idTren
+        ];
+        $this->eliminar($from, $datos);
+    }
+
+    public function buscarTrenes(){
+        $from = $this->nombre_tabla;
+        $select = "*";
+        $condicionalExtra = "LIMIT 10";
+        $resultado = $this->buscar(
+            tabla: $from,
+            datosSeleccion:$select, 
+            condicionalExtra: $condicionalExtra);
+        return $resultado;
     }
 
     }

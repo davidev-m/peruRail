@@ -3,7 +3,7 @@
     require_once __DIR__ . '/caso_base.php';
     class reserva extends caso_base_CRUD{
         private $nombreTabla;
-        function __construct(){
+        public function __construct(){
             parent::__construct(); 
             $this->nombreTabla = "Reserva";
         }

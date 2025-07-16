@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         </div>
         <div class="form-row">
           <div class="form-group"><label for="${key}_pais_${i}">País *</label><select id="${key}_pais_${i}" name="${key}_pais_${i}" required><option value="">-- Seleccione un país --</option><option value="Perú">Perú</option><option value="Chile">Chile</option><option value="Argentina">Argentina</option><option value="Colombia">Colombia</option><option value="Ecuador">Ecuador</option><option value="Brasil">Brasil</option></select></div>
-          <div class="form-group"><label for="${key}_tipo_doc_${i}">Tipo de Documento *</label><select id="${key}_tipo_doc_${i}" name="${key}_tipo_doc_${i}" required><option value="">-- Seleccione tipo --</option><option value="DNI">DNI</option><option value="Pasaporte">Pasaporte</option><option value="Carnet de extranjería">Carnet de extranjería</option></select></div>
+          <div class="form-group"><label for="${key}_tipo_doc_${i}">Tipo de Documento *</label><select id="${key}_tipo_doc_${i}" name="${key}_tipo_doc_${i}" required><option value="">-- Seleccione tipo --</option><option value="DNI">DNI</option><option value="Pasaporte">Pasaporte</option><option value="Carnet">Carnet de extranjería</option></select></div>
         </div>
         <div class="form-row">
           <div class="form-group"><label for="${key}_num_doc_${i}">Número de Documento *</label><input type="text" id="${key}_num_doc_${i}" name="${key}_num_doc_${i}" required></div>
@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Función para ejecutar la validación
       const validarDocumento = async () => {
         const docType = tipoDocSelect.value;
-        const docTypesToValidate = ['DNI', 'Pasaporte', 'Carnet de extranjería'];
+        const docTypesToValidate = ['DNI', 'Pasaporte', 'Carnet'];
 
         // Solo validar si el tipo de documento está en la lista y los campos requeridos tienen valor
         if (docTypesToValidate.includes(docType) && numDocInput.value && nombreInput.value && apellidosInput.value) {
@@ -256,7 +256,7 @@ document.addEventListener("DOMContentLoaded", async () => {
               if (selectedType === 'DNI') {
                   numDocInput.maxLength = 8;
                   numDocInput.pattern = "\\d{8}";
-              } else if (selectedType === 'Pasaporte' || selectedType === 'Carnet de extranjería') {
+              } else if (selectedType === 'Pasaporte' || selectedType === 'Carnet') {
                   numDocInput.maxLength = 12;
               } else {
                   numDocInput.removeAttribute('maxLength');

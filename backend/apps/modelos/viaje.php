@@ -106,7 +106,6 @@ class Viaje extends caso_base_CRUD {
             "Bus b" => "b.id_bus = v.id_bus"
         ];
         $condicionalExtra = " LIMIT 20";
-        $datos = $this->buscar($);
     }
 }
 ?>

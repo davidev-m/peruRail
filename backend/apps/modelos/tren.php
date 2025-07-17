@@ -70,13 +70,13 @@
                 "id_tren" => (int)$dato['id_tren'],
                 "codigo" => $dato['codigo'],
                 "cap_total" => $dato['cap_total'],
-                "Clase" => {
+                "Clase" => [
                     "id_clase" => (int)$dato['id_clase'],
                     "nombre_clase" => $dato['nombre_clase']
-                },
-                "Trabajador" =>{
+                ],
+                "Trabajador" =>[
                     "id_trabajador" => $dato['id_trabajador']
-                }
+                ]
             ];
         }
         return $tren;

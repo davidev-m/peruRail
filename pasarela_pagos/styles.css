@@ -1,3 +1,98 @@
+/* --- INICIO: Estilos para la Cabecera Agregada --- */
+:root {
+    --color-primario-azul: #003366;
+    --color-primario-gris: #6c757d;
+    --color-borde: #dee2e6;
+    --color-blanco: #ffffff;
+}
+
+/* Contenedor de la cabecera */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.logo img {
+    height: 45px;
+    width: auto;
+    display: block;
+}
+
+.session-info {
+    font-size: 14px;
+    color: var(--color-primario-gris);
+}
+
+/* Indicador de Pasos */
+.steps-indicator {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    list-style: none;
+    padding: 0;
+    margin-bottom: 40px;
+    position: relative;
+}
+
+.steps-indicator::before {
+    content: '';
+    position: absolute;
+    top: 20px; /* Alineado verticalmente con los círculos */
+    left: 5%;
+    right: 5%;
+    height: 2px;
+    background-color: var(--color-borde);
+    transform: translateY(-50%);
+    z-index: 1;
+    width: 90%;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    z-index: 2;
+    background-color: #f3f4f6; /* Coincide con bg-gray-100 de Tailwind */
+    padding: 0 15px;
+    width: 25%;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--color-borde);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--color-primario-gris);
+    background-color: var(--color-blanco);
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.step-label {
+    font-size: 14px;
+    color: var(--color-primario-gris);
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.step.active .step-number {
+    border-color: var(--color-primario-azul);
+    color: var(--color-primario-azul);
+}
+
+.step.active .step-label {
+    color: var(--color-primario-azul);
+}
+
+
 /* Estilo base para usar la fuente Inter */
 body {
     font-family: 'Inter', sans-serif;

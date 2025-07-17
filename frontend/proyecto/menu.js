@@ -97,6 +97,22 @@ document.addEventListener('DOMContentLoaded', function () {
             [campoTren, retornoFecha, pasajeros, ida_retorno].forEach(el => el.style.display = "block");
         }
 
+
+        // Selección automática del tipo de viaje  --------------------> MODIFICADO
+        const radioIdaVuelta = document.querySelector('input[name="tipo_viaje"][value="ida_vuelta"]');
+        const radioSoloIda = document.querySelector('input[name="tipo_viaje"][value="solo_ida"]');
+        if (
+            (["ciudad de cusco", "urubamba", "ollantaytambo", "hidroelectrica"].includes(origenValor.toLowerCase()) && destinoValor.toLowerCase() === "machu picchu") ||
+            (origenValor.toLowerCase() === "machu picchu" && ["ciudad de cusco", "urubamba", "ollantaytambo", "hidroelectrica"].includes(destinoValor.toLowerCase()))
+        ) {
+            if (radioIdaVuelta) radioIdaVuelta.checked = true;
+        } else {
+            if (radioSoloIda) radioSoloIda.checked = true;
+        }
+
+
+
+
         // ====================
         // VERIFICAR IDA Y VUELTA
         // ====================
@@ -168,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return {
             firstDayOfWeek: 1,
             weekdays: {
-                shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+                shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sab"],
                 longhand: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado"]
             },
             months: {
@@ -308,6 +324,51 @@ document.addEventListener('DOMContentLoaded', function () {
         );
     });
 
+
+    // ========================
+    //validación del formulario   ---> modificado
+    // ======================== 
+    function validarFormulario() {
+        const origen = document.getElementById('origen').value;
+        const destino = document.getElementById('destino').value;
+        const tipo = document.querySelector('input[name="tipo_viaje"]:checked')?.value;
+        const fechaIda = document.getElementById('fecha_ida').value;
+        const fechaRet = document.getElementById('fecha_retorno').value;
+        const adultos = parseInt(document.getElementById('adultosInput').value);
+
+        if (!origen) {
+            alert('Selecciona el origen.');
+            return false;
+        }
+        if (!destino) {
+            alert('Selecciona el destino.');
+            return false;
+        }
+        if (!tipo) {
+            alert('Selecciona el tipo de viaje.');
+            return false;
+        }
+        if (!fechaIda) {
+            alert('Selecciona la fecha de ida.');
+            return false;
+        }
+        if (tipo === 'ida_vuelta' && !fechaRet) {
+            alert('Selecciona la fecha de retorno.');
+            return false;
+        }
+        if (isNaN(adultos) || adultos < 1) {
+            alert('Selecciona al menos 1 adulto.');
+            return false;
+        }
+        return true;
+    }
+
+
+    // ========================
+
+
+
+
     /**
      * Envío del formulario principal a tren.php.
      * Guarda datos en sessionStorage y redirige a menu2.html.
@@ -315,6 +376,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const form = document.getElementById('formularioReserva');
     if (form) form.addEventListener('submit', async e => {
         e.preventDefault();
+        if (!validarFormulario()) return; // Validar antes de enviar
         const datos = {
             origen: document.getElementById('origen').value,
             destino: document.getElementById('destino').value,

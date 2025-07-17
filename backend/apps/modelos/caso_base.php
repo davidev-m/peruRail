@@ -51,6 +51,12 @@ class caso_base_CRUD {
         }
     }
 
+
+    public function mostrarAdmin($Nombretabla){
+        $condicionalExtra = "LIMIT 20";
+        $datos = $this->buscar(tabla: $Nombretabla, condicionalExtra:$condicionalExtra);
+    }
+
     /**
      * Busca y devuelve registros de una tabla.
      */
@@ -122,5 +128,6 @@ class caso_base_CRUD {
             throw new RuntimeException("Error al eliminar (desactivar) en la tabla `$tabla`: " . $e->getMessage());
         }
     }
+
 }
 ?>

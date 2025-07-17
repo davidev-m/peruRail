@@ -1,31 +1,28 @@
 <?php
-    class bus{
-        private PDO $conexion ;
+    require_once __DIR__ . 'caso_base.php';
+    class bus extends caso_base_CRUD{
+        private $nombreTabla;
         public function __construct(){
-            $this->conexion = database::getConexion();
+            parent::__construct();
+            $this->nombreTabla = 'Bus';
         }
-        public function id_Bus($placa){
-            if(empty($placa)){
-                throw new InvalidArgumentException("Datos vacios");
-            }
-            $sql = "SELECT id_bus
-            from Bus
-            where placa = :placa";
-            
-            if (!$sentencia = $this->conexion->prepare($sql)) {
-                throw new RuntimeException("Sentencia errorea", $this->conexion->errorCode());
-            }
 
-            $sentencia->bindParam(':placa', $placa);
-            if (!$sentencia->execute()) {
-                throw new RuntimeException('Error en la peticion de consulta', $sentencia->errorCode());
-            }
-            $result = $sentencia->fetch(PDO::FETCH_ASSOC);
-            if (!$result) {
-                throw new RuntimeException("No se encontró ruta con el ID proporcionado.");
-            }
-
-            return $result;
+        public function id_Bus($placa) {
+        if (empty($placa)) {
+            throw new InvalidArgumentException("La placa no puede estar vacía.");
         }
+
+        $tabla = 'Bus';
+        $datosSeleccion = 'id_bus';
+        $where = 'placa = :placa';
+        $datos = [':placa' => $placa];
+
+        $resultado = $this->buscar($tabla, $datosSeleccion, $where, $datos);
+        if (!empty($resultado)) {
+            return $resultado[0]['id_bus'];
+        }
+
+        return null;
+    }
     }
 ?>

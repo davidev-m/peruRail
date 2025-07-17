@@ -4,14 +4,12 @@
     error_reporting(E_ALL);
 
     require_once __DIR__  . '/../modelos/modelos.php';
+    require_once __DIR__ . '/funciones_extra.php';
     
-    
-    $documento = new tipo_documento();
-    $resultado = $documento->buscarDocumento("DNI");
-    if($resultado == null){
-        echo 'wa';
-    }else{
-        echo "documento: " . $resultado;
-    }
+
+    $wa = "Cliente";
+    $da = new $wa();
+    $resultado = $da->verificar_documento("1230987465");
+    print_r($resultado);
     
 ?>

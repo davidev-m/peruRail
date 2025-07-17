@@ -49,5 +49,29 @@ class Estacion extends caso_base_CRUD {
 
         return null; // No se encontró ninguna estación con esos criterios.
     }
+
+    public function mostrarAdmin($Nombretabla){
+        $Nombretabla .= " e";
+        $join = [
+            "Ruta r" => "e.id_ruta = r.id_ruta"
+        ];
+        $condicional = "LIMIT 20";
+        $Datos = $this->buscar(tabla:$Nombretabla, innerJoins: $join, condicionalExtra:$condicional);
+        foreach ($Datos as $fila) {
+            $estacion = [
+                'est origen'  => $fila['est_origen'],
+                'est Destino' => $fila['est_destino'],
+                'id_est'      => (int)$fila['id_est'],
+                'ruta'        => [
+                    'origen'  => $fila['ruta_origen'],
+                    'destino' => $fila['ruta_destino'],
+                    'id_ruta' => (int)$fila['id_ruta']
+                ]
+            ];
+        }
+
+        // 4. Devolver el array ya formateado
+        return $estacion;
+    }
 }
 ?>

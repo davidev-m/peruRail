@@ -60,21 +60,25 @@ class Viaje extends caso_base_CRUD {
 
     public function obtenerIdViaje($id_tren, $id_bus, $id_estacion, $fecha) {
         // 1. Validación de los datos de entrada.
-        if (empty($id_tren) || empty($id_bus) || empty($id_estacion) || empty($fecha)) {
+        if (empty($id_tren) || empty($id_estacion) || empty($fecha)) {
             throw new InvalidArgumentException("Los IDs de tren, bus y estación no pueden estar vacíos.");
         }
 
         // 2. Preparamos los parámetros para el método buscar().
         $select = 'id_viaje';
         $from = 'Viaje';
-        $where = 'id_tren = :tren AND id_bus = :bus AND id_estacion = :estacion AND fecha_salida = :fecha_salida';
+        $where = 'id_tren = :tren AND id_estacion = :estacion AND fecha_salida = :fecha_salida';
+        if($id_bus != null){
+            $datos[':bus'] = $id_bus;
+            $where .= " AND id_bus = :bus ";
+        }else{
+            $where .= " AND id_bus is null ";
+        }
         $datos = [
             ':tren' => $id_tren,
-            ':bus' => $id_bus,
             ':estacion' => $id_estacion,
             ':fecha_salida' => $fecha
         ];
-
         // 3. Llamamos al método de la clase padre para ejecutar la consulta.
         $resultado = $this->buscar(
             $from,

@@ -8,8 +8,6 @@ header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Headers:Content-Type');
 
 // Log de depuración: ID de sesión y contenido de la sesión al inicio
-error_log("datos_personales_E.php -> Session ID: " . session_id());
-error_log("datos_personales_E.php -> Contenido de SESSION: " . print_r($_SESSION, true));
 
 try{
     // Obtener los valores de la sesión, usando 0 como valor por defecto si no existen

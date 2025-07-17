@@ -1,10 +1,7 @@
 <?php
 require_once __DIR__ . '/../conexion/conexion.php';
 
-/**
- * Clase base para operaciones CRUD.
- * Proporciona métodos genéricos y seguros para interactuar con la base de datos.
- */
+
 class caso_base_CRUD {
     protected PDO $pdo;
 

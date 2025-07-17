@@ -57,5 +57,27 @@ class Cliente extends caso_base_CRUD {
         $resultado = $this->buscar($from,$select,$where,$datos);
         return $resultado[0]['id_cliente'];
     }
+
+        public function mostrarAdmin($Nombretabla){
+        $condicional = "LIMIT 20";
+        $Datos = $this->buscar(tabla:$Nombretabla, condicionalExtra:$condicional);
+        foreach ($Datos as $fila) {
+            $cliente[] = [
+                'est origen'  => $fila['est_origen'],
+                'est Destino' => $fila['est_destino'],
+                'id_est'      => (int)$fila['id_est'],
+                'ruta'        => [
+                    'origen'  => $fila['ruta_origen'],
+                    'destino' => $fila['ruta_destino'],
+                    'id_ruta' => (int)$fila['id_ruta']
+                ],
+                "estado" => $fila['estado']
+            ];
+        }
+
+        // 4. Devolver el array ya formateado
+        return $cliente;
+    }
+
 }
 ?>

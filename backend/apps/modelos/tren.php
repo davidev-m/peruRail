@@ -76,7 +76,8 @@
                 ],
                 "Trabajador" =>[
                     "id_trabajador" => $dato['id_trabajador']
-                ]
+                ],
+                "estado" => $dato['id_trabajador'] ?? ''
             ];
         }
         return $tren;

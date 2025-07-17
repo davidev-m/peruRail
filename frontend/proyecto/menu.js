@@ -169,7 +169,7 @@ document.addEventListener('DOMContentLoaded', function () {
             firstDayOfWeek: 1,
             weekdays: {
                 shorthand: ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
-                longhand: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+                longhand: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sabado"]
             },
             months: {
                 shorthand: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return fetch(`${API}?accion=fechaDisponible&origen=${encodeURIComponent(origen)}&destino=${encodeURIComponent(destino)}`)
             .then(r => r.json())
             .then(data => {
-                const mapa = { domingo: 0, lunes: 1, martes: 2, miércoles: 3, jueves: 4, viernes: 5, sábado: 6, "todos los días": [0, 1, 2, 3, 4, 5, 6] };
+                const mapa = { domingo: 0, lunes: 1, martes: 2, miércoles: 3, jueves: 4, viernes: 5, sabado: 6, "todos los dias": [0, 1, 2, 3, 4, 5, 6] };
                 if (typeof data === 'string') {
                     return [...new Set(
                         data.toLowerCase().split(/,\s*/).flatMap(d => Array.isArray(mapa[d.trim()]) ? mapa[d.trim()] : [mapa[d.trim()]])
@@ -327,9 +327,9 @@ document.addEventListener('DOMContentLoaded', function () {
         };
         try {
             // ANADIDO: credentials: 'include' para asegurar que la cookie de sesión se envíe
-            const res = await fetch('../../backend/apps/logica/tren_logica.php', { 
-                method: 'POST', 
-                headers: { 'Content-Type': 'application/json' }, 
+            const res = await fetch('../../backend/apps/logica/tren_logica.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datos),
                 credentials: 'include' // <-- ¡ESTO ES CRÍTICO!
             });

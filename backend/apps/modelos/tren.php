@@ -56,6 +56,30 @@
             condicionalExtra: $condicionalExtra);
         return $resultado;
     }
-
+    public function mostrarAdmin($nombre_tabla){
+        $nombre_tabla .= "t ";
+        $join = [
+            "Clase c" => "t.id_clase = c.id_clase"
+        ];
+        $condicinal = " LIMIT 20";
+        $datos = $this->buscar(tabla:$nombre_tabla, innerJoins: $join, condicionalExtra:$condicinal);
+        
+        $tren = [];    
+        foreach($datos as $dato){
+            $tren = [
+                "id_tren" => (int)$dato['id_tren'],
+                "codigo" => $dato['codigo'],
+                "cap_total" => $dato['cap_total'],
+                "Clase" => {
+                    "id_clase" => (int)$dato['id_clase'],
+                    "nombre_clase" => $dato['nombre_clase']
+                },
+                "Trabajador" =>{
+                    "id_trabajador" => $dato['id_trabajador']
+                }
+            ];
+        }
+        return $tren;
     }
+}
 ?>

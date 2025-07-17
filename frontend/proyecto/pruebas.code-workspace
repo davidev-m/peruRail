@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "../../../pruebas"
+		},
+		{
+			"path": "../../../proyecto"
+		},
+		{
+			"path": "../../bd"
+		},
+		{
+			"path": "../../../base"
+		},
+		{
+			"path": "../.."
+		}
+	],
+	"settings": {}
+}

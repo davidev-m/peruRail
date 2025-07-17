@@ -95,5 +95,18 @@ class Viaje extends caso_base_CRUD {
 
         return null; // No se encontró ningún viaje con esa combinación de IDs.
     }
+
+    public function mostrarAdmin($Nombretabla){
+        $Nombretabla  .= " v ";
+        $inner = [
+            "Tren t " => "v.id_tren = t.id_tren",
+            "Estacion e" => "v.id_estacion = e.id_estacion"
+        ];
+        $left = [
+            "Bus b" => "b.id_bus = v.id_bus"
+        ];
+        $condicionalExtra = " LIMIT 20";
+        $datos = $this->buscar($);
+    }
 }
 ?>

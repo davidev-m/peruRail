@@ -52,11 +52,6 @@ class caso_base_CRUD {
     }
 
 
-    public function mostrarAdmin($Nombretabla){
-        $condicionalExtra = "LIMIT 20";
-        $datos = $this->buscar(tabla: $Nombretabla, condicionalExtra:$condicionalExtra);
-    }
-
     /**
      * Busca y devuelve registros de una tabla.
      */
@@ -102,6 +97,12 @@ class caso_base_CRUD {
         } catch (PDOException $e) {
             throw new RuntimeException("Error al ejecutar la búsqueda: " . $e->getMessage() . " [Consulta: $sql]");
         }
+    }
+
+    public function mostrarAdmin($Nombretabla){
+        $condicionalExtra = " LIMIT 20 ";
+        $datos = $this->buscar(tabla: $Nombretabla, condicionalExtra:$condicionalExtra);
+        return $datos;
     }
 
     public function eliminar($tabla, $datoId) {

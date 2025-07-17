@@ -68,17 +68,17 @@ class Viaje extends caso_base_CRUD {
         $select = 'id_viaje';
         $from = 'Viaje';
         $where = 'id_tren = :tren AND id_estacion = :estacion AND fecha_salida = :fecha_salida';
+        $datos = [
+            ':tren' => $id_tren,
+            ':estacion' => $id_estacion,
+            ':fecha_salida' => $fecha
+        ];
         if($id_bus != null){
             $datos[':bus'] = $id_bus;
             $where .= " AND id_bus = :bus ";
         }else{
             $where .= " AND id_bus is null ";
         }
-        $datos = [
-            ':tren' => $id_tren,
-            ':estacion' => $id_estacion,
-            ':fecha_salida' => $fecha
-        ];
         // 3. Llamamos al método de la clase padre para ejecutar la consulta.
         $resultado = $this->buscar(
             $from,
@@ -106,6 +106,29 @@ class Viaje extends caso_base_CRUD {
             "Bus b" => "b.id_bus = v.id_bus"
         ];
         $condicionalExtra = " LIMIT 20";
+        $datos = $this->buscar(
+            tabla:$Nombretabla,
+            innerJoins:$inner,
+            condicionalExtra:$condicionalExtra,
+            leftJoins:$left);
+        foreach($datos as $dato){
+            $viaje[] = [
+                "id_viaje" => $dato['id_viaje'],
+                "fecha_salida" => $dato['fecha_salida'],
+                "Tren" => [
+                    "id_tren" => $dato['id_tren'],
+                    "codigo" => $dato['codigo'],    
+                ],
+                "Estacion" => [
+                    "id_estacion" => $dato['id_estacion'],
+                    "est_origen" => $dato['est_origen'],
+                    "est_destino" => $dato['est_destino']    
+                ],
+                "precio_pasaje" => $dato['precio_pasaje'],
+                "estado" => $dato['estado']
+            ];
+        }
+        return $viaje;
     }
 }
 ?>

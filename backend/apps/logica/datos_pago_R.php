@@ -54,16 +54,20 @@ if (!empty($confirmacion['verificacion']) && $confirmacion['verificacion'] === t
             $nombreTrenRetorno = separarNombreYNumero($trenRetornoInfo['tren']["nombre"]);
             $idTrenRetorno = $tren->BuscarIdTren($nombreTrenRetorno['codigo'], $nombreTrenRetorno['nombre']);
 
-            $idEstacionRetorno = $estacion->obtenerIdEstacion($trenRetornoInfo["estaciones"][0], $trenRetornoInfo["estaciones"][1]);
-            if (!!$idTrenRetorno || !$idEstacionRetorno) {
-                throw new Exception("Datos de id no encontrados o falsos ");
+            if (!$idEstacionIda) {
+                throw new Exception("TREN IDA: Datos de id no encontrados o falsos ");
             }
+            $idEstacionRetorno = $estacion->obtenerIdEstacion($trenRetornoInfo["estaciones"][0], $trenRetornoInfo["estaciones"][1]);
+            if (!$idTrenRetorno) {
+                throw new Exception("TREN RETORNO: Datos de id no encontrados o falsos ");
+            }
+            
 
             $idBusRetorno = !empty($trenRetornoInfo["tren"]["id_bus"]) ? $trenRetornoInfo["tren"]["id_bus"] : null;
-            if(!$fechaRetorno ){
-                throw new Exception("Fallo en la recoleccion de fehca ");
-            }
             $fechaRetorno = $_SESSION['trenes_seleccionados']['fechaRet'] ?? null;
+            if(!$fechaRetorno){
+                throw new Exception("Fallo en la recoleccion de fecha ");
+            }
             
             $idViajeRetorno = $viaje->obtenerIdViaje($idTrenRetorno, $idBusRetorno, $idEstacionRetorno, $fechaRetorno);
             if(!$idViajeRetorno ){

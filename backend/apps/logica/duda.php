@@ -6,8 +6,12 @@
     require_once __DIR__  . '/../modelos/modelos.php';
     require_once __DIR__ . '/funciones_extra.php';
     require_once __DIR__ . '/viaje_logica.php';
+    $nombre = "Ruta";
+    $viaje= new $nombre();
+    $datos = $viaje->mostrarAdmin($nombre);
+    foreach($datos as $dato){
+        print_r($dato);
+        echo '<br>';
+    }
 
-    $origen = "Ciudad de Cusco";
-    $destino = "Puno";
-    print_r(fechaDisponible($origen, $destino));
 ?>

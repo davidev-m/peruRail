@@ -66,7 +66,7 @@
         
         $tren = [];    
         foreach($datos as $dato){
-            $tren = [
+            $tren[] = [
                 "id_tren" => (int)$dato['id_tren'],
                 "codigo" => $dato['codigo'],
                 "cap_total" => $dato['cap_total'],

@@ -58,7 +58,7 @@ class Estacion extends caso_base_CRUD {
         $condicional = "LIMIT 20";
         $Datos = $this->buscar(tabla:$Nombretabla, innerJoins: $join, condicionalExtra:$condicional);
         foreach ($Datos as $fila) {
-            $estacion = [
+            $estacion[] = [
                 'est origen'  => $fila['est_origen'],
                 'est Destino' => $fila['est_destino'],
                 'id_est'      => (int)$fila['id_est'],
@@ -66,7 +66,8 @@ class Estacion extends caso_base_CRUD {
                     'origen'  => $fila['ruta_origen'],
                     'destino' => $fila['ruta_destino'],
                     'id_ruta' => (int)$fila['id_ruta']
-                ]
+                ],
+                "estado" => $fila['estado']
             ];
         }
 

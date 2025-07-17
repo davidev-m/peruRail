@@ -5,11 +5,12 @@ let montoTotalParaPagar = 0;
 document.addEventListener('DOMContentLoaded', () => {
     Culqi.publicKey = 'pk_test_MuNmwOi6ip1gVRE3';
 
-    Culqi.options({
-        style: {
-            logo: 'https://culqi.com/LogoCulqi.png',
-        }
-    });
+Culqi.options({
+    style: {
+        logo: 'https://www.perurail.com/wp-content/uploads/2024/07/logo-perurail-0.5x-25anos-v2-300x45.png',
+    }
+});
+
 
     cargarYRenderizarDatos();
 
@@ -21,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
             Culqi.settings({
                 title: 'Reserva de Viaje',
                 currency: 'PEN',
-                amount: Math.round(montoTotalParaPagar),
+                amount: Math.round(montoTotalParaPagar * 100),
             });
             Culqi.open();
         } else {
@@ -171,7 +172,7 @@ function renderizarDetalles(datos) {
         pasajerosBody.innerHTML += pasajeroHtml;
     });
 
-    totalAmount.textContent = `S/ ${datos.total *100}`;
+    totalAmount.textContent = `S/ ${datos.total}`;
     montoTotalParaPagar = parseFloat(datos.total);
 }
 

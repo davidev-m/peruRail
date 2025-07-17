@@ -132,12 +132,12 @@ INSERT IGNORE INTO Asesor_venta(id_trabajador) VALUES
 (49);
 
 INSERT IGNORE Ruta(destino, origen, dias_disponibles) VALUES
-('Ciudad de Cusco', 'Machu Picchu', 'Todos los días'),
+('Ciudad de Cusco', 'Machu Picchu', 'Todos los dias'),
 ('Ciudad de Cusco', 'Puno', 'Jueves'),
 ('Ciudad de Cusco', 'Arequipa', 'Jueves'),
-('Machu Picchu', 'Ciudad de Cusco', 'Todos los días'),
-('Machu Picchu', 'Ollantaytambo', 'Todos los días'),
-('Machu Picchu', 'Hidroeléctica', 'Todos los días'),
+('Machu Picchu', 'Ciudad de Cusco', 'Todos los dias'),
+('Machu Picchu', 'Ollantaytambo', 'Todos los dias'),
+('Machu Picchu', 'Hidroelectica', 'Todos los dias'),
 ('Machu Picchu', 'Urubamba', 'Todos los dias'),
 ('Urubamba', 'Machu Picchu', 'Todos los dias'),
 ('Ollantaytambo', 'Machu Picchu', 'Todos los dias'),

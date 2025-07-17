@@ -1,179 +1,166 @@
 <?php
-    require_once __DIR__ . '/funciones_extra.php';
-    require_once __DIR__ . '/../modelos/modelos.php';
-    session_start();
-    header('content-Type:application/json');
-    header('Access-Control-Allow-Origin: *');
-    header('Access-Control-Allow-Headers:Content-Type');
-    $confirmacion = json_decode(file_get_contents('php://input'), true);     
+require_once __DIR__ . '/funciones_extra.php';
+require_once __DIR__ . '/../modelos/modelos.php';
+require_once __DIR__ . '/../conexion/conexion.php';
+
+session_start();
+header('Content-Type: application/json');
+
+// --- Función de ayuda para enviar respuestas de error consistentes ---
+function enviarRespuestaError($mensaje, $codigoHttp = 500) {
+    http_response_code($codigoHttp);
+    echo json_encode(['error' => $mensaje]);
+    exit;
+}
+
+$confirmacion = json_decode(file_get_contents('php://input'), true);
+
+// La lógica principal solo se ejecuta si la verificación es explícitamente 'true'.
+if (!empty($confirmacion['verificacion']) && $confirmacion['verificacion'] === true) {
     
-    error_log("tren_seleccion.php -> Contenido de SESSION DESPUÉS DE GUARDAR TRENES: " . print_r($_SESSION, true));
+    // Obtenemos la única conexión a la base de datos para toda la operación
+    $pdo = database::getConexion();
 
-    if($confirmacion['verificacion']){
+    $pdo->beginTransaction();
 
-        //BUSCAR ID VIAJE-------------------------------------------------
-        $trenIda = $_SESSION["trenes_seleccionados"]["trenIda"];
-        $nombreTren = separarNombreYNumero($trenIda['tren']["nombre"]);
-        
+    try {
+        // --- 1. BUSCAR IDS DE VIAJE (LÓGICA REESTRUCTURADA Y VALIDADA) ---
         $tren = new Tren();
-        $idTren[] = $tren->BuscarIdTren($nombreTren['codigo'],$nombreTren['nombre']);
-        
         $estacion = new Estacion();
-        $NombreEstacion = $trenIda["estaciones"];
-        $idEstacion[] = $estacion->obtenerIdEstacion($NombreEstacion[0], $NombreEstacion[1]);
-
-        if(isset($trenIda["tren"]["id_bus"])){
-            $idBus[] = $trenIda["tren"]["id_bus"]; 
-        }else{
-            $idBus[] = null;
-        }
         $viaje = new Viaje();
+        $idViajes = [];
 
-        if($_SESSION['trenes_seleccionados']['tipo'] == "ida_vuelta"){
-            $tipoTren = "trenRetorno";
-            $trenRetorno = $_SESSION["trenes_seleccionados"][$tipoTren];
-            $nombreTren = separarNombreYNumero($trenRetorno['tren']["nombre"]);
-            
-            $tren = new Tren();
-            $idTren[] = $tren->BuscarIdTren($nombreTren['codigo'],$nombreTren['nombre']);  
-        
-            $NombreEstacion = $trenRetorno["estaciones"];
-            $idEstacion[] = $estacion->obtenerIdEstacion($NombreEstacion[0], $NombreEstacion[1]);
+        // --- Procesar Viaje de Ida ---
+        $trenIdaInfo = $_SESSION["trenes_seleccionados"]["trenIda"];
+        $nombreTrenIda = separarNombreYNumero($trenIdaInfo['tren']["nombre"]);
+        $idTrenIda = $tren->BuscarIdTren($nombreTrenIda['codigo'], $nombreTrenIda['nombre']);
 
-            if(isset($trenRetorno["tren"]["id_bus"])){
-                $idBus[] = $trenRetorno["tren"]["id_bus"]; 
-            }else{
-                $idBus[] = null;
+        $idEstacionIda = $estacion->obtenerIdEstacion($trenIdaInfo["estaciones"][0], $trenIdaInfo["estaciones"][1]);
+        if (!$idEstacionIda || !$idTrenIda) {
+            throw new Exception("Error en la obtencion de id tren o estacion");
+        }
+
+        $idBusIda = !empty($trenIdaInfo["tren"]["id_bus"]) ? $trenIdaInfo["tren"]["id_bus"] : null;
+        $fechaIda = $_SESSION['trenes_seleccionados']['fechaIda'];
+        $idViajeIda = $viaje->obtenerIdViaje($idTrenIda, $idBusIda, $idEstacionIda, $fechaIda);
+        if (!$idViajeIda) {
+            throw new Exception("No se pudo encontrar un viaje valido para el trayecto de ida.");
+        }
+        $idViajes[] = $idViajeIda;
+
+        // --- Procesar Viaje de Vuelta (si existe) ---
+        if ($_SESSION['trenes_seleccionados']['tipo'] == "ida_vuelta") {
+            $trenRetornoInfo = $_SESSION["trenes_seleccionados"]["trenRetorno"];
+            $nombreTrenRetorno = separarNombreYNumero($trenRetornoInfo['tren']["nombre"]);
+            $idTrenRetorno = $tren->BuscarIdTren($nombreTrenRetorno['codigo'], $nombreTrenRetorno['nombre']);
+
+            $idEstacionRetorno = $estacion->obtenerIdEstacion($trenRetornoInfo["estaciones"][0], $trenRetornoInfo["estaciones"][1]);
+            if (!!$idTrenRetorno || !$idEstacionRetorno) {
+                throw new Exception("Datos de id no encontrados o falsos ");
             }
+
+            $idBusRetorno = !empty($trenRetornoInfo["tren"]["id_bus"]) ? $trenRetornoInfo["tren"]["id_bus"] : null;
+            if(!$fechaRetorno ){
+                throw new Exception("Fallo en la recoleccion de fehca ");
+            }
+            $fechaRetorno = $_SESSION['trenes_seleccionados']['fechaRet'] ?? null;
+            
+            $idViajeRetorno = $viaje->obtenerIdViaje($idTrenRetorno, $idBusRetorno, $idEstacionRetorno, $fechaRetorno);
+            if(!$idViajeRetorno ){
+                throw new Exception("Fallo en la recoleccion de fehca ");
+            }
+            $idViajes[] = $idViajeRetorno;
         }
-
-        $fecha[] = $_SESSION['trenes_seleccionados']['fechaIda'];
-        if($_SESSION['trenes_seleccionados']['fechaRet']){
-            $fecha[] = $_SESSION['trenes_seleccionados']['fechaRet'];
-        }
-        for($i = 0; $i < count($idBus); $i++){
-            $idViaje[] = $viaje->obtenerIdViaje($idTren[$i], $idBus[$i], $idEstacion[$i], $fecha[$i]);
-        }
-
-
         
-        //----------------------------------------------
-
-
-
-        
-        
-        //CASO DE CLIENTE EMPRESA
-        $empresa = $_SESSION['empresa'];
-        $empresa = $_SESSION['empresa'];
-        $claseEmpresa = new ClienteEmpresa();
-        $idEmpresa = -1;
-        if(!empty($empresa)){
+        // --- 2. GESTIONAR CLIENTE EMPRESA (si existe) ---
+        $empresa = $_SESSION['empresa'] ?? [];
+        $idEmpresa = null; // Usar null en lugar de -1
+        if (!empty($empresa)) {
+            $claseEmpresa = new ClienteEmpresa();
             $ruc = $empresa['ruc'];
             $razon_social = $empresa['razon_social'];
             $direccion = $empresa['direccion'];
-            if($empresa['existe'] == 1){
-                $idEmpresa = ($claseEmpresa->buscaEmpresa($empresa['ruc']))['id_cliente_e'];
-            }else{
-                $idEmpresa = $claseEmpresa->insertarEmpresa($ruc,$razon_social,$direccion);
+            
+            if (isset($empresa['existe']) && $empresa['existe'] == 1) {
+                $empresaExistente = $claseEmpresa->buscaEmpresa($ruc);
+                $idEmpresa = $empresaExistente ? $empresaExistente['id_cliente_e'] : null;
+            } else {
+                $idEmpresa = $claseEmpresa->insertarEmpresa($ruc, $razon_social, $direccion);
+            }
+            if (!$idEmpresa) {
+                throw new Exception("No se pudo procesar la información de la empresa.");
             }
         }
-        
-        
-        
-        //CASO DE RESERVA
+
+        // --- 3. GESTIONAR CLIENTES, COMPRADOR Y PAGO ---
         $claseCliente = new Cliente();
         $claseClienteComprador = new ClienteComprador();
         $documento = new tipo_documento();
         $clasePago = new Pago();
         
-        $adultos = $_SESSION["pasajeros"]["adultos"];
-        $ninos = $_SESSION['pasajeros']['ninos'];
-        $comprador = $_SESSION["comprador"];
-
-
+        $adultos = $_SESSION["pasajeros"]["adultos"] ?? [];
+        $ninos = $_SESSION["pasajeros"]["ninos"] ?? [];
+        $compradorInfo = $_SESSION["comprador"];
         $clientes = array_merge($adultos, $ninos);
-        $cantCliente = count($clientes);
+        $idsClientes = [];
+        $idPago = null;
+
         foreach ($clientes as $client) {
-            //INSERTAR CLIENTE---------------------------------
-            $num_doc = $client["num_doc"];
-
-            //CLIENTE
-            //Existe cliente -- Buscar su Id
-            // if($client['existe'] == 1){
-            //     $idCliente[] = $claseCliente->buscarId($num_doc);
-            // }
-            // //No existe cliente -- Insertar
-            // else{
-            //     $idDocumento = $documento->buscarDocumento($client['tipo_doc']);
-            //     $nombre = $client["nombre"];
-            //     $apellidos = $client["apellidos"];
-            //     $genero = $client["genero"];
-            //     $pais = $client["pais"];
-            //     $tipo_doc = $client["tipo_doc"];
-            //     $fecha_nac = $client["fecha_nac"];
-    
-            //     $idCliente[] = $claseCliente->insertarCliente($idDocumento,$nombre,$apellidos,$genero,$num_doc,$fecha_nac);
-            // }
-            // //---------------------------------------------------
-   
             $idDocumento = $documento->buscarDocumento($client['tipo_doc']);
-            $nombre = $client["nombre"];
-            $apellidos = $client["apellidos"];
-            $genero = $client["genero"];
-            $pais = $client["pais"];
-            $tipo_doc = $client["tipo_doc"];
-            $fecha_nac = $client["fecha_nac"];
+            if (!$idDocumento) throw new Exception("Tipo de documento no válido: " . $client['tipo_doc']);
 
-            $idCliente[] = $claseCliente->insertarCliente($idDocumento,$nombre,$apellidos,$genero,$num_doc,$fecha_nac);
+            $nuevoIdCliente = $claseCliente->insertarCliente($idDocumento, $client["nombre"], $client["apellidos"], $client["genero"], $client["num_doc"], $client["fecha_nac"]);
+            $idsClientes[] = $nuevoIdCliente;
 
-            if(isset($client["es_comprador"]) && $client["es_comprador"] == 1){
-
-                //INSERTAR COMPRADOR
-                if(false && $client['existe'] == 1){
-                    $idComprador = $claseCliente->buscarId($num_doc);
-                }else{ 
-                    // if($idEmpresa == -1){
-                    //     $idComprador = $claseClienteComprador->insertarClienteComprador(id_cliente: end($idCliente),email:$comprador['email'], telefono:$comprado['telefono']);
-                    // }else{
-                    //     $idComprador = $claseClienteComprador->insertarClienteComprador(end($idCliente), $idEmpresa, $comprador['email'], $comprador['telefono']);
-                    // }   
-                    $idComprador = $claseClienteComprador->insertarClienteComprador(end($idCliente), $comprador['email'], $comprador['telefono'], null);
-                }
-
-                //INSERTAR PAGO
+            if (isset($client["es_comprador"]) && $client["es_comprador"] == 1) {
+                $idComprador = $claseClienteComprador->insertarClienteComprador($nuevoIdCliente, $compradorInfo['email'], $compradorInfo['telefono'], $idEmpresa);
                 $montoTotal = $_SESSION['monto_total'];
-                $idPago = $clasePago->insertarPago($idComprador,$montoTotal, "tarjeta");
+                $idPago = $clasePago->insertarPago($idComprador, $montoTotal, "tarjeta");
             }
-   
         }
 
-        $claseReserva = new reserva(); 
-        $fecha = $_SESSION["trenes_seleccionados"]['fechaIda'];
-        for($i = 0; $i < $cantCliente; $i++){
-            $client = $clientes[$i]; 
-            //Existe con_infante y no es nulo
-            $infante = 0;
-            if(isset($client['con_infante']) && $client['con_infante'] == 1){
-                $infante = 1;
+        if (!$idPago) {
+            throw new Exception("No se pudo procesar el pago o no se designó un comprador.");
+        }
+
+        // --- 4. INSERTAR RESERVAS (LÓGICA CORREGIDA) ---
+        $claseReserva = new reserva();
+        $cantCliente = count($clientes);
+
+        // Reserva para el viaje de IDA
+        $idViajeIda = $idViajes[0];
+        $fechaIda = $_SESSION["trenes_seleccionados"]['fechaIda'];
+        for ($i = 0; $i < $cantCliente; $i++) {
+            $client = $clientes[$i];
+            $infante = (isset($client['con_infante']) && $client['con_infante'] == 1) ? 1 : 0;
+            $claseReserva->insertarReserva($idViajeIda, $idPago, $fechaIda, $idsClientes[$i], $infante);
+        }
+
+        // Reserva para el viaje de VUELTA (si existe)
+        if (isset($idViajes[1])) {
+            $idViajeRetorno = $idViajes[1];
+            $fechaRetorno = $_SESSION["trenes_seleccionados"]['fechaRet'];
+            for ($i = 0; $i < $cantCliente; $i++) {
+                $client = $clientes[$i];
+                $infante = (isset($client['con_infante']) && $client['con_infante'] == 1) ? 1 : 0;
+                $claseReserva->insertarReserva($idViajeRetorno, $idPago, $fechaRetorno, $idsClientes[$i], $infante);
             }
-            $claseReserva->insertarReserva($idViaje[0],$idPago,$fecha,$idCliente[$i],$infante);
         }
-        if(count($idViaje) > 1){
-            for($i = 0; $i < $cantCliente; $i++){
-            $client = $clientes[$i]; 
-            //Existe con_infante y no es nulo
-            $infante = 0;
-            if(isset($client['con_infante']) && $client['con_infante'] == 1){
-                $infante = 1;
-            }
-            $claseReserva->insertarReserva($idViaje[1],$idPago,$fecha,$idCliente[$i],$infante);
-        }
-        }
+
+        $pdo->commit();
+
+        echo json_encode([
+            "success" => true,
+            "message" => "La reserva se ha completado con éxito."
+        ]);
+
+    } catch (Exception $e) {
+
+        $pdo->rollBack();
+        error_log("Error en la transacción de reserva: " . $e->getMessage());
+        enviarRespuestaError("No se pudo completar la reserva. Por favor, inténtelo de nuevo. Error: " . $e->getMessage());
     }
-
-    echo json_encode(
-        ["success" => true, 
-        "message" => "Datos de trenes seleccionados guardados en sesión."]);
-
+} else {
+    enviarRespuestaError("Verificación fallida.", 400);
+}
 ?>

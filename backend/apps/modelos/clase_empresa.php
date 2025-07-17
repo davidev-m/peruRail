@@ -21,9 +21,9 @@
         public function insertarEmpresa($ruc, $razon_social, $direccion){
             $from = $this->nombreTabla;
             $datos = [
-                ":ruc" => $ruc,
-                ":razon_social" => $razon_social,
-                ":direccion" => $direccion
+                "ruc" => $ruc,
+                "razon_social" => $razon_social,
+                "direccion" => $direccion
             ];
 
             $resultado = $this->insertar($from, $datos);

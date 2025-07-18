@@ -1,0 +1,29 @@
+[
+  {
+    "id_tren" : 2,
+    "cap_total" :30,
+    "codigo" : 92, 
+    "Clase" : {
+      "id_clase" : 1,
+      "nombre_clase" : "PeruRail Expedition"
+    }
+  },
+  {
+    "id_tren" : 12,
+    "cap_total" :50,
+    "codigo" : 72, 
+    "Clase" : {
+      "id_clase" : 1,
+      "nombre_clase" : "PeruRail Expedition"
+    }
+  },
+  {
+    "id_tren" : 20,
+    "cap_total" :45,
+    "codigo" : 301, 
+    "Clase" : {
+      "id_clase" : 3,
+      "nombre_clase" : "PeruRail Vistadome"
+    }
+  }
+]

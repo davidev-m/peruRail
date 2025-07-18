@@ -1,0 +1,22 @@
+[
+  {
+    "origen" : "machu picchu",
+    "destino" : "Puno",
+    "id_ruta" : 1
+  },
+  {
+    "origen" : "Arequipa",
+    "destino" : "Puno",
+    "id_ruta" : 2
+  },
+  {
+    "origen" : "machu picchu",
+    "destino" : "Ollantaytambo",
+    "id_ruta" : 3
+  },
+  {
+    "origen" : "Urubamba",
+    "destino" : "Machu Picchu",
+    "id_ruta" : 4
+  }
+]

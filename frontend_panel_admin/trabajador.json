@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "nombre": "Omar",
+    "apellido": "Gomez",
+    "correo": "omargomez@gmail.com",
+    "documento": "998762341",
+    "celular": "561245712",
+    "estado": "activo",
+    "rol": "chofer"
+  },
+  {
+    "id": "2",
+    "nombre": "Jean",
+    "apellido": "Martinez",
+    "correo": "jeanmartinez@gmail.com",
+    "documento": "124215611",
+    "celular": "145875421",
+    "estado": "activo",
+    "rol": "asesor"
+  },
+  {
+    "id": "3",
+    "nombre": "Juan",
+    "apellido": "Perez",
+    "correo": "juanperez@gmail.com",
+    "documento": "987431531",
+    "celular": "145784512",
+    "estado": "activo",
+    "rol": "chofer"
+  }
+]

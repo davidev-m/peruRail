@@ -1,0 +1,12 @@
+[
+  {
+    "est origen" : "Estación Hidroeléctica",
+    "est Destino" : "Estación Machu Picchu Pueblo",
+    "id_est" : 2,
+    "ruta" : {
+      "origen" : "machu picchu",
+      "destino" : "Puno",
+      "id_ruta" : 1
+    }
+  }
+]

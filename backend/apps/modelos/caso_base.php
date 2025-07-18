@@ -127,5 +127,42 @@ class caso_base_CRUD {
         }
     }
 
+        public function modificar($tabla, $datos, $condicion) {
+        if (empty($tabla) || empty($datos) || !is_array($datos) || empty($condicion) || !is_array($condicion) || count($condicion) !== 1) {
+            throw new InvalidArgumentException("Argumentos no válidos para la modificación.");
+        }
+        $this->validarNombre($tabla);
+
+        $setParts = [];
+        foreach (array_keys($datos) as $columna) {
+            $setParts[] = "`$columna` = :$columna";
+        }
+        $setClause = implode(', ', $setParts);
+
+        $columnaCondicion = array_key_first($condicion);
+        $whereClause = "`$columnaCondicion` = :condicion_$columnaCondicion";
+
+        $sql = "UPDATE `$tabla` SET $setClause WHERE $whereClause";
+
+        try {
+            $sentencia = $this->pdo->prepare($sql);
+
+            foreach ($datos as $columna => &$valor) {
+                $sentencia->bindValue(":$columna", $valor);
+            }
+
+            $valorCondicion = $condicion[$columnaCondicion];
+            $sentencia->bindValue(":condicion_$columnaCondicion", $valorCondicion);
+
+            $sentencia->execute();
+
+            return $sentencia->rowCount();
+
+        } catch (PDOException $e) {
+            throw new RuntimeException("Error al modificar la tabla `$tabla`: " . $e->getMessage());
+        }
+    }
+
+
 }
 ?>

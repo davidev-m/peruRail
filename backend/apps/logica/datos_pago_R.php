@@ -6,7 +6,6 @@ require_once __DIR__ . '/../conexion/conexion.php';
 session_start();
 header('Content-Type: application/json');
 
-// --- Función de ayuda para enviar respuestas de error consistentes ---
 function enviarRespuestaError($mensaje, $codigoHttp = 500) {
     http_response_code($codigoHttp);
     echo json_encode(['error' => $mensaje]);
@@ -15,22 +14,18 @@ function enviarRespuestaError($mensaje, $codigoHttp = 500) {
 
 $confirmacion = json_decode(file_get_contents('php://input'), true);
 
-// La lógica principal solo se ejecuta si la verificación es explícitamente 'true'.
 if (!empty($confirmacion['verificacion']) && $confirmacion['verificacion'] === true) {
     
-    // Obtenemos la única conexión a la base de datos para toda la operación
     $pdo = database::getConexion();
 
     $pdo->beginTransaction();
 
     try {
-        // --- 1. BUSCAR IDS DE VIAJE (LÓGICA REESTRUCTURADA Y VALIDADA) ---
         $tren = new Tren();
         $estacion = new Estacion();
         $viaje = new Viaje();
         $idViajes = [];
 
-        // --- Procesar Viaje de Ida ---
         $trenIdaInfo = $_SESSION["trenes_seleccionados"]["trenIda"];
         $nombreTrenIda = separarNombreYNumero($trenIdaInfo['tren']["nombre"]);
         $idTrenIda = $tren->BuscarIdTren($nombreTrenIda['codigo'], $nombreTrenIda['nombre']);
@@ -48,7 +43,7 @@ if (!empty($confirmacion['verificacion']) && $confirmacion['verificacion'] === t
         }
         $idViajes[] = $idViajeIda;
 
-        // --- Procesar Viaje de Vuelta (si existe) ---
+
         if ($_SESSION['trenes_seleccionados']['tipo'] == "ida_vuelta") {
             $trenRetornoInfo = $_SESSION["trenes_seleccionados"]["trenRetorno"];
             $nombreTrenRetorno = separarNombreYNumero($trenRetornoInfo['tren']["nombre"]);
@@ -76,7 +71,6 @@ if (!empty($confirmacion['verificacion']) && $confirmacion['verificacion'] === t
             $idViajes[] = $idViajeRetorno;
         }
         
-        // --- 2. GESTIONAR CLIENTE EMPRESA (si existe) ---
         $empresa = $_SESSION['empresa'] ?? [];
         $idEmpresa = null; // Usar null en lugar de -1
         if (!empty($empresa)) {
@@ -96,7 +90,6 @@ if (!empty($confirmacion['verificacion']) && $confirmacion['verificacion'] === t
             }
         }
 
-        // --- 3. GESTIONAR CLIENTES, COMPRADOR Y PAGO ---
         $claseCliente = new Cliente();
         $claseClienteComprador = new ClienteComprador();
         $documento = new tipo_documento();

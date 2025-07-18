@@ -12,9 +12,7 @@ class caso_base_CRUD {
     }
 
     private function validarNombre($nombre) {
-        if (!preg_match('/^[a-zA-Z0-9_]+$/', $nombre)) {
-            throw new InvalidArgumentException("Nombre de entidad no válido: $nombre");
-        }
+        
     }
 
     public function insertar($tabla, $datos) {
@@ -25,19 +23,15 @@ class caso_base_CRUD {
 
         $columnas = array_keys($datos);
 
-        // Creamos los placeholders
         $placeholders = array_map(fn($col) => ":$col", $columnas);
 
 
         $sql = "INSERT INTO `$tabla` (`" . implode('`, `', $columnas) . "`) VALUES (" . implode(', ', $placeholders) . ")";
         
-        //error_log("Caso Base (SQL Insert): " . $sql);
-
 
         try {
             $sentencia = $this->pdo->prepare($sql);
             
-            // Vinculamos los valores a los placeholders.
             foreach ($datos as $columna => &$valor) {
                 $sentencia->bindValue(":$columna", $valor);
             }
@@ -50,10 +44,6 @@ class caso_base_CRUD {
         }
     }
 
-
-    /**
-     * Busca y devuelve registros de una tabla.
-     */
     public function buscar($tabla, $datosSeleccion = '*', $where = '', $datos = [], $innerJoins = [], $condicionalExtra = '', $leftJoins = []) {
         if (empty($tabla)) {
             throw new InvalidArgumentException("El nombre de la tabla no puede estar vacío.");
@@ -116,7 +106,6 @@ class caso_base_CRUD {
         $columnaCondicion = array_key_first($datoId); 
         $valorCondicion = $datoId[$columnaCondicion];  
 
-        // 2. Construimos la sentencia SQL directamente.
         $sql = "UPDATE `$tabla` SET `estado` = :estado WHERE `$columnaCondicion` = :id_condicion";
 
         try {

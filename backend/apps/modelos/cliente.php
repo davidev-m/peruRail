@@ -39,7 +39,8 @@ class Cliente extends caso_base_CRUD {
             'apellido' => $apellido,
             'genero' => $genero,
             'documento' => $documento,
-            'fecha_nacimiento' => $fecha_nacimiento
+            'fecha_nacimiento' => $fecha_nacimiento,
+            'estado' => 'activo'
         ];
         $idCliente = $this->insertar("Cliente", $datos);
         if(!$idCliente){

@@ -141,6 +141,11 @@ public function mostrarAdmin($Nombretabla) {
         }
         $this->validarNombre($tabla);
 
+        // Eliminar la clave 'tipo' si existe en los datos
+        if (isset($datos['tipo'])) {
+            unset($datos['tipo']);
+        }
+
         $setParts = [];
         foreach (array_keys($datos) as $columna) {
             $setParts[] = "`$columna` = :$columna";

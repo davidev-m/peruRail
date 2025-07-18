@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             headers: ['N°', 'Nombre', 'Apellido', 'Documento', 'Estado'],
             dataFields: ['nombre', 'apellido', 'documento', 'estado'],
             idField: 'id_cliente',
-            canAdd: false, 
+            canAdd: false,
             fields: {
                 id_cliente: { label: 'ID', type: 'hidden' },
                 nombre: { label: 'Nombre', type: 'text', validationType: 'alpha' },
@@ -27,15 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 correo: { label: 'Correo', type: 'email', dependsOn: { field: 'tipo', value: 'cliente_comprador' } },
                 num_telf: { label: 'Teléfono', type: 'tel', validationType: 'numeric', dependsOn: { field: 'tipo', value: 'cliente_comprador' } },
                 fecha_nacimiento: { label: 'Fecha Nacimiento', type: 'date' },
-                sexo: { label: 'Género (M/F)', type: 'text', validationType: 'alpha' },
+                genero: { label: 'Género (M/F)', type: 'text', validationType: 'alpha', readOnly: true },
                 estado: { label: 'Estado', type: 'select', options: ['activo', 'inactivo'] }
             }
         },
         trabajadores: {
             tableName: 'Trabajador',
             title: 'Gestión de Trabajadores',
-            headers: ['N°', 'Nombre', 'Apellido', 'Rol', 'Estado'],
-            dataFields: ['nombre', 'apellido', 'rol', 'estado'],
+            headers: ['N°', 'Nombre', 'Apellido', 'Rol', 'Estado', 'Celular'],
+            dataFields: ['nombre', 'apellido', 'rol', 'estado', 'celular'],
             idField: 'id_trabajador',
             fields: {
                 id: { label: 'ID', type: 'hidden' },
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 documento: { label: 'N° Documento', type: 'text', validationType: 'numeric' }, // Quitado readOnly
                 correo: { label: 'Correo', type: 'email' },
                 celular: { label: 'Celular', type: 'tel', validationType: 'numeric' },
-                rol: { label: 'Rol', type: 'select', options: ['chofer', 'asesor'] },
+                rol: { label: 'Rol', type: 'text', readOnly: true },
                 estado: { label: 'Estado', type: 'select', options: ['activo', 'inactivo'] }
             }
         },
@@ -85,9 +85,9 @@ document.addEventListener('DOMContentLoaded', () => {
             idField: 'id_tren',
             fields: {
                 id_tren: { label: 'ID', type: 'hidden' },
-                'Clase.id_clase': { 
-                    label: 'Clase', 
-                    type: 'select', 
+                'Clase.id_clase': {
+                    label: 'Clase',
+                    type: 'select',
                     optionsSource: 'self',
                     optionsPath: 'Clase',
                     optionValueKey: 'id_clase',
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sidebarLinks = document.querySelectorAll('.sidebar-link');
     const formModal = document.getElementById('form-modal');
     const confirmModal = document.getElementById('confirm-modal');
-    
+
     let currentView = 'dashboard';
     let currentData = [];
     let currentDependencies = {};
@@ -160,7 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const renderContent = async (view) => {
         currentView = view;
         contentArea.innerHTML = '<p>Cargando...</p>';
-        
+
         sidebarLinks.forEach(link => {
             link.classList.toggle('active', link.dataset.view === view);
         });
@@ -178,14 +178,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const dataPromises = [fetchAPIData(API_URL_DATOS, { tabla: config.tableName })];
         const dependencyKeys = config.dependencies ? Object.keys(config.dependencies) : [];
-        
+
         dependencyKeys.forEach(key => {
             const dependencyTableName = config.dependencies[key];
             dataPromises.push(fetchAPIData(API_URL_DATOS, { tabla: dependencyTableName }));
         });
 
         const allData = await Promise.all(dataPromises);
-        
+
         currentData = allData[0] || [];
         currentDependencies = {};
         dependencyKeys.forEach((key, index) => {
@@ -193,18 +193,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (currentData.length === 0 && view !== 'dashboard') {
-             renderPlaceholder(view, `No se encontraron datos en <strong>${config.fileName}</strong>.`);
-             return;
+            renderPlaceholder(view, `No se encontraron datos en <strong>${config.fileName}</strong>.`);
+            return;
         }
-        
+
         renderTableLayout(config);
         populateTableRows(config, currentData, currentDependencies);
     };
-    
+
     const renderDashboard = async () => {
-         try {
+        try {
             const counts = await fetchAPIData(API_URL_CANTIDAD, {}); // Payload vacío para cantidad
-            
+
             contentArea.innerHTML = `
                 <div class="content-header"><h1>Dashboard</h1></div>
                 <div class="dashboard-grid">
@@ -264,10 +264,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </div>
             `;
-         } catch (error) {
+        } catch (error) {
             contentArea.innerHTML = `<p style="color: red;">Error al cargar los datos del dashboard.</p>`;
             console.error(error);
-         }
+        }
     };
 
     const renderPlaceholder = (viewName, message = '') => {
@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
     };
-    
+
     const renderTableLayout = (config) => {
         contentArea.innerHTML = `
             <div class="content-header">
@@ -314,10 +314,10 @@ document.addEventListener('DOMContentLoaded', () => {
         data.forEach((item, index) => {
             rowsHTML += `<tr data-id="${getProperty(item, config.idField)}">`;
             rowsHTML += `<td>${index + 1}</td>`;
-            
+
             config.dataFields.forEach(fieldKey => {
                 let cellContent;
-                
+
                 if (currentView === 'viajes' && fieldKey === 'Estacion') {
                     const estacionObj = getProperty(item, 'Estacion');
                     cellContent = estacionObj ? `${estacionObj.est_origen} - ${estacionObj.est_destino}` : 'N/A';
@@ -331,7 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                     cellContent = item[fieldKey] || '';
                 }
-                
+
                 if (fieldKey === 'tipo' || fieldKey === 'rol' || fieldKey === 'estado') {
                     let style = 'display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 500; text-transform: capitalize;';
                     const lowerCaseContent = cellContent.toString().toLowerCase();
@@ -342,10 +342,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     cellContent = `<span style="${style}">${cellContent}</span>`;
                 }
-                
+
                 rowsHTML += `<td>${cellContent}</td>`;
             });
-            
+
             rowsHTML += `
                 <td class="actions">
                     <button class="edit-btn btn-action" title="Modificar">&#9998;</button>
@@ -356,10 +356,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         tableBody.innerHTML = rowsHTML;
     };
-    
+
     const showModal = (title, item = {}) => {
         const config = viewConfig[currentView];
-        originalItemData = item; 
+        originalItemData = item;
         document.getElementById('modal-title').textContent = title;
         const formFields = document.getElementById('form-fields');
         formFields.innerHTML = '';
@@ -374,7 +374,45 @@ document.addEventListener('DOMContentLoaded', () => {
             const inputName = key.replace(/\./g, '_').replace(/ /g, '_');
             const isDependent = !!fieldConfig.dependsOn;
 
-            if (fieldConfig.type === 'select') {
+            // PATCH: rol editable solo al insertar y con opciones específicas
+            let readOnlyAttr = fieldConfig.readOnly ? 'readonly' : '';
+            if (config.tableName === 'Trabajador' && key === 'rol') {
+                if (!currentItemId) {
+                    // Insertar: mostrar select con opciones
+                    fieldHTML = `
+                        <div class="form-group" data-dependency-key="${key}">
+                            <label for="${inputName}">${fieldConfig.label}</label>
+                            <select id="${inputName}" name="${inputName}" required>
+                                <option value="">-- Seleccione --</option>
+                                <option value="Trabajador" ${value === 'Trabajador' ? 'selected' : ''}>Trabajador</option>
+                                <option value="Asesor_venta" ${value === 'Asesor_venta' ? 'selected' : ''}>Asesor de venta</option>
+                            </select>
+                        </div>
+                    `;
+                } else {
+                    // Modificar: solo lectura
+                    readOnlyAttr = 'readonly';
+                    fieldHTML = `
+                        <div class="form-group" data-dependency-key="${key}">
+                            <label for="${inputName}">${fieldConfig.label}</label>
+                            <input type="text" id="${inputName}" name="${inputName}" value="${value}" ${readOnlyAttr} required>
+                        </div>
+                    `;
+                }
+            } else if (config.tableName === 'Trabajador' && key === 'documento') {
+                // PATCH: documento solo editable al insertar
+                if (!currentItemId) {
+                    readOnlyAttr = '';
+                } else {
+                    readOnlyAttr = 'readonly';
+                }
+                fieldHTML = `
+                    <div class="form-group" data-dependency-key="${key}">
+                        <label for="${inputName}">${fieldConfig.label}</label>
+                        <input type="${fieldConfig.type}" id="${inputName}" name="${inputName}" value="${value}" ${readOnlyAttr} required>
+                    </div>
+                `;
+            } else if (fieldConfig.type === 'select') {
                 let optionsHTML = '<option value="">-- Seleccione --</option>';
                 let optionsSource = [];
 
@@ -412,11 +450,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
             } else {
-                let readOnlyAttr = fieldConfig.readOnly ? 'readonly' : '';
-                // Lógica para hacer el DNI del trabajador editable solo al agregar
-                if (config.tableName === 'Trabajador' && key === 'documento' && currentItemId) {
-                    readOnlyAttr = 'readonly';
-                }
                 fieldHTML = `
                     <div class="form-group" data-dependency-key="${key}" ${isDependent ? 'style="display: none;"' : ''}>
                         <label for="${inputName}">${fieldConfig.label}</label>
@@ -424,14 +457,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 `;
             }
-            
+
             formFields.insertAdjacentHTML('beforeend', fieldHTML);
-            
+
             if (fieldConfig.validationType) {
                 setInputValidation(inputName, fieldConfig.validationType);
             }
         }
-        
+
         handleDependentFields(item);
 
         formModal.classList.remove('hidden');
@@ -485,7 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
         modalElement.classList.remove('visible');
         setTimeout(() => modalElement.classList.add('hidden'), 300);
     };
-    
+
     const showConfirmModal = (id) => {
         currentItemId = id;
         confirmModal.classList.remove('hidden');
@@ -543,17 +576,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.id === 'search-input') {
             const searchTerm = e.target.value.toLowerCase();
             const config = viewConfig[currentView];
-            
+
             const filteredData = currentData.filter(item => {
                 return recursiveSearch(item, searchTerm);
             });
-            
+
             populateTableRows(config, filteredData, currentDependencies);
         }
     });
-    
+
     document.getElementById('modal-close-btn').addEventListener('click', () => hideModal(formModal));
-    
+
     document.getElementById('entity-form').addEventListener('submit', (e) => {
         e.preventDefault();
         const config = viewConfig[currentView];
@@ -605,9 +638,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 alert(`Error: ${error.message}`);
             });
     });
-    
+
     document.getElementById('confirm-cancel-btn').addEventListener('click', () => hideModal(confirmModal));
-    
+
     // --- EVENT LISTENER MODIFICADO PARA ELIMINAR ---
     document.getElementById('confirm-delete-btn').addEventListener('click', () => {
         const config = viewConfig[currentView];

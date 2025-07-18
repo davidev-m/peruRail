@@ -59,10 +59,20 @@
     //GUARDAR DATOS DE ADULTOS
     $cantAdultos = count($pasajeros['adultos']);
     for($i = 0; $i < $cantAdultos; $i++){
+        $telefono = isset($pasajeros["adultos"][$i]['telefono']) ? $pasajeros["adultos"][$i]['telefono'] : '-';
+        $email = isset($pasajeros["adultos"][$i]['email']) ? $pasajeros["adultos"][$i]['email'] : '-';
+        if (isset($pasajeros["adultos"][$i]['es_comprador']) && $pasajeros["adultos"][$i]['es_comprador'] == 1 && isset($_SESSION['comprador'])) {
+            $telefono = isset($_SESSION['comprador']['telefono']) ? $_SESSION['comprador']['telefono'] : $telefono;
+            $email = isset($_SESSION['comprador']['email']) ? $_SESSION['comprador']['email'] : $email;
+        }
         $resultado['pasajeros'][] = [
             "nombre" => $pasajeros["adultos"][$i]['nombre'] ." " . $pasajeros["adultos"][$i]['apellidos'],
             "documento" => $pasajeros["adultos"][$i]['num_doc'],
-            "tarifa" => "ADULTO"
+            "tarifa" => "ADULTO",
+            "pais" => isset($pasajeros["adultos"][$i]['pais']) ? $pasajeros["adultos"][$i]['pais'] : '-',
+            "telefono" => $telefono,
+            "email" => $email,
+            "nacionalidad" => isset($pasajeros["adultos"][$i]['nacionalidad']) ? $pasajeros["adultos"][$i]['nacionalidad'] : (isset($pasajeros["adultos"][$i]['pais']) ? $pasajeros["adultos"][$i]['pais'] : '-')
         ];
         $monto_total += (int)$montoIda;
         if($tren_retorno){
@@ -77,7 +87,11 @@
             $resultado['pasajeros'][] = [
                 "nombre" => $pasajeros["ninos"][$i]['nombre'] ." " . $pasajeros["ninos"][$i]['apellidos'],
                 "documento" => $pasajeros["ninos"][$i]['num_doc'],
-                "tarifa" => "NIÑO"
+                "tarifa" => "NIÑO",
+                "pais" => isset($pasajeros["ninos"][$i]['pais']) ? $pasajeros["ninos"][$i]['pais'] : '-',
+                "telefono" => isset($pasajeros["ninos"][$i]['telefono']) ? $pasajeros["ninos"][$i]['telefono'] : '-',
+                "email" => isset($pasajeros["ninos"][$i]['email']) ? $pasajeros["ninos"][$i]['email'] : '-',
+                "nacionalidad" => isset($pasajeros["ninos"][$i]['nacionalidad']) ? $pasajeros["ninos"][$i]['nacionalidad'] : (isset($pasajeros["ninos"][$i]['pais']) ? $pasajeros["ninos"][$i]['pais'] : '-')
             ];
             $monto_total += (int)$montoIda;
             if($tren_retorno){
@@ -91,6 +105,5 @@
         
     error_log("datos_pago_E.php -> Contenido de SESSION: " . print_r($resultado, true));
     echo json_encode($resultado);
-
 
 ?>

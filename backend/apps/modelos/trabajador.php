@@ -28,7 +28,7 @@
         ];
         $where = 'estado = :estado';
         $dato = [':estado' => 'activo'];
-        $condicional = "LIMIT 20";
+        $condicional = "ORDER BY id_trabajador DESC LIMIT 50";
 
         $resultadoPlano = $this->buscar(
             tabla: $tabla,
@@ -80,7 +80,7 @@
             $tablaRol = '';
             if ($rol === 'chofer') {
                 $tablaRol = 'Chofer';
-            } elseif ($rol === 'asesor') {
+            } elseif ($rol === 'asesor_venta') {
                 $tablaRol = 'Asesor_venta';
             } else {
                 throw new InvalidArgumentException("El rol '$rol' no es un rol de trabajador válido.");

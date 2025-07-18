@@ -97,7 +97,7 @@ class caso_base_CRUD {
     }
 
     public function mostrarAdmin($Nombretabla){
-        $condicionalExtra = " LIMIT 20 ";
+        $condicionalExtra = " LIMIT 20 ORDER BY i";
         $datos = $this->buscar(tabla: $Nombretabla, condicionalExtra:$condicionalExtra);
         return $datos;
     }

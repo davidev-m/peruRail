@@ -58,25 +58,62 @@ class Cliente extends caso_base_CRUD {
         return $resultado[0]['id_cliente'];
     }
 
-        public function mostrarAdmin($Nombretabla){
+    public function mostrarAdmin($nombre_tabla) {
+        $tabla = 'Cliente c'; 
+
+        $select = "
+            c.id_cliente,
+            c.nombre,
+            c.apellido,
+            c.genero,
+            c.documento,
+            c.fecha_nacimiento,
+            c.estado,
+            cc.correo,
+            cc.num_telf
+        ";
+
+        // Definimos el LEFT JOIN. Esto unirá Cliente_comprador (con alias 'cc')
+        // a Cliente donde los IDs coincidan.
+        $leftJoins = [
+            'Cliente_comprador cc' => 'c.id_cliente = cc.id_cliente'
+        ];
+        
         $condicional = "LIMIT 20";
-        $Datos = $this->buscar(tabla:$Nombretabla, condicionalExtra:$condicional);
-        foreach ($Datos as $fila) {
-            $cliente[] = [
-                'est origen'  => $fila['est_origen'],
-                'est Destino' => $fila['est_destino'],
-                'id_est'      => (int)$fila['id_est'],
-                'ruta'        => [
-                    'origen'  => $fila['ruta_origen'],
-                    'destino' => $fila['ruta_destino'],
-                    'id_ruta' => (int)$fila['id_ruta']
-                ],
-                "estado" => $fila['estado']
+
+        // 2. Ejecutamos UNA SOLA consulta eficiente que trae toda la información.
+        $resultadoPlano = $this->buscar(
+            tabla: $tabla,
+            datosSeleccion: $select,
+            leftJoins: $leftJoins,
+            condicionalExtra: $condicional
+        );
+
+        // 3. Procesamos el resultado con UN SOLO bucle.
+        $clientesFormateados = [];
+        foreach ($resultadoPlano as $fila) {
+            // Creamos la estructura base del cliente.
+            $cliente = [
+                'id_cliente'       => (int)$fila['id_cliente'],
+                'nombre'           => $fila['nombre'],
+                'apellido'         => $fila['apellido'], 
+                'genero'           => $fila['genero'],
+                'documento'        => $fila['documento'],
+                'fecha_nacimiento' => $fila['fecha_nacimiento'],
+                'estado'           => $fila['estado'],
+                'rol'              => 'Pasajero'
             ];
+
+            if (!is_null($fila['correo'])) {
+                $cliente['rol'] = 'Comprador';
+                $cliente['correo'] = $fila['correo'];
+                $cliente['num_telf'] = $fila['num_telf'];
+            }
+
+            $clientesFormateados[] = $cliente;
         }
 
-        // 4. Devolver el array ya formateado
-        return $cliente;
+        return $clientesFormateados;
     }
 
 }

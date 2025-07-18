@@ -1,0 +1,51 @@
+[
+  {
+    "id_viaje": 1,
+    "fecha_salida": "2025-07-04",
+    "Tren": {
+      "nombre": "PeruRail Expedition 92",
+      "id_tren": 2
+    },
+    "Estacion": {
+      "est_origen": "Estación Wánchaq",
+      "est_destino": "Estación Machu Picchu",
+      "id_estacion": 3
+    },
+    "Bus": {
+      "id_bus": 1
+    }
+  },
+  {
+    "id_viaje": 2,
+    "fecha_salida": "2025-07-12",
+    "Tren": {
+      "nombre": "PeruRail Vistadome 20",
+      "id_tren": 43
+    },
+    "Estacion": {
+      "est_origen": "Estación Wánchaq",
+      "est_destino": "Arequipa",
+      "id_estacion": 3
+    },
+    "Bus": {
+      "id_bus": 1
+    }
+  },
+    {
+    "id_viaje": 3,
+    "fecha_salida": "2025-07-15",
+    "Tren": {
+      "nombre": "PeruRail Vistadome 30",
+      "id_tren": 43
+    },
+    "Estacion": {
+      "est_origen": "Puno",
+      "est_destino": "Estación Machu Picchu",
+      "id_estacion": 3
+    },
+    "Bus": {
+      "id_bus": 1
+    }
+  }
+
+]

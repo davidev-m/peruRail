@@ -1,0 +1,35 @@
+[
+  {
+    "id_cliente": "1",
+    "id_documento": "1",
+    "nombre": "Edgar",
+    "apellido": "Leyva",
+    "sexo": "M",
+    "documento": "76852884",
+    "fecha_nacimiento": "2001-04-15",
+    "estado": "activo",
+    "tipo": "cliente_comprador"
+  },
+  {
+    "id_cliente": "2",
+    "id_documento": "2",
+    "nombre": "Carlos",
+    "apellido": "Martinez",
+    "sexo": "M",
+    "documento": "1234567890",
+    "fecha_nacimiento": "2000-05-11",
+    "estado": "activo",
+    "tipo": "cliente_comprador"
+  },
+  {
+    "id_cliente": "3",
+    "id_documento": "3",
+    "nombre": "Maria",
+    "apellido": "Linares",
+    "sexo": "F",
+    "documento": "1230987465",
+    "fecha_nacimiento": "2002-05-11",
+    "estado": "activo",
+    "tipo": "cliente"
+  }
+]

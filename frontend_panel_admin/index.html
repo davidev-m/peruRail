@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administrador - PeruRail</title>
+    <!-- Enlace a la hoja de estilos externa -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Sidebar (Menú de Navegación) -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h1>Panel de Administrador</h1>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li><a href="#" class="sidebar-link" data-view="dashboard"><span class="icon" id="icon-dashboard"></span>Dashboard</a></li>
+                <li><a href="#" class="sidebar-link" data-view="clientes"><span class="icon" id="icon-clientes"></span>Clientes</a></li>
+                <li><a href="#" class="sidebar-link" data-view="trabajadores"><span class="icon" id="icon-trabajadores"></span>Trabajadores</a></li>
+                <li><a href="#" class="sidebar-link" data-view="rutas"><span class="icon" id="icon-rutas"></span>Rutas</a></li>
+                <li><a href="#" class="sidebar-link" data-view="estaciones"><span class="icon" id="icon-estaciones"></span>Estaciones</a></li>
+                <li><a href="#" class="sidebar-link" data-view="trenes"><span class="icon" id="icon-trenes"></span>Trenes</a></li>
+                <li><a href="#" class="sidebar-link" data-view="viajes"><span class="icon" id="icon-viajes"></span>Viajes</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Contenido Principal -->
+    <main class="main-content">
+        <div id="content-area">
+            <!-- El contenido dinámico se cargará aquí -->
+        </div>
+    </main>
+
+    <!-- Ventana Modal para Agregar/Editar -->
+    <div id="form-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title"></h2>
+            </div>
+            <form id="entity-form">
+                <div id="form-fields"></div>
+                <div class="modal-footer">
+                    <button type="button" id="modal-close-btn" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Ventana Modal para Confirmar Eliminación -->
+    <div id="confirm-modal" class="modal hidden">
+        <div class="modal-content" style="text-align: center;">
+             <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">¿Estás seguro?</h3>
+             <p style="color: #555; margin-bottom: 2rem;">Esta acción no se puede deshacer.</p>
+             <div class="modal-footer" style="justify-content: center;">
+                <button id="confirm-cancel-btn" class="btn btn-secondary">Cancelar</button>
+                <button id="confirm-delete-btn" class="btn btn-danger">Sí, eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enlace al archivo JavaScript externo -->
+    <script src="script.js"></script>
+</body>
+</html>

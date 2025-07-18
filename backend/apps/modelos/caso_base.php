@@ -10,6 +10,8 @@ class caso_base_CRUD {
     public function __construct() {
         $this->pdo = database::getConexion();
     }
+    protected $filtroEstado = false;
+
 
     private function validarNombre($nombre) {
         
@@ -87,13 +89,25 @@ class caso_base_CRUD {
             throw new RuntimeException("Error al ejecutar la búsqueda: " . $e->getMessage() . " [Consulta: $sql]");
         }
     }
-
-    public function mostrarAdmin($Nombretabla) {
-        $order = "id_";
-        $order .= strtolower($Nombretabla);
-        $condicionalExtra = "LIMIT 20 ORDER BY ". $order;
+public function mostrarAdmin($Nombretabla) {
+        $id = "id_" . $Nombretabla;
+        $condicionalExtra = " ORDER BY `$id` DESC LIMIT 20";
         
-        $datos = $this->buscar(tabla: $Nombretabla, condicionalExtra: $condicionalExtra);
+        $where = '';
+        $datos_where = [];
+
+        if ($this->filtroEstado) {
+            $where = "estado = :estado";
+            $datos_where = [':estado' => 'activo'];
+        }
+        
+        $datos = $this->buscar(
+            tabla: $Nombretabla,
+            where: $where,
+            datos: $datos_where,
+            condicionalExtra: $condicionalExtra
+        );
+        
         return $datos;
     }
 

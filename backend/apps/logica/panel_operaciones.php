@@ -62,7 +62,7 @@ try {
                 throw new InvalidArgumentException("La solicitud de modificación debe contener exactamente una clave de ID (ej: 'id_tren').");
             }
 
-            $filasAfectadas = $modelo->modificar($tabla, $datosRecibidos['datos'], $condicionArray);
+            $filasAfectadas = $modelo->modificar($tabla, $datosRecibidos['datos'], $condicionArray['condicion']);
             $respuesta = [
                 'message' => 'Registro modificado con éxito.',
                 'filas_afectadas' => $filasAfectadas
@@ -78,7 +78,7 @@ try {
                 throw new InvalidArgumentException("La solicitud de eliminación debe contener exactamente una clave de ID (ej: 'id_tren').");
             }
             
-            $modelo->eliminar($tabla, $condicionArray);
+            $modelo->eliminar($tabla, $condicionArray['condicion']);
             $respuesta = ['message' => 'Registro desactivado con éxito.'];
             break;
         

@@ -2,6 +2,7 @@
     require_once __DIR__ . "/caso_base.php";
     class Trabajador extends caso_base_CRUD{
         private $nombreTabla;
+        protected $filtroEstado = true;
         function __construct(){
             parent::__construct(); 
             $this->nombreTabla = "Trabajador";
@@ -25,12 +26,15 @@
             'Chofer c' => 't.id_trabajador = c.id_trabajador',
             'Asesor_venta a' => 'a.id_trabajador = t.id_trabajador'
         ];
-        
+        $where = 'estado = :estado';
+        $dato = [':estado' => 'activo'];
         $condicional = "LIMIT 20";
 
         $resultadoPlano = $this->buscar(
             tabla: $tabla,
             datosSeleccion: $select,
+            where:$where,
+            datos: $dato,
             leftJoins: $leftJoins,
             condicionalExtra: $condicional
         );

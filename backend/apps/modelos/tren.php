@@ -57,7 +57,7 @@
         return $resultado;
     }
     public function mostrarAdmin($nombre_tabla){
-        $nombre_tabla .= "t ";
+        $nombre_tabla .= " t ";
         $join = [
             "Clase c" => "t.id_clase = c.id_clase"
         ];

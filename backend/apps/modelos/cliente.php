@@ -79,12 +79,16 @@ class Cliente extends caso_base_CRUD {
             'Cliente_comprador cc' => 'c.id_cliente = cc.id_cliente'
         ];
         
+        $where = 'estado = :estado';
+        $dato = [':estado' => 'activo'];
         $condicional = "LIMIT 20";
 
         // 2. Ejecutamos UNA SOLA consulta eficiente que trae toda la información.
         $resultadoPlano = $this->buscar(
             tabla: $tabla,
             datosSeleccion: $select,
+            where: $where,
+            datos:$dato,
             leftJoins: $leftJoins,
             condicionalExtra: $condicional
         );

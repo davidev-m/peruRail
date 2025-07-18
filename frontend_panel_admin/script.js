@@ -5,16 +5,19 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Configuración Central de Vistas ---
+    // --- Rutas de la API ---
+    const API_URL_DATOS = '../backend/apps/logica/panel_datos.php';
+    const API_URL_CANTIDAD = '../backend/apps/logica/panel_cantidad.php';
+    const API_URL_OPERACIONES = '../backend/apps/logica/panel_operaciones.php';
     const viewConfig = {
         dashboard: {},
         clientes: {
-            fileName: 'clientes.json',
             tableName: 'Cliente',
             title: 'Gestión de Clientes',
             headers: ['N°', 'Nombre', 'Apellido', 'Documento', 'Estado'],
             dataFields: ['nombre', 'apellido', 'documento', 'estado'],
             idField: 'id_cliente',
-            canAdd: false, // No se pueden agregar nuevos clientes desde aquí
+            canAdd: false, 
             fields: {
                 id_cliente: { label: 'ID', type: 'hidden' },
                 nombre: { label: 'Nombre', type: 'text', validationType: 'alpha' },
@@ -29,12 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
         trabajadores: {
-            fileName: 'trabajador.json',
             tableName: 'Trabajador',
             title: 'Gestión de Trabajadores',
             headers: ['N°', 'Nombre', 'Apellido', 'Rol', 'Estado'],
             dataFields: ['nombre', 'apellido', 'rol', 'estado'],
-            idField: 'id',
+            idField: 'id_trabajador',
             fields: {
                 id: { label: 'ID', type: 'hidden' },
                 nombre: { label: 'Nombre', type: 'text', validationType: 'alpha' },
@@ -47,27 +49,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
         rutas: {
-            fileName: 'Ruta.json',
             tableName: 'Ruta',
             title: 'Gestión de Rutas',
-            headers: ['N°', 'Origen', 'Destino'],
-            dataFields: ['origen', 'destino'],
+            headers: ['N°', 'Origen', 'Destino', 'Días Disponibles'],
+            dataFields: ['origen', 'destino', 'dias_disponibles'],
             idField: 'id_ruta',
             fields: {
                 id_ruta: { label: 'ID', type: 'hidden' },
                 origen: { label: 'Origen', type: 'text' },
-                destino: { label: 'Destino', type: 'text' }
+                destino: { label: 'Destino', type: 'text' },
+                destino: { label: 'Días Disponibles', type: 'text' },
             }
         },
         estaciones: {
-            fileName: 'estacion.json',
             tableName: 'Estacion',
             title: 'Gestión de Estaciones',
             headers: ['N°', 'Estación Origen', 'Estación Destino', 'Ruta Asignada'],
-            dataFields: ['est origen', 'est Destino', 'ruta'],
-            idField: 'id_est',
+            dataFields: ['est_origen', 'est_destino', 'ruta'],
+            idField: 'id_estacion',
             dependencies: {
-                rutas: 'Ruta.json'
+                rutas: 'Ruta'
             },
             fields: {
                 id_est: { label: 'ID', type: 'hidden' },
@@ -77,7 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
         trenes: {
-            fileName: 'tren.json',
             tableName: 'Tren',
             title: 'Gestión de Trenes',
             headers: ['N°', 'Clase', 'Código', 'Capacidad'],
@@ -99,15 +99,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         },
         viajes: {
-            fileName: 'viaje.json',
             tableName: 'Viaje',
             title: 'Gestión de Viajes',
             headers: ['N°', 'Fecha Salida', 'Tren', 'Estación'],
             dataFields: ['fecha_salida', 'Tren.nombre', 'Estacion'],
             idField: 'id_viaje',
             dependencies: {
-                trenes: 'tren.json',
-                estaciones: 'estacion.json'
+                trenes: 'Tren',
+                estaciones: 'Estacion'
             },
             fields: {
                 id_viaje: { label: 'ID', type: 'hidden' },
@@ -130,29 +129,31 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentItemId = null;
     let originalItemData = null; // Para guardar los datos originales al editar
 
-    async function fetchTableData(config) {
-        const payload = { tabla: config.tableName };
-        console.log(`--> Enviando solicitud para la tabla: ${config.tableName}`);
-        console.log('Payload:', JSON.stringify(payload));
+    async function fetchAPIData(url, payload) {
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
 
-        try {
-            const response = await fetch(config.fileName);
-            if (!response.ok) throw new Error(`No se pudo cargar ${config.fileName}.`);
-            return await response.json();
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || `Error del servidor: ${response.status}`);
+            }
+
+            const result = await response.json();
+            if (result.success) {
+                return result.data;
+            } else {
+                throw new Error(result.error || 'La respuesta del backend no fue exitosa.');
+            }
         } catch (error) {
-            console.error(error);
-            return [];
-        }
-    }
-    
-    async function fetchDependencyData(fileName) {
-        try {
-            const response = await fetch(fileName);
-            if (!response.ok) throw new Error(`No se pudo cargar dependencia: ${fileName}.`);
-            return await response.json();
-        } catch (error) {
-            console.error(error);
-            return [];
+            console.error(`Error al llamar a la API (${url}):`, error);
+            // Devolvemos un array vacío o un objeto vacío para que el resto del script no falle
+            return payload && Array.isArray(payload.tabla) ? [] : {};
         }
     }
 
@@ -175,19 +176,20 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const dataPromises = [fetchTableData(config)];
+        const dataPromises = [fetchAPIData(API_URL_DATOS, { tabla: config.tableName })];
         const dependencyKeys = config.dependencies ? Object.keys(config.dependencies) : [];
         
         dependencyKeys.forEach(key => {
-            dataPromises.push(fetchDependencyData(config.dependencies[key]));
+            const dependencyTableName = config.dependencies[key];
+            dataPromises.push(fetchAPIData(API_URL_DATOS, { tabla: dependencyTableName }));
         });
 
         const allData = await Promise.all(dataPromises);
         
-        currentData = allData[0];
+        currentData = allData[0] || [];
         currentDependencies = {};
         dependencyKeys.forEach((key, index) => {
-            currentDependencies[key] = allData[index + 1];
+            currentDependencies[key] = allData[index + 1] || [];
         });
 
         if (currentData.length === 0 && view !== 'dashboard') {
@@ -201,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const renderDashboard = async () => {
          try {
-            const counts = await fetchDependencyData('../backend/apps/logica/panel_cantidad.php');
+            const counts = await fetchAPIData(API_URL_CANTIDAD, {}); // Payload vacío para cantidad
             
             contentArea.innerHTML = `
                 <div class="content-header"><h1>Dashboard</h1></div>
@@ -567,20 +569,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentItemId) { // Modificar
             const modifiedData = {};
             for (const key in config.fields) {
-                const originalValue = getProperty(originalItemData, key);
-                const currentValue = data[key];
-                if (originalValue != currentValue) {
-                    modifiedData[key] = currentValue;
+                // Usamos hasOwnProperty para asegurarnos de que no estamos iterando sobre propiedades heredadas
+                if (Object.prototype.hasOwnProperty.call(config.fields, key)) {
+                    const originalValue = getProperty(originalItemData, key);
+                    const currentValue = data[key];
+                    if (String(originalValue) != String(currentValue)) {
+                        modifiedData[key.split('.').pop()] = currentValue; // Enviamos solo el nombre final de la columna
+                    }
                 }
             }
 
             payload = {
                 accion: 'modificar',
                 tabla: config.tableName,
-                [config.idField]: currentItemId,
-                datos: modifiedData
+                datos: modifiedData,
+                condicion: { [config.idField]: currentItemId }
             };
-            console.log("--> Enviando JSON de Modificación:");
 
         } else { // Insertar
             payload = {
@@ -588,29 +592,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 tabla: config.tableName,
                 datos: data
             };
-            console.log("--> Enviando JSON de Inserción:");
         }
 
-        console.log(JSON.stringify(payload, null, 2));
-        alert('Acción guardada (simulación). Revisa la consola para ver el JSON enviado.');
-        hideModal(formModal);
+        // Llamamos a la API de operaciones
+        fetchAPIData(API_URL_OPERACIONES, payload)
+            .then(response => {
+                alert(response.message || 'Operación realizada con éxito.');
+                hideModal(formModal);
+                renderContent(currentView); // Recargamos la tabla para ver los cambios
+            })
+            .catch(error => {
+                alert(`Error: ${error.message}`);
+            });
     });
     
     document.getElementById('confirm-cancel-btn').addEventListener('click', () => hideModal(confirmModal));
     
+    // --- EVENT LISTENER MODIFICADO PARA ELIMINAR ---
     document.getElementById('confirm-delete-btn').addEventListener('click', () => {
         const config = viewConfig[currentView];
         const payload = {
             accion: 'eliminar',
             tabla: config.tableName,
-            [config.idField]: currentItemId
+            condicion: { [config.idField]: currentItemId }
         };
 
-        console.log("--> Enviando JSON de Eliminación:");
-        console.log(JSON.stringify(payload, null, 2));
-        alert(`Registro ${currentItemId} eliminado (simulación). Revisa la consola.`);
-        hideModal(confirmModal);
+        // Llamamos a la API de operaciones
+        fetchAPIData(API_URL_OPERACIONES, payload)
+            .then(response => {
+                alert(response.message || 'Registro desactivado con éxito.');
+                hideModal(confirmModal);
+                renderContent(currentView); // Recargamos la tabla
+            })
+            .catch(error => {
+                alert(`Error: ${error.message}`);
+            });
     });
-
-    renderContent('dashboard');
 });

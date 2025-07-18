@@ -384,7 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <label for="${inputName}">${fieldConfig.label}</label>
                             <select id="${inputName}" name="${inputName}" required>
                                 <option value="">-- Seleccione --</option>
-                                <option value="Trabajador" ${value === 'Trabajador' ? 'selected' : ''}>Trabajador</option>
+                                <option value="Chofer" ${value === 'Chofer' ? 'selected' : ''}>Chofer</option>
                                 <option value="Asesor_venta" ${value === 'Asesor_venta' ? 'selected' : ''}>Asesor de venta</option>
                             </select>
                         </div>

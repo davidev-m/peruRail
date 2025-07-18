@@ -1,4 +1,6 @@
 <?php
+
+use Culqi\Orders;
 require_once __DIR__ . '/../conexion/conexion.php';
 
 
@@ -96,9 +98,12 @@ class caso_base_CRUD {
         }
     }
 
-    public function mostrarAdmin($Nombretabla){
-        $condicionalExtra = " LIMIT 20 ORDER BY i";
-        $datos = $this->buscar(tabla: $Nombretabla, condicionalExtra:$condicionalExtra);
+    public function mostrarAdmin($Nombretabla) {
+        $order = "id_";
+        $order .= strtolower($Nombretabla);
+        $condicionalExtra = "LIMIT 20 ORDER BY ". $order;
+        
+        $datos = $this->buscar(tabla: $Nombretabla, condicionalExtra: $condicionalExtra);
         return $datos;
     }
 

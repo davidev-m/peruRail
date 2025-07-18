@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const renderDashboard = async () => {
          try {
-            const counts = await fetchDependencyData('cantidad_panel.json');
+            const counts = await fetchDependencyData('../backend/apps/logica/panel_cantidad.php');
             
             contentArea.innerHTML = `
                 <div class="content-header"><h1>Dashboard</h1></div>
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="card-text">
                            <p class="card-title">Clientes</p>
-                           <p class="card-value">${counts.Clientes || 0}</p>
+                           <p class="card-value">${counts.Cliente || 0}</p>
                         </div>
                     </div>
                     <div class="dashboard-card">
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="card-text">
                            <p class="card-title">Trabajadores</p>
-                           <p class="card-value">${counts.Trabajadores || 0}</p>
+                           <p class="card-value">${counts.Trabajador || 0}</p>
                         </div>
                     </div>
                      <div class="dashboard-card">
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="card-text">
                            <p class="card-title">Rutas</p>
-                           <p class="card-value">${counts.Rutas || 0}</p>
+                           <p class="card-value">${counts.Ruta || 0}</p>
                         </div>
                     </div>
                      <div class="dashboard-card">
@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="card-text">
                            <p class="card-title">Estaciones</p>
-                           <p class="card-value">${counts.Estaciones || 0}</p>
+                           <p class="card-value">${counts.Estacion || 0}</p>
                         </div>
                     </div>
                     <div class="dashboard-card">
@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="card-text">
                            <p class="card-title">Trenes</p>
-                           <p class="card-value">${counts.Trenes || 0}</p>
+                           <p class="card-value">${counts.Tren || 0}</p>
                         </div>
                     </div>
                     <div class="dashboard-card">
@@ -257,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </div>
                         <div class="card-text">
                            <p class="card-title">Viajes</p>
-                           <p class="card-value">${counts.Viajes || 0}</p>
+                           <p class="card-value">${counts.Viaje || 0}</p>
                         </div>
                     </div>
                 </div>

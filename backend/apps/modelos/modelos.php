@@ -9,4 +9,5 @@
     require_once __DIR__ . '/tipo_documento.php';
     require_once __DIR__ . '/pago.php';
     require_once __DIR__ . '/reserva.php';
+    require_once __DIR__ . '/trabajador.php';
 ?>

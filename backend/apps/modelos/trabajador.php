@@ -1,10 +1,10 @@
 <?php
     require_once __DIR__ . "/caso_base.php";
-    class Empleado extends caso_base_CRUD{
+    class Trabajador extends caso_base_CRUD{
         private $nombreTabla;
         function __construct(){
             parent::__construct(); 
-            $this->nombreTabla = "Empleado";
+            $this->nombreTabla = "Trabajador";
         }
     public function mostrarAdmin($nombre_tabla) {
         $tabla = 'Trabajador t'; 
@@ -51,13 +51,47 @@
             if (!is_null($fila['es_chofer'])) {
                 $trabajador['rol'] = 'Chofer';
             } elseif (!is_null($fila['es_asesor'])) {
-                $trabajador['rol'] = 'Asesor de Venta';
+                $trabajador['rol'] = 'Asesor_venta';
             }
 
             $trabajadoresFormateados[] = $trabajador;
         }
 
         return $trabajadoresFormateados;
+    }
+
+        public function insertar($tabla, $datos) {
+        if (!isset($datos['rol']) || empty($datos['rol'])) {
+            throw new InvalidArgumentException("El 'rol' del trabajador es obligatorio.");
+        }
+
+        $rol = strtolower($datos['rol']);
+        unset($datos['rol']); 
+
+        $this->pdo->beginTransaction();
+
+        try {
+            $idTrabajador = parent::insertar('Trabajador', $datos);
+
+            $tablaRol = '';
+            if ($rol === 'chofer') {
+                $tablaRol = 'Chofer';
+            } elseif ($rol === 'asesor') {
+                $tablaRol = 'Asesor_venta';
+            } else {
+                throw new InvalidArgumentException("El rol '$rol' no es un rol de trabajador válido.");
+            }
+
+            parent::insertar($tablaRol, ['id_trabajador' => $idTrabajador]);
+
+            $this->pdo->commit();
+
+            return $idTrabajador;
+
+        } catch (Exception $e) {
+            $this->pdo->rollBack();
+            throw new RuntimeException("No se pudo insertar el trabajador: " . $e->getMessage());
+        }
     }
 }
 
